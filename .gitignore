@@ -1,0 +1,21 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# Compiled files
+*.o
+*.so
+*.rlib
+*.dll
+*.ll
+
+# Executables
+*.exe
+
+# Ignore Nim Compiler Cache
+nimcache/
