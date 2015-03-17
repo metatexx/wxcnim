@@ -125,3 +125,16 @@ proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: cint, da
 
 proc wxPanel_Create*(prt: WxWindow , id: WxId, lft: cint, top: cint, wdt: cint, hgt: cint, stl: cint): WxPanel
   {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxMessageDialog_Create*(prt: WxWindow, msg: WxString, cap: WxString, spc: WxDialogSpecs): WxMessageDialog
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxMessageDialog_Delete*(obj: WxMessageDialog)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxMessageDialog_ShowModal*(obj: WxMessageDialog): WxId
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+
+
+# (c) Hans Raaf - METATEXX GmbH

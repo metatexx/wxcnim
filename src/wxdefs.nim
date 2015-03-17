@@ -179,13 +179,50 @@ const
   wxID_OSX_HIDE* = wxID_MDI_WINDOW_FIRST
   wxID_OSX_MENU_LAST* = wxID_OSX_SERVICES
 
-type WxFrameStyle* = enum
-  wxRESIZE_BORDER = 64
-  wxMAXIMIZE_BOX = 512
-  wxMINIMIZE_BOX = 1024
-  wxSYSTEM_MENU = 2048
-  wxCLOSE_BOX = 4096
-  wxCLIP_CHILDREN = 4194304
-  wxCAPTION = 0x20000000
-  wxDEFAULT_FRAME_STYLE = 536878656    
+type WxFrameStyle* = int64
 
+const
+  wxRESIZE_BORDER*:WxFrameStyle = 64
+  wxMAXIMIZE_BOX*:WxFrameStyle = 512
+  wxMINIMIZE_BOX*:WxFrameStyle = 1024
+  wxSYSTEM_MENU*:WxFrameStyle = 2048
+  wxCLOSE_BOX*:WxFrameStyle = 4096
+  wxCLIP_CHILDREN*:WxFrameStyle = 4194304
+  wxCAPTION*:WxFrameStyle = 0x20000000
+  wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656    
+
+type WxDialogSpecs* = int64
+
+const
+  wxYES*:WxDialogSpecs = 0x00000002
+  wxOK*:WxDialogSpecs = 0x00000004
+  wxNO*:WxDialogSpecs = 0x00000008
+  wxYES_NO*:WxDialogSpecs = wxYES + wxNO
+  wxCANCEL*:WxDialogSpecs = 0x00000010
+  wxAPPLY*:WxDialogSpecs = 0x00000020
+  wxCLOSE*:WxDialogSpecs = 0x00000040
+
+  wxOK_DEFAULT*:WxDialogSpecs = 0x00000000  # has no effect (default)
+  wxYES_DEFAULT*:WxDialogSpecs = 0x00000000 # has no effect (default)
+  wxNO_DEFAULT*:WxDialogSpecs = 0x00000080  # only valid with wxYES_NO
+  wxCANCEL_DEFAULT*:WxDialogSpecs = 0x80000000  # only valid with wxCANCEL
+
+#define wxICON_EXCLAMATION      0x00000100
+#define wxICON_HAND             0x00000200
+#define wxICON_WARNING          wxICON_EXCLAMATION
+#define wxICON_ERROR            wxICON_HAND
+#define wxICON_QUESTION         0x00000400
+#define wxICON_INFORMATION      0x00000800
+#define wxICON_STOP             wxICON_HAND
+#define wxICON_ASTERISK         wxICON_INFORMATION
+
+#define wxHELP                  0x00001000
+#define wxFORWARD               0x00002000
+#define wxBACKWARD              0x00004000
+#define wxRESET                 0x00008000
+#define wxMORE                  0x00010000
+#define wxSETUP                 0x00020000
+#define wxICON_NONE             0x00040000
+#define wxICON_AUTH_NEEDED      0x00080000
+
+#define wxICON_MASK (wxICON_EXCLAMATION|wxICON_HAND|wxICON_QUESTION|wxICON_INFORMATION|wxICON_NONE|wxICON_AUTH_NEEDED)

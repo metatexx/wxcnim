@@ -18,8 +18,17 @@ proc myButtonClicked(fun, data, evn: pointer) =
   echo "Clicker Event: ", evn.repr
   echo "Clicker Data: ", data.repr
   
+  let parent = cast[WxWindow](data)
+  let txt = newWxString "Do you really want to quit?"
+  let cap = newWxString "You pushed the button!"
+  let msgDlg = wxMessageDialog_Create(parent, txt, cap, wxYES_NO or wxNO_DEFAULT)
+  if msgDlg.wxMessageDialog_ShowModal == wxID_YES:
+    echo "Ending..."
+    ELJApp_ExitMainLoop()
+
+  msgDlg.wxMessageDialog_Delete
+
   # this will end the mainloop
-  ELJApp_ExitMainLoop()
 
 proc makeButton(parent: WxFrame): WxButton =
   let txt = newWxString "Push Me!"

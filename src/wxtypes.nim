@@ -7,6 +7,7 @@ type WxString* = pointer
 type WxFrame* = pointer
 type WxWindow* = pointer
 type WxPanel* = pointer
+type WxMessageDialog* = pointer
 
 type WxMenu* = pointer
 type WxMenuBar* = pointer
