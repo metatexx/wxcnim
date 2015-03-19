@@ -20,5 +20,8 @@ converter toWxId*(x: int): WxId = result = cast[WxId](x)
 converter toWxId*(x: WxStandardId): WxId = result = cast[WxId](x)
 converter toWxWindow*(x: WxPanel): WxWindow = result = cast[WxWindow](x)
 
+#converter toCInt*(x: WxDirection): cint = result = cast[int64](x)
+#converter toCInt*(x: WxStretch): cint = result = cast[cint](x)
+
 proc newWxString*(s: string): WxString = 
   wxString_CreateUTF8(s)

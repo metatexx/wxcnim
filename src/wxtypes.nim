@@ -15,7 +15,12 @@ type WxMenu* = pointer
 type WxMenuBar* = pointer
 type WxMenuItem* = pointer
 
-type WxButton* = pointer
+type WxControl* = pointer
+type WxButton* = WxControl
+type WxListCtrl* = WxControl
+
+type WxSizer* = pointer
+type WxBoxSizer* = WxSizer
 
 type WxSize* = ptr tuple[w, h: cint]
 type WxPos* = ptr tuple[w, h: cint]

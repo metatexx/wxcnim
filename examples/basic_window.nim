@@ -32,7 +32,7 @@ proc myButtonClicked(fun, data, evn: pointer) =
 
 proc makeButton(parent: WxFrame): WxButton =
   let txt = newWxString "Push Me!"
-  result = wxButton_Create(parent, -1, txt, 10, 10, -1, 30, 0)
+  result = wxButton_Create(parent, -1, txt, 0, 0, -1, -1, 0)
   var cl = wxClosure_Create(myButtonClicked, parent)
   discard wxEvtHandler_Connect(result, -1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
 
@@ -65,13 +65,37 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   discard wxMenuBar_Append(menuBar, fileMenu, newWxString("File"))
   wxFrame_SetMenuBar(mainFrame, menuBar)
 
+
+
+
   # Adding a panel to the Frame
-  let panel = wxPanel_Create(mainFrame, wxID_ANY,  -1,-1,-1,-1, 0)
+  let panel1 = wxPanel_Create(mainFrame, wxID_ANY,  -1,-1,-1,-1, 0)
+  let panel2 = wxPanel_Create(mainFrame, wxID_ANY,  -1,-1,-1,-1, 0)
+
+  let sizer = wxBoxSizer_Create(wxVERTICAL)
+
+  wxSizer_AddWindow(sizer, panel1, 0, wxEXPAND + wxALL, 10, nil)
+  wxSizer_AddWindow(sizer, panel2, 0, wxEXPAND + wxAll, 10, nil)
   
-  discard panel.makeButton # Button hinzufügen
+  discard panel1.makeButton # Button hinzufügen
+
+  wxWindow_SetSizer(mainFrame, sizer)
+
+  # ListControl (some of the most important widgets for our case)
+  let lcTable = wxListCtrl_Create(panel2, wxID_ANY, 0, 0, 200, 100, wxLC_REPORT)
+  let thName = newWxString "Name"
+  let thVorname = newWxString "Vorname"
+
+  var pos: cint = 0
+  pos = wxListCtrl_InsertColumn(lcTable, pos, thName, 0, 100)
+  pos = wxListCtrl_InsertColumn(lcTable, pos, thVorname, 0, 100)
 
   var cl_menu_new = wxClosure_Create(myMenuSelected, app)
   discard wxEvtHandler_Connect(menuBar, fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
+
+  #wxSizer_Layout(sizer)
+
+  wxWindow_Fit(mainFrame)
 
   wxWindow_Show mainFrame
   wxWindow_Raise mainFrame

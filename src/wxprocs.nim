@@ -61,6 +61,15 @@ proc wxWindow_Show*(p: WxWindow)
 proc wxWindow_Hide*(p: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_Fit*(p: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxWindow_FitInside*(p: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxWindow_SetSizer*(obj: WxWindow, sizer: WxSizer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc wxMenu_Create*(title: WxString, style: clong ): WxMenu
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -111,6 +120,35 @@ proc ELJApp_GetUserHome*(): WxString
 
 proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: cint, top: cint, wdt: cint, hgt: cint, stl: cint): WxButton
   {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxBoxSizer
+
+#TClass(wxSize) wxBoxSizer_CalcMin( TSelf(wxBoxSizer) _obj );
+proc wxBoxSizer_Create*(orient: WxOrientation): WxBoxSizer
+  {.cdecl, dynlib: WXCLibName, importc.}
+#int        wxBoxSizer_GetOrientation( TSelf(wxBoxSizer) _obj );
+#void       wxBoxSizer_RecalcSizes( TSelf(wxBoxSizer) _obj );
+
+# wxSizer (abstract)
+
+proc wxSizer_AddWindow*(obj: WxSizer, window: WxWindow, option: int64, flag: int64, border: int64, userData: pointer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxSizer_Layout*(obj: WxSizer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+#TClass(wxSize) wxSizer_CalcMin( TSelf(wxSizer) _obj );
+
+# wxListCtrl
+
+proc wxListCtrl_Create*(prt: WxWindow, id: WxId, lft: cint, top: cint, wdt: cint, hgt: cint, stl: WxLCStyle): WxListCtrl
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: cint, heading: WxString, format: cint, width: cint): cint
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+
+# wxEvtHandler
 
 proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: cint, data: WxClosure): cint
   {.cdecl, dynlib: WXCLibName, importc.}

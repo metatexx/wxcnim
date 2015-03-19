@@ -228,3 +228,69 @@ const
 #define wxICON_AUTH_NEEDED      0x00080000
 
 #define wxICON_MASK (wxICON_EXCLAMATION|wxICON_HAND|wxICON_QUESTION|wxICON_INFORMATION|wxICON_NONE|wxICON_AUTH_NEEDED)
+
+type WxLcStyle* = int64
+
+const
+  wxLC_VRULES*: WxLcStyle = 0x0001
+  wxLC_HRULES*: WxLcStyle = 0x0002
+  wxLC_ICON*: WxLcStyle = 0x0004
+  wxLC_SMALL_ICON*: WxLcStyle = 0x0008
+  wxLC_LIST*: WxLcStyle = 0x0010
+  wxLC_REPORT*: WxLcStyle = 0x0020
+
+#define wxLC_ALIGN_TOP       0x0040
+#define wxLC_ALIGN_LEFT      0x0080
+#define wxLC_AUTOARRANGE     0x0100
+#define wxLC_VIRTUAL         0x0200
+#define wxLC_EDIT_LABELS     0x0400
+#define wxLC_NO_HEADER       0x0800
+#define wxLC_NO_SORT_HEADER  0x1000
+#define wxLC_SINGLE_SEL      0x2000
+#define wxLC_SORT_ASCENDING  0x4000
+#define wxLC_SORT_DESCENDING 0x8000
+
+#define wxLC_MASK_TYPE       (wxLC_ICON | wxLC_SMALL_ICON | wxLC_LIST | wxLC_REPORT)
+#define wxLC_MASK_ALIGN      (wxLC_ALIGN_TOP | wxLC_ALIGN_LEFT)
+#define wxLC_MASK_SORT       (wxLC_SORT_ASCENDING | wxLC_SORT_DESCENDING)
+
+
+type WxOrientation* = int64
+const
+  wxHORIZONTAL*: WxOrientation = 0x0004
+  wxVERTICAL*: WxOrientation = 0x0008
+  wxBOTH*: WxOrientation = 0x000c
+  # a mask to extract orientation from the combination of flags
+  wxORIENTATION_MASK*: WxOrientation = wxBOTH
+
+type WxStretch = int64
+const
+  wxSTRETCH_NOT*: WxStretch = 0x0000
+  wxSHRINK*: WxStretch = 0x1000
+  wxGROW*: WxStretch = 0x2000
+  wxEXPAND*: WxStretch = wxGROW
+  wxSHAPED*: WxStretch = 0x4000
+  #wxTILE*: WxStretch = wxSHAPED + wxFIXED_MINSIZE
+
+  # a mask to extract stretch from the combination of flags
+  wxSTRETCH_MASK*: WxStretch = 0x7000 # sans wxTILE
+
+type WxDirection = int64
+const
+  wxLEFT*: WxDirection = 0x0010
+  wxRIGHT*: WxDirection = 0x0020
+  wxUP*: WxDirection = 0x0040
+  wxDOWN*: WxDirection = 0x0080
+
+  wxTOP* = wxUP
+  wxBOTTOM* = wxDOWN
+
+  wxNORTH* = wxUP
+  wxSOUTH* = wxDOWN
+  wxWEST* = wxLEFT
+  wxEAST* = wxRIGHT
+
+  wxALL* = (wxUP + wxDOWN + wxRIGHT + wxLEFT)
+
+  # a mask to extract direction from the combination of flags
+  wxDIRECTION_MASK* = wxALL
