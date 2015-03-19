@@ -1,12 +1,4 @@
-import wxtypes
-import wxdefs
-
-when defined(mswindows):
-  const WXCLibName* = "wxc.dll"
-elif defined(macosx):
-  const WXCLibName* = "libwxc.dylib"
-else:
-  const WXCLibName* = "libwxc.so"
+# wxprocs include
 
 proc wxString_CreateUTF8*(buffer: cstring): WxString
   {.cdecl, dynlib: WXCLibName, importc.}
@@ -134,7 +126,5 @@ proc wxMessageDialog_Delete*(obj: WxMessageDialog)
 
 proc wxMessageDialog_ShowModal*(obj: WxMessageDialog): WxId
   {.cdecl, dynlib: WXCLibName, importc.}
-
-
 
 # (c) Hans Raaf - METATEXX GmbH

@@ -1,3 +1,5 @@
+# wxtypes include
+
 type WxId* = int
 
 type WxClosure* = pointer

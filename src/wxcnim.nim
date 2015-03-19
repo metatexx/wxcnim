@@ -1,12 +1,20 @@
-import wxtypes
-import wxdefs
-import wxevents
-import wxprocs
+## wxcnim - wxWidgets for Nim
+##
+## (c) Hans Raaf - METATEXX GmbH
+##
+## License MIT (see LICENSE.txt)
 
-export wxdefs
-export wxevents
-export wxtypes
-export wxprocs
+when defined(mswindows):
+  const WXCLibName* = "wxc.dll"
+elif defined(macosx):
+  const WXCLibName* = "libwxc.dylib"
+else:
+  const WXCLibName* = "libwxc.so"
+
+include wxtypes
+include wxevents
+include wxdefs
+include wxprocs
 
 converter toWxId*(x: int): WxId = result = cast[WxId](x)
 converter toWxId*(x: WxStandardId): WxId = result = cast[WxId](x)
