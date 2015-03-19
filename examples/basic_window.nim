@@ -3,13 +3,13 @@
 
 import wxcnim
 
-#ELJApp_Bell()
-
 proc myMenuSelected(fun, data, evn: pointer) =
   if cast[int](evn) == 0:
     return
   echo "Menu Event: ", evn.repr
   echo "Menu Data: ", data.repr
+  # bell (wau wau)
+  ELJApp_Bell()
 
 proc myButtonClicked(fun, data, evn: pointer) =
   if cast[int](evn) == 0:
@@ -24,11 +24,11 @@ proc myButtonClicked(fun, data, evn: pointer) =
   let msgDlg = wxMessageDialog_Create(parent, txt, cap, wxYES_NO or wxNO_DEFAULT)
   if msgDlg.wxMessageDialog_ShowModal == wxID_YES:
     echo "Ending..."
-    ELJApp_ExitMainLoop()
-
+    ELJApp_ExitMainLoop() # this will end the mainloop
+  
+  # cleaning up the dialog and exit
   msgDlg.wxMessageDialog_Delete
 
-  # this will end the mainloop
 
 proc makeButton(parent: WxFrame): WxButton =
   let txt = newWxString "Push Me!"
@@ -37,8 +37,10 @@ proc makeButton(parent: WxFrame): WxButton =
   discard wxEvtHandler_Connect(result, -1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
 
 proc appMain(argc: pointer, argv: openArray[cstring]) =
-  # argc und argv machen keinen sinn :(
-  ELJApp_InitAllImageHandlers()
+  # argc und argv do not make sense to me :(
+
+  #ELJApp_InitAllImageHandlers() # probably not needed
+
   let app = ELJApp_GetApp()
 
   #echo ELJApp_Initialized()
@@ -47,6 +49,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   #let txt = ELJApp_GetUserName()
   #echo "txt is: ", wxString_Length txt
+  #wxString_Delete(txt)
 
   let txt = newWxString("Hallo Nim World!")
 
@@ -61,10 +64,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   wxMenu_AppendItem(fileMenu, fileNew)
   discard wxMenuBar_Append(menuBar, fileMenu, newWxString("File"))
   wxFrame_SetMenuBar(mainFrame, menuBar)
-  
-  #wxString_Delete(txt)
 
-  # Ein Panel ins Windows setzen
+  # Adding a panel to the Frame
   let panel = wxPanel_Create(mainFrame, wxID_ANY,  -1,-1,-1,-1, 0)
   
   discard panel.makeButton # Button hinzufügen
@@ -75,18 +76,17 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   wxWindow_Show mainFrame
   wxWindow_Raise mainFrame
   
-  echo "appMain Done"
+  echo "appMain finished"
 
-  # wird nicht gebraucht!
+  # not needed
   #ELJApp_MainLoop()
   #ELJApp_Exit()
 
 when isMainModule:
-  echo "Using: ", WXCLibName
-
-  # Das initialisiert die App und startet unser "appMain"
+  # Initialising and running "appMain"
   let cl = wxClosure_Create(appMain, nil) # Create Closure for appMain()
   ELJApp_InitializeC(cl, 0, nil) # Das startet alles und geht in den Loop
 
-  # Der MainLoop läuft nach return von appMain()
+  # ... Mainloop running here ...
+
   echo "Done"
