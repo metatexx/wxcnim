@@ -9,6 +9,9 @@ proc wxString_Delete*(s: WxString)
 proc wxString_Length*(s: WxString): cint
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxString_GetString*(s: WxString, b: pointer): cint
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc wxClosure_Create*(fun: proc {.stdcall.} , data: pointer): WxClosure
   {.cdecl, dynlib: WXCLibName, importc.}
 
