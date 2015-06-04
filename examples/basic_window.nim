@@ -57,9 +57,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   #echo "txt is: ", wxString_Length txt
   #wxString_Delete(txt)
 
-  let txt = newMxString("Hallo Nim World!")
-
-  let mainFrame = wxFrame_Create( nil, wxID_ANY, txt, -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame_Create( nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
 
   let menuBar = wxMenuBar_Create(0)
   let fileMenu = wxMenu_Create(newMxString(""), 0)

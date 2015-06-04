@@ -57,6 +57,14 @@ proc newMxString*(s: string): MxString =
   new(result, mxStringFinalizer)
   result.obj = wxString_CreateUTF8(s)
 
+# Makes a MxString from a "string" just by using
+#  var s:MxString = "Test"
+converter toMxString*(s: string): MxString = newMxString(s)
+
+# Makes a WxString from a "string" by first creating an MxString
+# and then uses it's "internal" WxString (deleting the WxString afterwarts)
+converter toWxString*(s: string): WxString = toWxString(newMxString(s))
+
 type
   MxMessageDialog* = ref MxMessageDialogObj
   MxMessageDialogObj* {.final.} = object
