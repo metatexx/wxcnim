@@ -32,7 +32,7 @@ type
 
 # Will extract the WxString from an MxString (if needed)
 # But attention: This does not increate the ref-counting
-converter toWxString*(obj: MxString): WxString = result = obj.obj
+converter toWxString*(obj: MxString): WxString = obj.obj
 
 # convert a WxString into an UTF8 String
 proc `$`*(self: WxString): string =
