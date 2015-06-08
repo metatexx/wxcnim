@@ -18,6 +18,7 @@ type WxMenuItem* = pointer
 type WxControl* = pointer
 type WxButton* = WxControl
 type WxListCtrl* = WxControl
+type WxStaticText = WxControl
 
 type WxSizer* = pointer
 type WxBoxSizer* = WxSizer

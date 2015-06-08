@@ -229,6 +229,31 @@ const
 
 #define wxICON_MASK (wxICON_EXCLAMATION|wxICON_HAND|wxICON_QUESTION|wxICON_INFORMATION|wxICON_NONE|wxICON_AUTH_NEEDED)
 
+type WxAlignment* = int64
+const
+  # 0 is a valid wxAlignment value (both wxALIGN_LEFT and wxALIGN_TOP
+  # use it) so define a symbolic name for an invalid alignment value
+  # which can be assumed to be different from anything else
+
+  wxALIGN_INVALID*: WxAlignment = -1
+
+  wxALIGN_NOT*: WxAlignment = 0x0000
+  wxALIGN_CENTER_HORIZONTAL*: WxAlignment = 0x0100
+  wxALIGN_CENTRE_HORIZONTAL*: WxAlignment = wxALIGN_CENTER_HORIZONTAL
+  wxALIGN_LEFT*: WxAlignment = wxALIGN_NOT
+  wxALIGN_TOP*: WxAlignment = wxALIGN_NOT
+  wxALIGN_RIGHT*: WxAlignment = 0x0200
+  wxALIGN_BOTTOM*: WxAlignment = 0x0400
+  wxALIGN_CENTER_VERTICAL*: WxAlignment = 0x0800
+  wxALIGN_CENTRE_VERTICAL*: WxAlignment = wxALIGN_CENTER_VERTICAL
+
+  wxALIGN_CENTER*: WxAlignment = wxALIGN_CENTER_HORIZONTAL + wxALIGN_CENTER_VERTICAL
+  wxALIGN_CENTRE*: WxAlignment = wxALIGN_CENTER
+
+  # a mask to extract alignment from the combination of flags
+  wxALIGN_MASK*: WxAlignment = 0x0f00
+
+
 type WxLcStyle* = int64
 
 const
@@ -254,6 +279,17 @@ const
 #define wxLC_MASK_ALIGN      (wxLC_ALIGN_TOP | wxLC_ALIGN_LEFT)
 #define wxLC_MASK_SORT       (wxLC_SORT_ASCENDING | wxLC_SORT_DESCENDING)
 
+type WxStaticTextStyle* =  int64
+const
+  wxST_NO_AUTORESIZE*: WxStaticTextStyle = 0x0001
+  # free 0x0002 bit
+  wxST_ELLIPSIZE_START*: WxStaticTextStyle = 0x0004
+  wxST_ELLIPSIZE_MIDDLE*: WxStaticTextStyle = 0x0008
+  wxST_ELLIPSIZE_END*: WxStaticTextStyle = 0x0010
+  # make those type-safe
+  wxST_ALIGN_LEFT*: WxStaticTextStyle = wxALIGN_LEFT
+  wxST_ALIGN_RIGHT*: WxStaticTextStyle = wxALIGN_RIGHT
+  wxST_ALIGN_CENTER*: WxStaticTextStyle = wxALIGN_CENTER
 
 type WxOrientation* = int64
 const

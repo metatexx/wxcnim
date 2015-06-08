@@ -4,12 +4,7 @@
 ##
 ## License MIT (see LICENSE.txt)
 
-when defined(mswindows):
-  const WXCLibName* = "wxc.dll"
-elif defined(macosx):
-  const WXCLibName* = "libwxc.dylib"
-else:
-  const WXCLibName* = "libwxc.so"
+include wxlibname
 
 import unicode
 
@@ -18,24 +13,20 @@ include wxevents
 include wxdefs
 include wxprocs
 
-converter toWxId*(x: int): WxId = result = cast[WxId](x)
-converter toWxId*(x: WxStandardId): WxId = result = cast[WxId](x)
-converter toWxWindow*(x: WxPanel): WxWindow = result = cast[WxWindow](x)
+#template wxPos*(x:int ,y:int): stmt {.immediate.} =
+#  x, y
 
+converter toWxId*(x: int): WxId = result = cast[WxId](x)
+converter toWxId*(x: WxStandardId): WxId = cast[WxId](x)
+converter toWxWindow*(x: WxPanel): WxWindow = cast[WxWindow](x)
+
+#converter toCInt*(x: WxAlignment): cint = cast[cint](x)
 #converter toCInt*(x: WxDirection): cint = result = cast[int64](x)
 #converter toCInt*(x: WxStretch): cint = result = cast[cint](x)
 
-type
-  MxString* = ref MxStringObj
-  MxStringObj* {.final.} = object
-    obj: WxString # The real wxString Objekt
-
-# Will extract the WxString from an MxString (if needed)
-# But attention: This does not increate the ref-counting
-converter toWxString*(obj: MxString): WxString = obj.obj
-
 # convert a WxString into an UTF8 String
 proc `$`*(self: WxString): string =
+  echo "DBG: Create string from WxString called"
   if self.wxString_Length == 0:
     result = ""
   else:
@@ -45,45 +36,15 @@ proc `$`*(self: WxString): string =
     for w in s:
       result.add Rune(w).toUTF8
 
-# Free the WxString inside the MxString
-proc mxStringFinalizer*(o: MxString) =
-  if o.obj != nil:
-    # debug what we delete (and when)
-    echo "deleting '", $ o.obj, "'"
-    wxString_Delete o.obj
+# Makes a WxString from a "string"
+converter toWxString*(s: string): WxString = 
+  echo "DBG: string->WxString conversion for " & s
+  result = wxString_CreateUTF8(s)
 
-# Allocate a GCed "WxString"
-proc newMxString*(s: string): MxString =
-  new(result, mxStringFinalizer)
-  result.obj = wxString_CreateUTF8(s)
+# Deleting a WxString (which was returned by a funtion)
+proc delete*(s: WxString) = wxString_Delete s
 
-# Makes a MxString from a "string" just by using
-#  var s:MxString = "Test"
-converter toMxString*(s: string): MxString = newMxString(s)
-
-# Makes a WxString from a "string" by first creating an MxString
-# and then uses it's "internal" WxString (deleting the WxString afterwarts)
-converter toWxString*(s: string): WxString = toWxString(newMxString(s))
-
-type
-  MxMessageDialog* = ref MxMessageDialogObj
-  MxMessageDialogObj* {.final.} = object
-    obj: WxMessageDialog # The real Objekt
-    msg: MxString # refholder
-    cap: MxString # refholder
-
-proc mxMessageDialogFinalizer*(o: MxMessageDialog) =
-  echo "deleting1"
-  if o.obj != nil: 
-    echo "deleting2"
-
-  if o.msg != nil: 
-    wxString_Delete o.msg
-
-  if o.cap != nil: 
-    wxString_Delete o.cap
-
-proc mxMessageDialog*(prt: WxWindow, msg: MxString, cap: MxString, spc: WxDialogSpecs): MxMessageDialog =
-  echo "creating"
-  new(result, mxMessageDialogFinalizer)
-  #result.obj = wxString_CreateUTF8(s)
+converter toString*(s: WxString): string =
+  result = $s
+  echo "DBG: WxString->string conversion for " & result
+  s.delete

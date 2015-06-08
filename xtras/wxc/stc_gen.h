@@ -33,6 +33,7 @@ int wxStyledTextCtrl_MarkerLineFromHandle(TSelf(wxStyledTextCtrl) _obj, int hand
 void wxStyledTextCtrl_MarkerDeleteHandle(TSelf(wxStyledTextCtrl) _obj, int handle);
 
 TBool wxStyledTextCtrl_GetUndoCollection(TSelf(wxStyledTextCtrl) _obj);
+TBool wxStyledTextCtrl_GetUndoCollection(TSelf(wxStyledTextCtrl) _obj);
 
 int wxStyledTextCtrl_GetViewWhiteSpace(TSelf(wxStyledTextCtrl) _obj);
 
