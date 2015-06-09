@@ -65,7 +65,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let txt = ELJApp_GetUserName()
   echo "txt is: " & normalize(txt)
 
-  let mainFrame = wxFrame_Create( nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame_Create( wxNil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
 
   let menuBar = wxMenuBar_Create(0)
   let fileMenu = wxMenu_Create("", 0)
@@ -81,10 +81,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   discard wxEvtHandler_Connect(menuBar, fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
 
   # creating a virutal sizer as container
-  let sizer = wxBoxSizer_Create(wxVERTICAL)
-  
-  # and adding it into the main window
-  wxWindow_SetSizer(mainFrame, sizer)
+  let sizer = wxBoxSizer(wxVERTICAL)
   
   # our Button
   let bt = makeButton(mainFrame) # Button hinzufügen
@@ -127,14 +124,17 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
     # wxcUnpacking(add, wxSizer_AddWindow)
     # wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
 
-    let lcTable = mainFrame.listCtrl(wxID_ANY, mxPos(0, 0), -1, 100, wxLC_REPORT)
+    let lcTable = mainFrame.listCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
     sizer.add(lcTable, 0, wxEXPAND or wxAll, 10, nil)
     discard lcTable.insertColumn(-1, "Vorname", 0, 100)
     discard lcTable.insertColumn(-1, "Name", 0, 100)
     discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
-    discard lcTable.insertColumn(-1, "Alter", 0, 30)
+    discard lcTable.insertColumn(-1, "Alter", 0, 100)
   
   #wxSizer_Layout(sizer)
+  
+  # Add the souer into the main window
+  mainFrame.setSizer(sizer)
 
   # this constrains the windows min size
   wxTopLevelWindow_SetMinSize(mainFrame, 100, 150)
@@ -142,7 +142,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # this constrains the windows max size
   wxTopLevelWindow_SetMaxSize(mainFrame, 800, 600)
   
-  wxWindow_Fit(mainFrame)
+  wxWindow_Fit mainFrame
   
   wxWindow_Show mainFrame
   wxWindow_Raise mainFrame
@@ -155,7 +155,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
 when isMainModule:
   # Initialising and running "appMain"
-  let cl = wxClosure_Create(appMain, nil) # Create Closure for appMain()
+  let cl = wxClosure_Create(appMain, wxNil) # Create Closure for appMain()
   ELJApp_InitializeC(cl, 0, nil) # Das startet alles und geht in den Loop
 
   # ... Mainloop running here ...

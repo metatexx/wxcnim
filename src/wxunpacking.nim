@@ -3,10 +3,11 @@ import macros
 # we need these dummy constructors due to the wrong implementation
 # of 'varargs[untyped]' in the compiler:
 
-proc mxPos*(x, y: cint): cint = discard
-proc mxPoint*(x, y: cint): cint = discard
-proc mxColor*(r, g, b: cint): cint = discard
-proc mxRect*(a, b, c, d: cint): cint = discard
+proc wxPoint*(x, y: cint): cint = discard
+proc wxSize*(w, h: cint): cint = discard
+
+proc wxColor*(r, g, b: cint): cint = discard
+proc wxRect*(a, b, c, d: cint): cint = discard
 
 template wxcUnpacking(nimname,extname) =
   macro nimname*(n: varargs[untyped]): untyped =
@@ -16,16 +17,16 @@ template wxcUnpacking(nimname,extname) =
       var unpack = false
       if x.kind in nnkCallKinds:
         case $x[0]
-        of "mxPoint":
+        of "wxPoint":
           expectLen(x, 3)
           unpack = true
-        of "mxPos":
+        of "wxSize":
           expectLen(x, 3)
           unpack = true
-        of "mxRect":
+        of "wxRect":
           expectLen(x, 5)
           unpack = true
-        of "mxColor":
+        of "wxColor":
           expectLen(x, 4)
           unpack = true
         else: discard
@@ -48,5 +49,9 @@ template wxcUnpacking(nimname,extname) =
     result = parseStmt(s)
 
 wxcUnpacking(listCtrl, wxListCtrl_Create)
-wxcUnpacking(add, wxSizer_AddWindow)
 wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
+
+wxcUnpacking(wxBoxSizer, wxBoxSizer_Create)
+wxcUnpacking(add, wxSizer_AddWindow)
+
+wxcUnpacking(setSizer, wxWindow_SetSizer)

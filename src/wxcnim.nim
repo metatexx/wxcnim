@@ -18,9 +18,21 @@ include wxunpacking
 #template wxPos*(x:int ,y:int): stmt {.immediate.} =
 #  x, y
 
+type WxNil = distinct int
+const wxNil*: WxNil = WxNil(0)
+
 converter toWxId*(x: int): WxId = result = cast[WxId](x)
 converter toWxId*(x: WxStandardId): WxId = cast[WxId](x)
-converter toWxWindow*(x: WxPanel): WxWindow = cast[WxWindow](x)
+
+converter toWxSizer*(x: WxBoxSizer): WxSizer = cast[WxSizer](x)
+
+converter toWxWindow*(x: WxNil): WxWindow = cast[WxWindow](0)
+converter toWxWindow*(x: WxFrame): WxWindow = cast[WxWindow](x)
+converter toWxWindow*(x: WxButton): WxWindow = cast[WxWindow](x)
+
+converter toWxClosureTypes*(x: WxNil): WxClosureTypes = cast[WxClosureTypes](0)
+converter toWxClosureTypes*(x: WxApp): WxClosureTypes = cast[WxClosureTypes](x)
+converter toWxClosureTypes*(x: WxFrame): WxClosureTypes = cast[WxClosureTypes](x)
 
 #converter toCInt*(x: WxAlignment): cint = cast[cint](x)
 #converter toCInt*(x: WxDirection): cint = result = cast[int64](x)
