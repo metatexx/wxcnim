@@ -3,6 +3,7 @@
 
 import wxcnim
 import strutils
+
 #import mxstring (not needed atm)
 
 proc myMenuSelected(fun, data, evn: pointer) =
@@ -110,18 +111,28 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
       echo tmp
 
   # ListControl (some of the most important widgets for our case)
-  let lcTable = wxListCtrl_Create(mainFrame, wxID_ANY, 0, 0, -1, 100, wxLC_REPORT)
-  wxSizer_AddWindow(sizer, lcTable, 0, wxEXPAND + wxAll, 10, nil)
 
-  var pos: cint = 0
-  pos = wxListCtrl_InsertColumn(lcTable, -1, "Vorname", 0, 100)
-  echo "Vorname pos: ", pos
-  pos = wxListCtrl_InsertColumn(lcTable, -1, "Name", 0, 100)
-  echo "Name pos: ", pos
-  pos = wxListCtrl_InsertColumn(lcTable, 0, "Id", 0, 30)
-  echo "Id pos: ", pos
-  pos = wxListCtrl_InsertColumn(lcTable, -1, "Alter", 0, 100)
-  echo "Alter pos: ", pos
+  when false: # old code
+    let lcTable = wxListCtrl_Create(mainFrame, wxID_ANY, 0, 0, -1, 100, wxLC_REPORT)
+    wxSizer_AddWindow(sizer, lcTable, 0, wxEXPAND + wxAll, 10, nil)
+    discard wxListCtrl_InsertColumn(lcTable, -1, "Vorname", 0, 100)
+    discard wxListCtrl_InsertColumn(lcTable, -1, "Name", 0, 100)
+    discard wxListCtrl_InsertColumn(lcTable, 0, "Id", 0, 30) # insert 'in front'
+    discard wxListCtrl_InsertColumn(lcTable, -1, "Alter", 0, 100)
+
+  else:
+    # new code using the unpacker Macro like this:
+    #
+    # wxcUnpacking(listCtrl, wxListCtrl_Create)
+    # wxcUnpacking(add, wxSizer_AddWindow)
+    # wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
+
+    let lcTable = mainFrame.listCtrl(wxID_ANY, mxPos(0, 0), -1, 100, wxLC_REPORT)
+    sizer.add(lcTable, 0, wxEXPAND or wxAll, 10, nil)
+    discard lcTable.insertColumn(-1, "Vorname", 0, 100)
+    discard lcTable.insertColumn(-1, "Name", 0, 100)
+    discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
+    discard lcTable.insertColumn(-1, "Alter", 0, 30)
   
   #wxSizer_Layout(sizer)
 

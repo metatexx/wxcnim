@@ -13,6 +13,8 @@ include wxevents
 include wxdefs
 include wxprocs
 
+include wxunpacking
+
 #template wxPos*(x:int ,y:int): stmt {.immediate.} =
 #  x, y
 
