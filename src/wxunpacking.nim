@@ -48,10 +48,33 @@ template wxcUnpacking(nimname,extname) =
     echo s
     result = parseStmt(s)
 
-wxcUnpacking(listCtrl, wxListCtrl_Create)
+
+wxcUnpacking(wxClosure, wxClosure_Create)
+wxcUnpacking(wxListCtrl, wxListCtrl_Create)
+wxcUnpacking(wxBoxSizer, wxBoxSizer_Create)
+wxcUnpacking(wxStaticText, wxStaticText_Create)
+wxcUnpacking(wxMenuBar, wxMenuBar_Create)
+wxcUnpacking(wxMenu, wxMenu_Create)
+wxcUnpacking(wxMenuItem, wxMenuItem_Create)
+wxcUnpacking(wxMenuItemEx, wxMenuItem_CreateEx)
+
 wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
 
-wxcUnpacking(wxBoxSizer, wxBoxSizer_Create)
 wxcUnpacking(add, wxSizer_AddWindow)
 
 wxcUnpacking(setSizer, wxWindow_SetSizer)
+wxcUnpacking(show, wxWindow_Show)
+wxcUnpacking(fit, wxWindow_Fit)
+wxcUnpacking(raize, wxWindow_Raise) # raize vs raise!
+
+wxcUnpacking(setLabel, wxControl_SetLabel)
+
+wxcUnpacking(appendItem, wxMenu_AppendItem)
+wxcUnpacking(append, wxMenu_Append)
+
+wxcUnpacking(getId, wxMenuItem_GetId)
+
+
+# menubar
+wxcUnpacking(connect, wxEvtHandler_Connect)
+

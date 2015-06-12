@@ -2,27 +2,32 @@
 
 type WxId* = int
 
-type WxClosure* = pointer
-type WxApp* = pointer
-type WxString* = pointer
+type WxClosure* = ptr object
+type WxApp* = ptr object
+type WxString* = ptr object
 
-type WxFrame* = distinct pointer
-type WxWindow* = distinct pointer
-type WxPanel* = distinct pointer
-type WxMessageDialog* = distinct pointer
+# Baseclass for all widgets!
+type WxWindow* = ptr object
 
-type WxClosureTypes* = distinct pointer
+# container widgets
+type WxFrame* = WxWindow
+type WxPanel* = WxWindow
 
-type WxMenu* = pointer
-type WxMenuBar* = pointer
-type WxMenuItem* = pointer
-
-type WxControl* = pointer
-type WxButton* = WxControl
+# container controls
+type WxControl* = WxWindow
 type WxListCtrl* = WxControl
-type WxStaticText = WxControl
+type WxStaticText* = WxControl
+type WxButton* = WxControl
 
-type WxSizer* = pointer
+type WxMessageDialog* = ptr object
+
+type WxClosureTypes* = ptr object
+
+type WxMenu* = ptr object
+type WxMenuBar* = ptr object
+type WxMenuItem* = ptr object
+
+type WxSizer* = ptr object
 type WxBoxSizer* = WxSizer
 
 type WxSize* = ptr tuple[w, h: cint]

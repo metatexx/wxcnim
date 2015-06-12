@@ -12,33 +12,15 @@ include wxtypes
 include wxevents
 include wxdefs
 include wxprocs
-
 include wxunpacking
-
-#template wxPos*(x:int ,y:int): stmt {.immediate.} =
-#  x, y
-
-type WxNil = distinct int
-const wxNil*: WxNil = WxNil(0)
 
 converter toWxId*(x: int): WxId = result = cast[WxId](x)
 converter toWxId*(x: WxStandardId): WxId = cast[WxId](x)
 
-converter toWxSizer*(x: WxBoxSizer): WxSizer = cast[WxSizer](x)
-
-converter toWxWindow*(x: WxNil): WxWindow = cast[WxWindow](0)
-converter toWxWindow*(x: WxFrame): WxWindow = cast[WxWindow](x)
-converter toWxWindow*(x: WxButton): WxWindow = cast[WxWindow](x)
-
-converter toWxClosureTypes*(x: WxNil): WxClosureTypes = cast[WxClosureTypes](0)
 converter toWxClosureTypes*(x: WxApp): WxClosureTypes = cast[WxClosureTypes](x)
-converter toWxClosureTypes*(x: WxFrame): WxClosureTypes = cast[WxClosureTypes](x)
+converter toWxClosureTypes*(x: WxWindow): WxClosureTypes = cast[WxClosureTypes](x)
 
-#converter toCInt*(x: WxAlignment): cint = cast[cint](x)
-#converter toCInt*(x: WxDirection): cint = result = cast[int64](x)
-#converter toCInt*(x: WxStretch): cint = result = cast[cint](x)
-
-# convert a WxString into an UTF8 String
+# Create a UTF8 String from an WxString (does not consume the WxString)
 proc `$`*(self: WxString): string =
   echo "DBG: Create string from WxString called"
   if self.wxString_Length == 0:
@@ -50,14 +32,15 @@ proc `$`*(self: WxString): string =
     for w in s:
       result.add Rune(w).toUTF8
 
-# Makes a WxString from a "string"
+# Makes a new WxString from a "string"
 converter toWxString*(s: string): WxString = 
   echo "DBG: string->WxString conversion for " & s
   result = wxString_CreateUTF8(s)
 
-# Deleting a WxString (which was returned by a funtion)
+# Deleting a WxString
 proc delete*(s: WxString) = wxString_Delete s
 
+# Converts a WxString to a string (and frees the WxString)
 converter toString*(s: WxString): string =
   result = $s
   echo "DBG: WxString->string conversion for " & result

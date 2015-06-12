@@ -65,35 +65,35 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let txt = ELJApp_GetUserName()
   echo "txt is: " & normalize(txt)
 
-  let mainFrame = wxFrame_Create( wxNil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame_Create(nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
 
-  let menuBar = wxMenuBar_Create(0)
-  let fileMenu = wxMenu_Create("", 0)
-  let fileNew = wxMenuItem_CreateEx(-1, "Neu", "", 0, nil)
+  let menuBar = wxMenuBar(0)
+  let fileMenu = wxMenu("", 0)
+  let fileNew = wxMenuItemEx(-1, "Neu", "", 0, nil)
   
-  let fileNewId = fileNew.wxMenuItem_GetId
+  let fileNewId = fileNew.getId
 
-  wxMenu_AppendItem(fileMenu, fileNew)
+  fileMenu.appendItem(fileNew)
   discard wxMenuBar_Append(menuBar, fileMenu, "File")
   wxFrame_SetMenuBar(mainFrame, menuBar)
 
-  var cl_menu_new = wxClosure_Create(myMenuSelected, app)
-  discard wxEvtHandler_Connect(menuBar, fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
+  var cl_menu_new = wxClosure(myMenuSelected, app)
+  discard menuBar.connect(fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
 
   # creating a virutal sizer as container
   let sizer = wxBoxSizer(wxVERTICAL)
   
   # our Button
   let bt = makeButton(mainFrame) # Button hinzufügen
-  wxSizer_AddWindow(sizer, bt, 0, wxEXPAND + wxALL, 10, nil)
+  sizer.add(bt, 0, wxEXPAND + wxALL, 10, nil)
 
   # add some text (right aligned for fun)
-  let st = wxStaticText_Create(mainFrame, -1, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
-  wxSizer_AddWindow(sizer, st, 0, wxEXPAND + wxALL, 10, nil)
+  let st = wxStaticText(mainFrame, -1, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
+  sizer.add(st, 0, wxEXPAND + wxALL, 10, nil)
 
   # The lable is not so static :)
   # following uses converters "magically"
-  wxControl_SetLabel(st, "User: " & toUpper(ELJApp_GetUserName()))
+  st.setLabel("User: " & toUpper(ELJApp_GetUserName()))
 
   # memory leak testing (you need to free GetLabel)
   when false:
@@ -124,7 +124,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
     # wxcUnpacking(add, wxSizer_AddWindow)
     # wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
 
-    let lcTable = mainFrame.listCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
+    let lcTable = mainFrame.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
     sizer.add(lcTable, 0, wxEXPAND or wxAll, 10, nil)
     discard lcTable.insertColumn(-1, "Vorname", 0, 100)
     discard lcTable.insertColumn(-1, "Name", 0, 100)
@@ -142,10 +142,9 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # this constrains the windows max size
   wxTopLevelWindow_SetMaxSize(mainFrame, 800, 600)
   
-  wxWindow_Fit mainFrame
-  
-  wxWindow_Show mainFrame
-  wxWindow_Raise mainFrame
+  mainFrame.fit
+  mainFrame.show
+  mainFrame.raize
   
   echo "appMain finished"
 
@@ -155,7 +154,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
 when isMainModule:
   # Initialising and running "appMain"
-  let cl = wxClosure_Create(appMain, wxNil) # Create Closure for appMain()
+  let cl = wxClosure_Create(appMain, nil) # Create Closure for appMain()
   ELJApp_InitializeC(cl, 0, nil) # Das startet alles und geht in den Loop
 
   # ... Mainloop running here ...
