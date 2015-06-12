@@ -30,6 +30,8 @@ type WxMenuItem* = ptr object
 type WxSizer* = ptr object
 type WxBoxSizer* = WxSizer
 
+type WxSizeObj* = tuple[w, h: int]
+
 type WxSize* = ptr tuple[w, h: cint]
-type WxPos* = ptr tuple[w, h: cint]
+type WxPosPtr* = ptr tuple[w, h: cint]
 #type Rect = (int, int, int, int)

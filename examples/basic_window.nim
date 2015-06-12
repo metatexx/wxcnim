@@ -24,7 +24,7 @@ proc myButtonClicked(fun: pointer, parent: WxWindow, evn: pointer) =
 
   # This will show a no/yes modal dialog
   #let parent = cast[WxWindow](data)
-  let msgDlg = wxMessageDialog_Create(
+  let msgDlg = wxMessageDialog(
     parent,
     "Do you really want to quit?", 
     "You pushed the button!",
@@ -45,10 +45,10 @@ proc myButtonClicked(fun: pointer, parent: WxWindow, evn: pointer) =
 
 
 proc makeButton(parent: WxFrame): WxButton =
-  result = wxButton_Create(parent, -1, "Push Me!", 0, 0, -1, -1, 0)
-  var cl = wxClosure_Create(myButtonClicked, parent)
+  result = wxButton(parent, -1, "Push Me!", 0, 0, -1, -1, 0)
+  var cl = wxClosure(myButtonClicked, parent)
   echo "cl: ", myButtonClicked.repr
-  discard wxEvtHandler_Connect(result, -1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
+  discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
 
 
 proc appMain(argc: pointer, argv: openArray[cstring]) =
@@ -56,16 +56,16 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   #ELJApp_InitAllImageHandlers() # probably not needed
 
-  let app = ELJApp_GetApp()
+  let app = eljGetApp()
 
   #echo ELJApp_Initialized()
-  let dispSize = ELJApp_DisplaySize()
+  let dispSize = eljDisplaySize()
   echo dispSize.w, " x ", dispSize.h
 
-  let txt = ELJApp_GetUserName()
+  let txt = eljGetUserName()
   echo "txt is: " & normalize(txt)
 
-  let mainFrame = wxFrame_Create(nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame(nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
 
   let menuBar = wxMenuBar(0)
   let fileMenu = wxMenu("", 0)
@@ -74,7 +74,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let fileNewId = fileNew.getId
 
   fileMenu.appendItem(fileNew)
-  discard wxMenuBar_Append(menuBar, fileMenu, "File")
+  discard menuBar.append(fileMenu, "File")
   wxFrame_SetMenuBar(mainFrame, menuBar)
 
   var cl_menu_new = wxClosure(myMenuSelected, app)
@@ -93,58 +93,47 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # The lable is not so static :)
   # following uses converters "magically"
-  st.setLabel("User: " & toUpper(ELJApp_GetUserName()))
+  st.setLabel("User: " & toUpper(eljGetUserName()))
 
   # memory leak testing (you need to free GetLabel)
   when false:
     for x in 0..1000:
-      let tmp = st.wxWindow_GetLabel
+      let tmp = st.getLabel
       #echo tmp
       #wxString_Delete tmp
       tmp.delete
 
     for x in 0..1000:
-      let tmp: string = st.wxWindow_GetLabel
+      let tmp: string = st.getLabel
       echo tmp
 
   # ListControl (some of the most important widgets for our case)
 
-  when false: # old code
-    let lcTable = wxListCtrl_Create(mainFrame, wxID_ANY, 0, 0, -1, 100, wxLC_REPORT)
-    wxSizer_AddWindow(sizer, lcTable, 0, wxEXPAND + wxAll, 10, nil)
-    discard wxListCtrl_InsertColumn(lcTable, -1, "Vorname", 0, 100)
-    discard wxListCtrl_InsertColumn(lcTable, -1, "Name", 0, 100)
-    discard wxListCtrl_InsertColumn(lcTable, 0, "Id", 0, 30) # insert 'in front'
-    discard wxListCtrl_InsertColumn(lcTable, -1, "Alter", 0, 100)
-
-  else:
-    # new code using the unpacker Macro like this:
-    #
-    # wxcUnpacking(listCtrl, wxListCtrl_Create)
-    # wxcUnpacking(add, wxSizer_AddWindow)
-    # wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
-
-    let lcTable = mainFrame.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
-    sizer.add(lcTable, 0, wxEXPAND or wxAll, 10, nil)
-    discard lcTable.insertColumn(-1, "Vorname", 0, 100)
-    discard lcTable.insertColumn(-1, "Name", 0, 100)
-    discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
-    discard lcTable.insertColumn(-1, "Alter", 0, 100)
+  let lcTable = mainFrame.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
+  sizer.add(lcTable, 0, wxEXPAND or wxAll, 10, nil)
+  discard lcTable.insertColumn(-1, "Vorname", 0, 100)
+  discard lcTable.insertColumn(-1, "Name", 0, 100)
+  discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
+  discard lcTable.insertColumn(-1, "Alter", 0, 100)
   
   #wxSizer_Layout(sizer)
   
-  # Add the souer into the main window
+  # Add the sizer into the main window
   mainFrame.setSizer(sizer)
 
+  # playing around .. using array as argument
+  let size_array: array = [100,150]
   # this constrains the windows min size
-  wxTopLevelWindow_SetMinSize(mainFrame, 100, 150)
+  mainFrame.setMinSize(size_array)
 
+  # playing around .. using tuple as argument
+  var tuple_size: WxSizeObj = (800, 600)
   # this constrains the windows max size
-  wxTopLevelWindow_SetMaxSize(mainFrame, 800, 600)
+  mainFrame.setMaxSize(tuple_size)
   
   mainFrame.fit
   mainFrame.show
-  mainFrame.raize
+  mainFrame.`raise` # do I want mainFrame.raize?
   
   echo "appMain finished"
 
@@ -154,8 +143,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
 when isMainModule:
   # Initialising and running "appMain"
-  let cl = wxClosure_Create(appMain, nil) # Create Closure for appMain()
-  ELJApp_InitializeC(cl, 0, nil) # Das startet alles und geht in den Loop
+  let cl = wxClosure(appMain, nil) # Create Closure for appMain()
+  cl.initializeC(0, nil) # Das startet alles und geht in den Loop
 
   # ... Mainloop running here ...
 

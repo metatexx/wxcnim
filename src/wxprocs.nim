@@ -18,13 +18,13 @@ proc ELJApp_ExitMainLoop*()
 proc ELJApp_SetTopWindow*( wnd: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc ELJApp_MainLoop*(): cint
+proc ELJApp_MainLoop*(): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc ELJApp_GetApp*(): WxApp
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc ELJApp_Pending*(): cint
+proc ELJApp_Pending*(): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc ELJApp_Initialized*(): bool
@@ -56,10 +56,10 @@ proc wxString_CreateUTF8*(buffer: cstring): WxString
 proc wxString_Delete*(s: WxString)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxString_Length*(s: WxString): cint
+proc wxString_Length*(s: WxString): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxString_GetString*(s: WxString, b: pointer): cint
+proc wxString_GetString*(s: WxString, b: pointer): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 #proc wxClosure_Create*(fun: proc {.stdcall.} , data: pointer): WxClosure
@@ -71,7 +71,7 @@ proc wxClosure_Create*(fun: proc {.stdcall.} , data: WxClosureTypes): WxClosure
 # wxFrame
 
 proc wxFrame_Create*(p: WxWindow, id: WxId, txt: WxString,
-  x: cint, y: cint, w: cint, h: cint , stl: WxFrameStyle): WxFrame
+  x: int, y: int, w: int, h: int , stl: WxFrameStyle): WxFrame
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxFrame_SetMenuBar*(obj: WxFrame, menubar: WxMenuBar)
@@ -105,11 +105,11 @@ proc wxWindow_SetSizer*(obj: WxWindow, sizer: WxSizer)
 
 # wxTopLevelWindow
 
-proc wxTopLevelWindow_SetMaxSize*(obj: WxWindow, w,h: cint)
+proc wxTopLevelWindow_SetMaxSize*(obj: WxWindow, w,h: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 
-proc wxTopLevelWindow_SetMinSize*(obj: WxWindow, w,h: cint)
+proc wxTopLevelWindow_SetMinSize*(obj: WxWindow, w,h: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxTopLevelWindow_Maximize*(obj: WxWindow)
@@ -128,7 +128,7 @@ proc wxMenu_GetLabelText*(obj: WxWindow): WxString
 
 # wxMenuBar
 
-proc wxMenuBar_Create*(style: cint): WxMenuBar
+proc wxMenuBar_Create*(style: int): WxMenuBar
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxMenuBar_Append*(onj: WxMenuBar, menu: WxMenu, title: WxString): int
@@ -139,7 +139,7 @@ proc wxMenuBar_Append*(onj: WxMenuBar, menu: WxMenu, title: WxString): int
 proc wxMenuItem_Create*(): WxMenuItem
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxMenuItem_CreateEx*(id: cint, label: WxString, help: WxString,
+proc wxMenuItem_CreateEx*(id: int, label: WxString, help: WxString,
   itemkind: int, submenu: WxMenu): WxMenuItem
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -166,7 +166,7 @@ proc wxMenuItem_SetItemLabel*(obj: WxMenuItem, str: WxString)
 
 # wxButton
 
-proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: cint, top: cint, wdt: cint, hgt: cint, stl: cint): WxButton
+proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: int, top: int, wdt: int, hgt: int, stl: int): WxButton
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxBoxSizer
