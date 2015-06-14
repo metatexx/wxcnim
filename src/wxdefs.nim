@@ -210,6 +210,10 @@ const
   # a mask to extract border style from the combination of flags
   wxBORDER_MASK*: WxBorder = 0x1f200000
 
+const wxSIMPLE_BORDER* = wxBORDER_SIMPLE
+const wxSTATIC_BORDER* = wxBORDER_STATIC
+const wxRAISED_BORDER* = wxBORDER_RAISED
+const wxSUNKEN_BORDER* = wxBORDER_SUNKEN
 
 type WxDialogSpecs* = int64
 

@@ -14,6 +14,7 @@ type WxWindow* = ptr object
 # container widgets
 type WxFrame* = WxWindow
 type WxPanel* = WxWindow
+type WxScrolledWindow* = WxWindow
 
 # container controls
 type WxControl* = WxWindow

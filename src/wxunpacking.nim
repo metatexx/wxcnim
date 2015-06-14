@@ -145,8 +145,22 @@ wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
 wxcUnpackingT(WxWindow, setMinSize, wxTopLevelWindow_SetMinSize)
 wxcUnpackingT(WxWindow, setMaxSize, wxTopLevelWindow_SetMaxSize)
 
-# wxFrame
+# WxScrolledWindow
+
+wxcUnpacking(wxScrolledWindow, wxScrolledWindow_Create)
+
+wxcUnpackingT(WxScrolledWindow, adjustScrollbars, wxScrolledWindow_AdjustScrollbars)
+wxcUnpackingT(WxScrolledWindow, enableScrolling, wxScrolledWindow_EnableScrolling)
+wxcUnpackingT(WxScrolledWindow, showScrollbars, wxScrolledWindow_ShowScrollbars)
+wxcUnpackingT(WxScrolledWindow, setScrollbars, wxScrolledWindow_SetScrollbars)
+wxcUnpackingT(WxScrolledWindow, setScrollRate, wxScrolledWindow_SetScrollRate)
+wxcUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
+
+# WxFrame
 wxcUnpacking(wxFrame, wxFrame_Create)
+
+# WxPanel
+wxcUnpacking(wxPanel, wxPanel_Create)
 
 # Controls: General
 wxcUnpacking(setLabel, wxControl_SetLabel)

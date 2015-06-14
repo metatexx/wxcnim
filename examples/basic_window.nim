@@ -3,6 +3,9 @@
 
 import wxcnim
 import strutils
+import os
+
+const ScolledId = 1 
 
 #import mxstring (not needed atm)
 
@@ -47,13 +50,22 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   if cast[int](evn) == 0:
     return
 
-  echo "Clicked '", fun.repr
-  echo "Clicker2 Event: ", evn.repr
-  echo "Clicker2 Data: ", parent.repr
+#  echo "Clicked '", fun.repr
+#  echo "Clicker2 Event: ", evn.repr
+#  echo "Clicker2 Data: ", parent.repr
+  
+  # just to have something going on we show the current scrolled window offset
+  let scrolled = ELJApp_FindWindowById(ScolledId, nil)
+  var x, y: int
+
+  wxScrolledWindow_GetViewStart(scrolled, addr x, addr y)
+  #discard wxFrame_ShowFullScreen(mainFrame, true, 0)
+  echo y
+
 
 
 proc makeButton(parent: WxFrame, text: string, cb: proc): WxButton =
-  result = wxButton(parent, -1, text, 0, 0, -1, -1, 0)
+  result = wxButton(parent, wxID_ANY, text, 0, 0, -1, -1, 0)
   var cl = wxClosure(cb, parent)
   #echo "cl: ", result.repr
   discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
@@ -115,23 +127,20 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let wxbmp = wxBitmapLoad("bitmap1.png", wxBITMAP_TYPE_PNG)
   
   # mache a borderless button (just the bitmap)
-  let bt4 = wxBitmapButton(mainFrame, -1, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
+  let bt4 = wxBitmapButton(mainFrame, wxID_ANY, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
   hsiz.addWindow(bt4, 0, wxALL xor wxLEFT, 10, nil)
 
   # here i reuse the loaded bitmap for a button with border.
   # I guess thats wrong memorywise but not sure.
-  let bt5 = wxBitmapButton(mainFrame, -1, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
+  let bt5 = wxBitmapButton(mainFrame, wxID_ANY, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
   hsiz.addWindow(bt5, 0, wxALL xor wxLEFT, 10, nil)
 
   hsiz.layout
  
-  # so you can't make the window smaller than the buttons sizer
-  hsiz.setSizeHints(mainFrame)
-
   vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
 
   # add some text (right aligned for fun)
-  let st = wxStaticText(mainFrame, -1, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
+  let st = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
   vsiz.addWindow(st, 0, wxEXPAND + wxALL, 10, nil)
 
   # The lable is not so static :)
@@ -159,8 +168,30 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
   discard lcTable.insertColumn(-1, "Alter", 0, 100)
   
-  #wxSizer_Layout(sizer)
+  # A scrolling panel!
+  let scrolled = wxScrolledWindow(mainFrame, ScolledId, 0, 0, -1, 100, wxSUNKEN_BORDER)
   
+  let scsiz = wxBoxSizer(wxVERTICAL)
+  let texts = ["The","Brown","Fox","jumps","over","the","lazy","dog"]
+  
+  for t in texts:
+    let st = wxStaticText(scrolled, -1, t, 0, 0, -1, -1, 0)
+    scsiz.addWindow(st, 0, wxEXPAND or wxALL, 0, nil)
+  
+  scrolled.setSizer(scsiz)
+  #scrolled.setScrollbars(0, 10, 0, 0, 0, 0, false) # well
+  scrolled.setScrollRate(0, 1) # this makes the scrollbars appear :)
+  #scrolled.adjustScrollbars # ?
+  #scrolled.enableScrolling(false,true) # stops scrolling but not the scrollbar movement
+  #scrolled.showScrollbars(0,0) ??
+  
+ 
+  vsiz.addWindow(scrolled, 0, wxEXPAND or wxAll, 10, nil)
+
+  # so you can't make the window smaller than the buttons sizer
+  hsiz.setSizeHints(mainFrame)
+  #vsiz.setSizeHints(mainFrame)
+
   # Add the sizer into the main window
   mainFrame.setSizer(vsiz)
 
@@ -174,12 +205,13 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   var tuple_size: WxSizeObj = (800, 600)
   # this constrains the windows max size
   mainFrame.setMaxSize(tuple_size)
-  
+
   mainFrame.fit
   mainFrame.show
   mainFrame.`raise` # do I want mainFrame.raize?
-  
-  #discard wxFrame_ShowFullScreen(mainFrame, true, 0)
+
+  # after the mainframe is visible we can "scroll" with a proc
+  scrolled.scroll(0, 10)
   
   echo "appMain finished"
 

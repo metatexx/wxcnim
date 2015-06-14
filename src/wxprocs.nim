@@ -48,6 +48,9 @@ proc ELJApp_InitAllImageHandlers*()
 proc ELJApp_GetUserHome*(): WxString
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc ELJApp_FindWindowById*(id: int, prt: WxWindow): WxWindow
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxString
 
 proc wxString_CreateUTF8*(buffer: cstring): WxString
@@ -120,6 +123,33 @@ proc wxTopLevelWindow_SetMinSize*(obj: WxWindow, w,h: int)
 
 proc wxTopLevelWindow_Maximize*(obj: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxScrolledWindow
+
+proc wxScrolledWindow_Create*(prt: WxWindow, id: int, lft, top, wdt, hgt: int, stl: int): WxScrolledWindow
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxScrolledWindow_AdjustScrollbars*(obj: WxScrolledWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxScrolledWindow_EnableScrolling*(obj: WxScrolledWindow, scrollh, scrollv: bool)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxScrolledWindow_ShowScrollbars*(obj: WxScrolledWindow, showh, showv: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxScrolledWindow_SetScrollRate*(obj: WxScrolledWindow, rateh, ratev: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxScrolledWindow_SetScrollbars*(obj: WxScrolledWindow, pixelsPerUnitX, pixelsPerUnitY, noUnitsX, noUnitsY, xPos, yPos: int, noRefresh:bool )
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxScrolledWindow_Scroll*(obj: WxScrolledWindow, x_pos, y_pos: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+  
+proc wxScrolledWindow_GetViewStart*(obj: WxScrolledWindow, x: ptr int, y: ptr int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 
 # wxMenu
 
@@ -246,7 +276,7 @@ proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: cint, heading: WxString, for
 proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: cint, data: WxClosure): cint
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxPanel_Create*(prt: WxWindow , id: WxId, lft: cint, top: cint, wdt: cint, hgt: cint, stl: cint): WxPanel
+proc wxPanel_Create*(prt: WxWindow , id: WxId, lft, top, wdt, hgt: int, stl: int): WxPanel
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxMessageDialog_Create*(prt: WxWindow, msg: WxString, cap: WxString, spc: WxDialogSpecs): WxMessageDialog
