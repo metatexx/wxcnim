@@ -6,6 +6,8 @@ type WxClosure* = ptr object
 type WxApp* = ptr object
 type WxString* = ptr object
 
+type WxBitmap* = ptr object
+
 # Baseclass for all widgets!
 type WxWindow* = ptr object
 
@@ -18,6 +20,7 @@ type WxControl* = WxWindow
 type WxListCtrl* = WxControl
 type WxStaticText* = WxControl
 type WxButton* = WxControl
+type WxBitmapButton* = WxControl
 
 type WxMessageDialog* = ptr object
 

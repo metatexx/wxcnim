@@ -14,7 +14,7 @@ proc myMenuSelected(fun, data, evn: pointer) =
   # bell (wau wau)
   ELJApp_Bell()
 
-proc myButtonClicked(fun: pointer, parent: WxWindow, evn: pointer) =
+proc button1Clicked(fun: pointer, parent: WxWindow, evn: pointer) =
   if cast[int](evn) == 0:
     return
 
@@ -43,18 +43,28 @@ proc myButtonClicked(fun: pointer, parent: WxWindow, evn: pointer) =
   # cleaning up the dialog and exit
   msgDlg.wxMessageDialog_Delete
 
+proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
+  if cast[int](evn) == 0:
+    return
 
-proc makeButton(parent: WxFrame): WxButton =
-  result = wxButton(parent, -1, "Push Me!", 0, 0, -1, -1, 0)
-  var cl = wxClosure(myButtonClicked, parent)
-  echo "cl: ", myButtonClicked.repr
+  echo "Clicked '", fun.repr
+  echo "Clicker2 Event: ", evn.repr
+  echo "Clicker2 Data: ", parent.repr
+
+
+proc makeButton(parent: WxFrame, text: string, cb: proc): WxButton =
+  result = wxButton(parent, -1, text, 0, 0, -1, -1, 0)
+  var cl = wxClosure(cb, parent)
+  echo "cl: ", result.repr
   discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
 
 
 proc appMain(argc: pointer, argv: openArray[cstring]) =
   # argc und argv do not make sense to me :(
 
-  #ELJApp_InitAllImageHandlers() # probably not needed
+  # we need this so wxImage can load our wxBitmap from
+  # the PNG file later!
+  ELJApp_InitAllImageHandlers() # probably not needed
 
   let app = eljGetApp()
 
@@ -80,16 +90,39 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   var cl_menu_new = wxClosure(myMenuSelected, app)
   discard menuBar.connect(fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
 
-  # creating a virutal sizer as container
-  let sizer = wxBoxSizer(wxVERTICAL)
-  
-  # our Button
-  let bt = makeButton(mainFrame) # Button hinzufügen
-  sizer.add(bt, 0, wxEXPAND + wxALL, 10, nil)
+  # creating a vertical sizer
+  let vsiz = wxBoxSizer(wxVERTICAL)
+
+  # creating a horizontal sizer
+  let hsiz = wxBoxSizer(wxHORIZONTAL)
+ 
+  # our Buttons
+  hsiz.add(wxSize(100,100),  0, 0, 0, nil)
+    
+  let bt1 = makeButton(mainFrame,"Click Me 1", button1Clicked) # Button hinzufügen
+  hsiz.addWindow(bt1, 0, wxEXPAND or wxALL , 10, nil)
+
+  let bt2 = makeButton(mainFrame,"Click Me 2", button2Clicked) # Button hinzufügen
+  hsiz.addWindow(bt2, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+
+  let bt3 = makeButton(mainFrame,"Click Me 3", button2Clicked) # Button hinzufügen
+  hsiz.addWindow(bt3, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+
+  # make something more complex: a bitmap button
+  let wxbmp = wxBitmapLoad("bitmap1.png", wxBITMAP_TYPE_PNG)
+  let bt4 = wxBitmapButton(mainFrame, -1, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
+  hsiz.addWindow(bt4, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+
+  let bt5 = wxBitmapButton(mainFrame, -1, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
+  hsiz.addWindow(bt5, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+
+  #hsiz.layout
+ 
+  vsiz.addSizer(hsiz, 0, 0, 0, nil)
 
   # add some text (right aligned for fun)
   let st = wxStaticText(mainFrame, -1, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
-  sizer.add(st, 0, wxEXPAND + wxALL, 10, nil)
+  vsiz.addWindow(st, 0, wxEXPAND + wxALL, 10, nil)
 
   # The lable is not so static :)
   # following uses converters "magically"
@@ -110,7 +143,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # ListControl (some of the most important widgets for our case)
 
   let lcTable = mainFrame.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
-  sizer.add(lcTable, 0, wxEXPAND or wxAll, 10, nil)
+  vsiz.addWindow(lcTable, 0, wxEXPAND or wxAll, 10, nil)
   discard lcTable.insertColumn(-1, "Vorname", 0, 100)
   discard lcTable.insertColumn(-1, "Name", 0, 100)
   discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
@@ -119,7 +152,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   #wxSizer_Layout(sizer)
   
   # Add the sizer into the main window
-  mainFrame.setSizer(sizer)
+  mainFrame.setSizer(vsiz)
 
   # playing around .. using array as argument
   let size_array: array = [100,150]
@@ -134,6 +167,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   mainFrame.fit
   mainFrame.show
   mainFrame.`raise` # do I want mainFrame.raize?
+  
+  #discard wxFrame_ShowFullScreen(mainFrame, true, 0)
   
   echo "appMain finished"
 

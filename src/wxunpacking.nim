@@ -99,6 +99,20 @@ wxcUnpacking(eljGetApp, ELJApp_GetApp)
 wxcUnpacking(eljDisplaySize, ELJApp_DisplaySize)
 wxcUnpacking(eljGetUserName, ELJApp_GetUserName)
 
+# wxString
+wxcUnpackingT(WxString, delete, wxString_Delete)
+
+# wxBitmap
+wxcUnpacking(wxBitmapLoad, wxBitmap_CreateLoad)
+
+wxcUnpackingT(WxBitmap, delete, wxBitmap_Delete)
+wxcUnpackingT(WxBitmap, getHeight, wxBitmap_GetHeight)
+wxcUnpackingT(WxBitmap, getWidth, wxBitmap_GetWidth)
+
+# wxBitmapButton
+wxcUnpacking(wxBitmapButton, wxBitmapButton_Create)
+
+
 # Events + Closure (Glue)
 wxcUnpacking(wxClosure, wxClosure_Create)
 
@@ -109,7 +123,11 @@ wxcUnpacking(connect, wxEvtHandler_Connect)
 # Sizers
 wxcUnpacking(wxBoxSizer, wxBoxSizer_Create)
 
-wxcUnpackingT(WxSizer, add, wxSizer_AddWindow)
+wxcUnpackingT(WxSizer, add, wxSizer_Add)
+wxcUnpackingT(WxSizer, addWindow, wxSizer_AddWindow)
+wxcUnpackingT(WxSizer, addSizer, wxSizer_AddSizer)
+
+wxcUnpackingT(WxSizer, layout, wxSizer_Layout)
 
 wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
 

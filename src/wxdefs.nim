@@ -193,6 +193,24 @@ const
   wxCAPTION*:WxFrameStyle = 0x20000000
   wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656    
 
+type WxBorder* = int64
+
+const
+  # this is different from wxBORDER_NONE as by default the controls do have border
+  wxBORDER_DEFAULT*: WxBorder = 0
+
+  wxBORDER_NONE*: WxBorder = 0x00200000
+  wxBORDER_STATIC*: WxBorder = 0x01000000
+  wxBORDER_SIMPLE*: WxBorder = 0x02000000
+  wxBORDER_RAISED*: WxBorder = 0x04000000
+  wxBORDER_SUNKEN*: WxBorder = 0x08000000
+  wxBORDER_DOUBLE*: WxBorder = 0x10000000 # deprecated
+  wxBORDER_THEME*: WxBorder = wxBORDER_DOUBLE
+
+  # a mask to extract border style from the combination of flags
+  wxBORDER_MASK*: WxBorder = 0x1f200000
+
+
 type WxDialogSpecs* = int64
 
 const
@@ -330,3 +348,43 @@ const
 
   # a mask to extract direction from the combination of flags
   wxDIRECTION_MASK* = wxALL
+
+type WxBitmapType* = enum
+  wxBITMAP_TYPE_INVALID,          # should be == 0 for compatibility!
+  wxBITMAP_TYPE_BMP,
+  wxBITMAP_TYPE_BMP_RESOURCE,
+  #wxBITMAP_TYPE_RESOURCE = wxBITMAP_TYPE_BMP_RESOURCE,
+  wxBITMAP_TYPE_ICO,
+  wxBITMAP_TYPE_ICO_RESOURCE,
+  wxBITMAP_TYPE_CUR,
+  wxBITMAP_TYPE_CUR_RESOURCE,
+  wxBITMAP_TYPE_XBM,
+  wxBITMAP_TYPE_XBM_DATA,
+  wxBITMAP_TYPE_XPM,
+  wxBITMAP_TYPE_XPM_DATA,
+  wxBITMAP_TYPE_TIFF,
+  #wxBITMAP_TYPE_TIF = wxBITMAP_TYPE_TIFF,
+  wxBITMAP_TYPE_TIFF_RESOURCE,
+  #wxBITMAP_TYPE_TIF_RESOURCE = wxBITMAP_TYPE_TIFF_RESOURCE,
+  wxBITMAP_TYPE_GIF,
+  wxBITMAP_TYPE_GIF_RESOURCE,
+  wxBITMAP_TYPE_PNG,
+  wxBITMAP_TYPE_PNG_RESOURCE,
+  wxBITMAP_TYPE_JPEG,
+  wxBITMAP_TYPE_JPEG_RESOURCE,
+  wxBITMAP_TYPE_PNM,
+  wxBITMAP_TYPE_PNM_RESOURCE,
+  wxBITMAP_TYPE_PCX,
+  wxBITMAP_TYPE_PCX_RESOURCE,
+  wxBITMAP_TYPE_PICT,
+  wxBITMAP_TYPE_PICT_RESOURCE,
+  wxBITMAP_TYPE_ICON,
+  wxBITMAP_TYPE_ICON_RESOURCE,
+  wxBITMAP_TYPE_ANI,
+  wxBITMAP_TYPE_IFF,
+  wxBITMAP_TYPE_TGA,
+  wxBITMAP_TYPE_MACCURSOR,
+  wxBITMAP_TYPE_MACCURSOR_RESOURCE,
+
+  wxBITMAP_TYPE_MAX,
+  wxBITMAP_TYPE_ANY = 50

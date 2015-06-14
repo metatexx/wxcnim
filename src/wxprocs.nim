@@ -77,6 +77,9 @@ proc wxFrame_Create*(p: WxWindow, id: WxId, txt: WxString,
 proc wxFrame_SetMenuBar*(obj: WxFrame, menubar: WxMenuBar)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxFrame_ShowFullScreen*(obj: WxFrame, show: bool, style: int): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxWindow
 
 proc wxWindow_Raise*(p: WxWindow)
@@ -169,6 +172,25 @@ proc wxMenuItem_SetItemLabel*(obj: WxMenuItem, str: WxString)
 proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: int, top: int, wdt: int, hgt: int, stl: int): WxButton
   {.cdecl, dynlib: WXCLibName, importc.}
 
+# wxBitmap
+
+proc wxBitmap_CreateLoad*(name: WxString, kind: WxBitmapType): WxBitmap
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBitmap_Delete*(obj: WxBitmap)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBitmap_GetHeight*(obj: WxBitmap): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBitmap_GetWidth*(obj: WxBitmap): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxBitmapButton
+
+proc wxBitmapButton_Create*(prt: WxWindow, id: int, bmp: WxBitmap, lft, top, wdt, hgt: int, stl: int): WxBitmapButton
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxBoxSizer
 
 #TClass(wxSize) wxBoxSizer_CalcMin( TSelf(wxBoxSizer) _obj );
@@ -179,7 +201,13 @@ proc wxBoxSizer_Create*(orient: WxOrientation): WxBoxSizer
 
 # wxSizer (abstract)
 
-proc wxSizer_AddWindow*(obj: WxSizer, window: WxWindow, option: int64, flag: int64, border: int64, userData: pointer)
+proc wxSizer_Add*(obj: WxSizer, width, height, option, flag, border: int, userData: pointer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxSizer_AddWindow*(obj: WxSizer, window: WxWindow, option: int, flag: int, border: int, userData: pointer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, option, flag, border: int, userData: pointer)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_Layout*(obj: WxSizer)

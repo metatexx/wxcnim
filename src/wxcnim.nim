@@ -38,7 +38,7 @@ converter toWxString*(s: string): WxString =
   result = wxString_CreateUTF8(s)
 
 # Deleting a WxString
-proc delete*(s: WxString) = wxString_Delete s
+#proc delete*(s: WxString) = wxString_Delete s
 
 # Converts a WxString to a string (and frees the WxString)
 converter toString*(s: WxString): string =
