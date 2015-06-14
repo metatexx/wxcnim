@@ -143,8 +143,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let st1 = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
  
   # highlight the background of the static text window
-  let col1 = wxColourRGB(255,255,200,255)
-  let col2 = wxColourRGB(255,220,200,255)
+  let col1 = wxColourRGB(255,255,200)
+  let col2 = wxColourRGB(255,220,200)
   discard st1.setBackgroundColour(col1)
 
   vsiz.addWindow(st1, 0, wxALL or wxEXPAND, 10, nil)

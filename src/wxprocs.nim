@@ -210,7 +210,7 @@ proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: int, top: int
 
 # wxColour
 
-proc wxColour_CreateRGB*(red, green, blue, alpha: int): WxColour
+proc wxColour_CreateRGB*(red, green, blue, alpha: int = 255): WxColour
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxBitmap
