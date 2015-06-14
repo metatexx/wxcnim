@@ -112,6 +112,9 @@ proc wxWindow_SetSizer*(obj: WxWindow, sizer: WxSizer)
 proc wxWindow_SetSizeHints*(obj: WxWindow, minW, minH, maxW, maxH, incW, incH: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_SetBackgroundColour*(obj: WxWindow, colour: WxColour): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxTopLevelWindow
 
 proc wxTopLevelWindow_SetMaxSize*(obj: WxWindow, w,h: int)
@@ -203,6 +206,11 @@ proc wxMenuItem_SetItemLabel*(obj: WxMenuItem, str: WxString)
 # wxButton
 
 proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: int, top: int, wdt: int, hgt: int, stl: int): WxButton
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxColour
+
+proc wxColour_CreateRGB*(red, green, blue, alpha: int): WxColour
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxBitmap

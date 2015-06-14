@@ -113,6 +113,8 @@ wxcUnpackingT(WxBitmap, getWidth, wxBitmap_GetWidth)
 # wxBitmapButton
 wxcUnpacking(wxBitmapButton, wxBitmapButton_Create)
 
+# wxColour
+wxcUnpacking(wxColourRGB, wxColour_CreateRGB)
 
 # Events + Closure (Glue)
 wxcUnpacking(wxClosure, wxClosure_Create)
@@ -139,6 +141,7 @@ wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
 wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
 
 wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
+wxcUnpackingT(WxWindow, setBackgroundColour, wxWindow_SetBackgroundColour)
 
 # WxTopLevelWindow
 

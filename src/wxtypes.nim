@@ -8,6 +8,8 @@ type WxString* = ptr object
 
 type WxBitmap* = ptr object
 
+type WxColour* = ptr object
+
 # Baseclass for all widgets!
 type WxWindow* = ptr object
 

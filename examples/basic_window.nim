@@ -135,17 +135,33 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let bt5 = wxBitmapButton(mainFrame, wxID_ANY, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
   hsiz.addWindow(bt5, 0, wxALL xor wxLEFT, 10, nil)
 
-  hsiz.layout
+  #hsiz.layout
  
   vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
 
-  # add some text (right aligned for fun)
-  let st = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
-  vsiz.addWindow(st, 0, wxEXPAND + wxALL, 10, nil)
+  # add some text (right aligned for fun, does not work on ubuntu it seems)
+  let st1 = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
+ 
+  # highlight the background of the static text window
+  let col1 = wxColourRGB(255,255,200,255)
+  let col2 = wxColourRGB(255,220,200,255)
+  discard st1.setBackgroundColour(col1)
 
+  vsiz.addWindow(st1, 0, wxALL or wxEXPAND, 10, nil)
+
+  # again some text right alighn but this time using a sizer
+  let hp = wxBoxSizer(wxHORIZONTAL)
+  let st2 = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
+    
+  discard st2.setBackgroundColour(col2)
+
+  hp.add(0, 0, 1, wxEXPAND, 0, nil)
+  hp.addWindow(st2, 0, 0, 0, nil)
+  vsiz.addSizer(hp, 0, wxLEFT or wxRIGHT or wxEXPAND, 10, nil)
+ 
   # The lable is not so static :)
   # following uses converters "magically"
-  st.setLabel("User: " & toUpper(eljGetUserName()))
+  st2.setLabel("User: " & toUpper(eljGetUserName()))
 
   # memory leak testing (you need to free GetLabel)
   when false:
