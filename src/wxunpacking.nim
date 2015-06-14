@@ -98,6 +98,7 @@ template wxcUnpackingT(what,nimname,extname) =
 wxcUnpacking(eljGetApp, ELJApp_GetApp)
 wxcUnpacking(eljDisplaySize, ELJApp_DisplaySize)
 wxcUnpacking(eljGetUserName, ELJApp_GetUserName)
+wxcUnpacking(eljInitAllImageHandlers, ELJApp_InitAllImageHandlers)
 
 # wxString
 wxcUnpackingT(WxString, delete, wxString_Delete)
@@ -128,8 +129,7 @@ wxcUnpackingT(WxSizer, addWindow, wxSizer_AddWindow)
 wxcUnpackingT(WxSizer, addSizer, wxSizer_AddSizer)
 
 wxcUnpackingT(WxSizer, layout, wxSizer_Layout)
-
-wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
+wxcUnpackingT(WxSizer, setSizeHints, wxSizer_SetSizeHints)
 
 # WxWindow
 wxcUnpackingT(WxWindow, getLabel, wxWindow_GetLabel)
@@ -137,6 +137,8 @@ wxcUnpackingT(WxWindow, show, wxWindow_Show)
 wxcUnpackingT(WxWindow, fit, wxWindow_Fit)
 wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
 wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
+
+wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
 
 # WxTopLevelWindow
 

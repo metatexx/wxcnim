@@ -106,6 +106,9 @@ proc wxWindow_GetLabel*(obj: WxWindow): WxString
 proc wxWindow_SetSizer*(obj: WxWindow, sizer: WxSizer)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_SetSizeHints*(obj: WxWindow, minW, minH, maxW, maxH, incW, incH: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxTopLevelWindow
 
 proc wxTopLevelWindow_SetMaxSize*(obj: WxWindow, w,h: int)
@@ -211,6 +214,9 @@ proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, option, flag, border: int, 
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_Layout*(obj: WxSizer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxSizer_SetSizeHints*(obj: WxSizer, wnd: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 #TClass(wxSize) wxSizer_CalcMin( TSelf(wxSizer) _obj );

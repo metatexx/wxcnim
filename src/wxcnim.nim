@@ -22,7 +22,7 @@ converter toWxClosureTypes*(x: WxWindow): WxClosureTypes = cast[WxClosureTypes](
 
 # Create a UTF8 String from an WxString (does not consume the WxString)
 proc `$`*(self: WxString): string =
-  echo "DBG: Create string from WxString called"
+  #echo "DBG: Create string from WxString called"
   if self.wxString_Length == 0:
     result = ""
   else:
@@ -34,7 +34,7 @@ proc `$`*(self: WxString): string =
 
 # Makes a new WxString from a "string"
 converter toWxString*(s: string): WxString = 
-  echo "DBG: string->WxString conversion for " & s
+  #echo "DBG: string->WxString conversion for " & s
   result = wxString_CreateUTF8(s)
 
 # Deleting a WxString
@@ -43,5 +43,5 @@ converter toWxString*(s: string): WxString =
 # Converts a WxString to a string (and frees the WxString)
 converter toString*(s: WxString): string =
   result = $s
-  echo "DBG: WxString->string conversion for " & result
+  #echo "DBG: WxString->string conversion for " & result
   s.delete

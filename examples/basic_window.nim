@@ -55,7 +55,7 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
 proc makeButton(parent: WxFrame, text: string, cb: proc): WxButton =
   result = wxButton(parent, -1, text, 0, 0, -1, -1, 0)
   var cl = wxClosure(cb, parent)
-  echo "cl: ", result.repr
+  #echo "cl: ", result.repr
   discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
 
 
@@ -64,7 +64,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # we need this so wxImage can load our wxBitmap from
   # the PNG file later!
-  ELJApp_InitAllImageHandlers() # probably not needed
+  eljInitAllImageHandlers()
 
   let app = eljGetApp()
 
@@ -96,29 +96,39 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # creating a horizontal sizer
   let hsiz = wxBoxSizer(wxHORIZONTAL)
  
-  # our Buttons
-  hsiz.add(wxSize(100,100),  0, 0, 0, nil)
+  # some "extra" size at the left
+  hsiz.add(wxSize(100,0), 1, wxEXPAND, 0, nil)
     
+  # our Buttons
   let bt1 = makeButton(mainFrame,"Click Me 1", button1Clicked) # Button hinzufügen
-  hsiz.addWindow(bt1, 0, wxEXPAND or wxALL , 10, nil)
+  hsiz.addWindow(bt1, 0, wxALL , 10, nil)
 
   let bt2 = makeButton(mainFrame,"Click Me 2", button2Clicked) # Button hinzufügen
-  hsiz.addWindow(bt2, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+  hsiz.addWindow(bt2, 1, wxEXPAND or wxALL xor wxLEFT, 10, nil)
 
   let bt3 = makeButton(mainFrame,"Click Me 3", button2Clicked) # Button hinzufügen
-  hsiz.addWindow(bt3, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+  hsiz.addWindow(bt3, 0, wxALL xor wxLEFT, 10, nil)
 
   # make something more complex: a bitmap button
+  
+  # load an png image to a bitmap for usage as button
   let wxbmp = wxBitmapLoad("bitmap1.png", wxBITMAP_TYPE_PNG)
+  
+  # mache a borderless button (just the bitmap)
   let bt4 = wxBitmapButton(mainFrame, -1, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
-  hsiz.addWindow(bt4, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+  hsiz.addWindow(bt4, 0, wxALL xor wxLEFT, 10, nil)
 
+  # here i reuse the loaded bitmap for a button with border.
+  # I guess thats wrong memorywise but not sure.
   let bt5 = wxBitmapButton(mainFrame, -1, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
-  hsiz.addWindow(bt5, 0, wxEXPAND or wxALL xor wxLEFT, 10, nil)
+  hsiz.addWindow(bt5, 0, wxALL xor wxLEFT, 10, nil)
 
-  #hsiz.layout
+  hsiz.layout
  
-  vsiz.addSizer(hsiz, 0, 0, 0, nil)
+  # so you can't make the window smaller than the buttons sizer
+  hsiz.setSizeHints(mainFrame)
+
+  vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
 
   # add some text (right aligned for fun)
   let st = wxStaticText(mainFrame, -1, "This is a static Text", 0, 0, -1, -1, wxST_ALIGN_RIGHT)
@@ -143,7 +153,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # ListControl (some of the most important widgets for our case)
 
   let lcTable = mainFrame.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
-  vsiz.addWindow(lcTable, 0, wxEXPAND or wxAll, 10, nil)
+  vsiz.addWindow(lcTable, 1, wxEXPAND or wxAll, 10, nil)
   discard lcTable.insertColumn(-1, "Vorname", 0, 100)
   discard lcTable.insertColumn(-1, "Name", 0, 100)
   discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
@@ -154,10 +164,11 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # Add the sizer into the main window
   mainFrame.setSizer(vsiz)
 
-  # playing around .. using array as argument
-  let size_array: array = [100,150]
-  # this constrains the windows min size
-  mainFrame.setMinSize(size_array)
+  when false:
+    # playing around .. using array as argument
+    let size_array: array = [100,150]
+    # this constrains the windows min size
+    mainFrame.setMinSize(size_array)
 
   # playing around .. using tuple as argument
   var tuple_size: WxSizeObj = (800, 600)
