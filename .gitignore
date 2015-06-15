@@ -13,6 +13,7 @@
 *.rlib
 *.dll
 *.ll
+.DS_Store
 
 # Executables
 *.exe
