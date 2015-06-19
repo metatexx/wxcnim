@@ -14,9 +14,12 @@
 *.dll
 *.ll
 .DS_Store
+Thumbs.db
 
 # Executables
 *.exe
 
 # Ignore Nim Compiler Cache
 nimcache/
+
+!*/mswin/*

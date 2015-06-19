@@ -9,6 +9,17 @@ proc wxSize*(w, h: int): int = discard
 proc wxColor*(r, g, b: int): int = discard
 proc wxRect*(a, b, c, d: int): int = discard
 
+# default value proxies
+proc hgt*(val: int) = discard
+proc wdt*(val: int) = discard
+proc top*(val: int) = discard
+proc lft*(val: int) = discard
+proc stl*(val: int) = discard
+proc opt*(val: int) = discard
+proc flg*(val: int) = discard
+proc udt*(val: int) = discard
+proc alpha*(val: int) = discard
+
 template wxcUnpacking(nimname,extname) =
   macro nimname*(n: varargs[untyped]): untyped =
     var s: string = astToStr(extname) & "("
@@ -17,6 +28,16 @@ template wxcUnpacking(nimname,extname) =
       var unpack = false
       if x.kind in nnkCallKinds:
         case $x[0]
+        # "default parameter proxies"
+        of "hgt", "wdt", "top", "lft", "stl", "opt", "flg", "udt", "alpha":
+          expectLen(x, 2)
+          if first: 
+            first = false
+          else:
+            add(s, ", ")
+          add(s, $x[0] & "=" & repr(x[1]))
+          continue
+
         of "wxPoint":
           expectLen(x, 3)
           unpack = true
@@ -33,7 +54,10 @@ template wxcUnpacking(nimname,extname) =
 
       elif x.kind == nnkSym and ((x.getType).typeKind) in { ntyTuple, ntyArray }:
         for y in 0 .. x.getType().len()-2:
-          add(s, ", ")
+          if first: 
+            first = false
+          else:
+            add(s, ", ")
           add(s, repr(x) & "[" & $y & "]")
         continue
 
@@ -52,7 +76,7 @@ template wxcUnpacking(nimname,extname) =
         add(s, repr(x))
       
     add(s, ")")
-    #echo s
+    echo s
     result = parseStmt(s)
 
 # This works like a method call for the as "what" given type
@@ -63,6 +87,13 @@ template wxcUnpackingT(what,nimname,extname) =
         var unpack = false
         if x.kind in nnkCallKinds:
           case $x[0]
+          # "default parameter proxies"
+          of "hgt", "wdt", "top", "lft", "stl", "opt", "flg", "udt", "alpha":
+            expectLen(x, 2)
+            add(s, ", ")
+            add(s, $x[0] & "=" & repr(x[1]))
+            continue
+
           of "wxPoint":
             expectLen(x, 3)
             unpack = true
@@ -93,6 +124,7 @@ template wxcUnpackingT(what,nimname,extname) =
       add(s, ")")
       #echo s
       result = parseStmt(s)
+
 
 # App wrapper
 wxcUnpacking(eljGetApp, ELJApp_GetApp)
@@ -143,6 +175,9 @@ wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
 wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
 wxcUnpackingT(WxWindow, setBackgroundColour, wxWindow_SetBackgroundColour)
 
+wxcUnpackingT(WxWindow, setFocus, wxWindow_SetFocus)
+wxcUnpackingT(WxWindow, setAutoLayout, wxWindow_SetAutoLayout)
+
 # WxTopLevelWindow
 
 wxcUnpackingT(WxWindow, setMinSize, wxTopLevelWindow_SetMinSize)
@@ -173,7 +208,9 @@ wxcUnpacking(wxButton, wxButton_Create)
 
 # Controls: List Ctrl
 wxcUnpacking(wxListCtrl, wxListCtrl_Create)
-wxcUnpacking(insertColumn, wxListCtrl_InsertColumn)
+
+wxcUnpackingT(WxListCtrl, insertColumn, wxListCtrl_InsertColumn)
+wxcUnpackingT(WxListCtrl, getColumnCount, wxListCtrl_GetColumnCount)
 
 # Static Widgets
 wxcUnpacking(wxStaticText, wxStaticText_Create)
@@ -187,7 +224,7 @@ wxcUnpacking(wxMenu, wxMenu_Create)
 wxcUnpacking(wxMenuItem, wxMenuItem_Create)
 wxcUnpacking(wxMenuItemEx, wxMenuItem_CreateEx)
 
-wxcUnpacking(appendItem, wxMenu_AppendItem)
-wxcUnpacking(append, wxMenuBar_Append)
+wxcUnpackingT(WxMenu, appendItem, wxMenu_AppendItem)
+wxcUnpackingT(WxMenuBar, append, wxMenuBar_Append)
 
-wxcUnpacking(getId, wxMenuItem_GetId)
+wxcUnpackingT(WxMenuItem, getId, wxMenuItem_GetId)

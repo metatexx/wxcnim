@@ -85,9 +85,22 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   echo dispSize.w, " x ", dispSize.h
 
   let txt = eljGetUserName()
+  
   echo "txt is: " & normalize(txt)
 
   let mainFrame = wxFrame(nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+
+  # now using a "panel" instead of the raw frame.
+  # This should look much better on windows (and older linux?)
+  when true: # use panel
+    let mainPanel = wxPanel(mainFrame, wxID_ANY)
+    let mainSizer = wxBoxSizer(wxVERTICAL)
+    mainSizer.addWindow(mainPanel,1, wxEXPAND)
+    mainFrame.setSizer(mainSizer)  
+  else:
+    let mainPanel = mainFrame # try that to see the effect (on windows / linux)
+
+  #mainFrame.setAutoLayout(true)
 
   let menuBar = wxMenuBar(0)
   let fileMenu = wxMenu("", 0)
@@ -105,20 +118,20 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # creating a vertical sizer
   let vsiz = wxBoxSizer(wxVERTICAL)
 
-  # creating a horizontal sizer
+  # creating a horizontal sizer for our buttons
   let hsiz = wxBoxSizer(wxHORIZONTAL)
  
-  # some "extra" size at the left
-  hsiz.add(wxSize(100,0), 1, wxEXPAND, 0, nil)
-    
+  # some "extra" size at the left of our buttons
+  hsiz.add(wxSize(100,0), 1, wxEXPAND)
+
   # our Buttons
-  let bt1 = makeButton(mainFrame,"Click Me 1", button1Clicked) # Button hinzufügen
+  let bt1 = makeButton(mainPanel,"Click Me 1", button1Clicked) # Button hinzufügen
   hsiz.addWindow(bt1, 0, wxALL , 10, nil)
 
-  let bt2 = makeButton(mainFrame,"Click Me 2", button2Clicked) # Button hinzufügen
+  let bt2 = makeButton(mainPanel,"Click Me 2", button2Clicked) # Button hinzufügen
   hsiz.addWindow(bt2, 1, wxEXPAND or wxALL xor wxLEFT, 10, nil)
 
-  let bt3 = makeButton(mainFrame,"Click Me 3", button2Clicked) # Button hinzufügen
+  let bt3 = makeButton(mainPanel,"Click Me 3", button2Clicked) # Button hinzufügen
   hsiz.addWindow(bt3, 0, wxALL xor wxLEFT, 10, nil)
 
   # make something more complex: a bitmap button
@@ -127,12 +140,12 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let wxbmp = wxBitmapLoad("bitmap1.png", wxBITMAP_TYPE_PNG)
   
   # mache a borderless button (just the bitmap)
-  let bt4 = wxBitmapButton(mainFrame, wxID_ANY, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
+  let bt4 = wxBitmapButton(mainPanel, wxID_ANY, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
   hsiz.addWindow(bt4, 0, wxALL xor wxLEFT, 10, nil)
 
   # here i reuse the loaded bitmap for a button with border.
   # I guess thats wrong memorywise but not sure.
-  let bt5 = wxBitmapButton(mainFrame, wxID_ANY, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
+  let bt5 = wxBitmapButton(mainPanel, wxID_ANY, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
   hsiz.addWindow(bt5, 0, wxALL xor wxLEFT, 10, nil)
 
   #hsiz.layout
@@ -140,18 +153,20 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
 
   # add some text (right aligned for fun, does not work on ubuntu it seems)
-  let st1 = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
+  #let pst1 = wxPanel(mainPanel)
+  let st1 = wxStaticText(mainPanel, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
  
   # highlight the background of the static text window
   let col1 = wxColourRGB(255,255,200)
   let col2 = wxColourRGB(255,220,200)
+  #discard pst1.setBackgroundColour(col2)
   discard st1.setBackgroundColour(col1)
 
-  vsiz.addWindow(st1, 0, wxALL or wxEXPAND, 10, nil)
+  vsiz.addWindow(st1, 0, wxALL or wxEXPAND, 10)
 
   # again some text right alighn but this time using a sizer
   let hp = wxBoxSizer(wxHORIZONTAL)
-  let st2 = wxStaticText(mainFrame, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
+  let st2 = wxStaticText(mainPanel, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
     
   discard st2.setBackgroundColour(col2)
 
@@ -177,23 +192,24 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # ListControl (some of the most important widgets for our case)
 
-  let lcTable = mainFrame.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
+  let lcTable = mainPanel.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
   vsiz.addWindow(lcTable, 1, wxEXPAND or wxAll, 10, nil)
-  discard lcTable.insertColumn(-1, "Vorname", 0, 100)
-  discard lcTable.insertColumn(-1, "Name", 0, 100)
-  discard lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
-  discard lcTable.insertColumn(-1, "Alter", 0, 100)
+  var pos = 0
+  pos = lcTable.insertColumn(0, "Vorname", 0, 100)
+  pos = lcTable.insertColumn(pos+1, "Name", 0, 100)
+  pos = lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
+  pos = lcTable.insertColumn(lcTable.getColumnCount(), "Alter", 0, 100)
   
-  # A scrolling panel!
+  # A scrolling area!
   let scrolled = wxScrolledWindow(mainFrame, ScolledId, 0, 0, -1, 100, wxSUNKEN_BORDER)
   
   let scsiz = wxBoxSizer(wxVERTICAL)
   let texts = ["The","Brown","Fox","jumps","over","the","lazy","dog"]
-  
+
   for t in texts:
     let st = wxStaticText(scrolled, -1, t, 0, 0, -1, -1, 0)
     scsiz.addWindow(st, 0, wxEXPAND or wxALL, 0, nil)
-  
+
   scrolled.setSizer(scsiz)
   #scrolled.setScrollbars(0, 10, 0, 0, 0, 0, false) # well
   scrolled.setScrollRate(0, 1) # this makes the scrollbars appear :)
@@ -201,15 +217,13 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   #scrolled.enableScrolling(false,true) # stops scrolling but not the scrollbar movement
   #scrolled.showScrollbars(0,0) ??
   
- 
+  # on windows it will only scroll by mousewheel if it has the focus
+  scrolled.setFocus() # focus scrolled on first display of the window
+  
   vsiz.addWindow(scrolled, 0, wxEXPAND or wxAll, 10, nil)
 
-  # so you can't make the window smaller than the buttons sizer
-  hsiz.setSizeHints(mainFrame)
-  #vsiz.setSizeHints(mainFrame)
-
   # Add the sizer into the main window
-  mainFrame.setSizer(vsiz)
+  mainPanel.setSizer(vsiz)
 
   when false:
     # playing around .. using array as argument
@@ -222,7 +236,13 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # this constrains the windows max size
   mainFrame.setMaxSize(tuple_size)
 
-  mainFrame.fit
+  mainPanel.fit
+
+  # so you can't make the window smaller than the buttons sizer
+  hsiz.setSizeHints(mainFrame)
+  vsiz.setSizeHints(mainFrame)
+
+
   mainFrame.show
   mainFrame.`raise` # do I want mainFrame.raize?
 

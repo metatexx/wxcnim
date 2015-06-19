@@ -26,11 +26,18 @@ proc `$`*(self: WxString): string =
   if self.wxString_Length == 0:
     result = ""
   else:
-    var s = newSeq[int32](self.wxString_Length)
-    discard wxString_GetString(self, addr s[0])
-    result = ""
-    for w in s:
-      result.add Rune(w).toUTF8
+    when defined(mswindows):
+      var s = newSeq[int16](self.wxString_Length)
+      discard wxString_GetString(self, addr s[0])
+      result = ""
+      for w in s:
+        result.add Rune(w).toUTF8
+    else:
+      var s = newSeq[int32](self.wxString_Length)
+      discard wxString_GetString(self, addr s[0])
+      result = ""
+      for w in s:
+        result.add Rune(w).toUTF8
 
 # Makes a new WxString from a "string"
 converter toWxString*(s: string): WxString = 

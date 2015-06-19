@@ -115,6 +115,12 @@ proc wxWindow_SetSizeHints*(obj: WxWindow, minW, minH, maxW, maxH, incW, incH: i
 proc wxWindow_SetBackgroundColour*(obj: WxWindow, colour: WxColour): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_SetAutoLayout*(obj: WxWindow, autolayout: bool)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxWindow_SetFocus*(obj: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxTopLevelWindow
 
 proc wxTopLevelWindow_SetMaxSize*(obj: WxWindow, w,h: int)
@@ -125,6 +131,11 @@ proc wxTopLevelWindow_SetMinSize*(obj: WxWindow, w,h: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxTopLevelWindow_Maximize*(obj: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxPanel
+
+proc wxPanel_Create*(prt: WxWindow, id: WxId = -1, lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1, stl: int = 0): WxPanel
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxScrolledWindow
@@ -152,7 +163,6 @@ proc wxScrolledWindow_Scroll*(obj: WxScrolledWindow, x_pos, y_pos: int)
   
 proc wxScrolledWindow_GetViewStart*(obj: WxScrolledWindow, x: ptr int, y: ptr int)
   {.cdecl, dynlib: WXCLibName, importc.}
-
 
 # wxMenu
 
@@ -242,13 +252,13 @@ proc wxBoxSizer_Create*(orient: WxOrientation): WxBoxSizer
 
 # wxSizer (abstract)
 
-proc wxSizer_Add*(obj: WxSizer, width, height, option, flag, border: int, userData: pointer)
+proc wxSizer_Add*(obj: WxSizer, wdt: int = 0, hgt: int = 0, opt: int = 0, flg: int = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxSizer_AddWindow*(obj: WxSizer, window: WxWindow, option: int, flag: int, border: int, userData: pointer)
+proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0, flg: int = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, option, flag, border: int, userData: pointer)
+proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, opt: int = 0, flg: int = 0, brd: int = 0, udt: pointer)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_Layout*(obj: WxSizer)
@@ -272,19 +282,18 @@ proc wxStaticText_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: cint, top
 
 # wxListCtrl
 
-proc wxListCtrl_Create*(prt: WxWindow, id: WxId, lft: cint, top: cint, wdt: cint, hgt: cint, stl: WxLCStyle): WxListCtrl
+proc wxListCtrl_Create*(prt: WxWindow, id: WxId, lft: int, top: int, wdt: int, hgt: int, stl: WxLCStyle): WxListCtrl
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: cint, heading: WxString, format: cint, width: cint): cint
+proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: int, heading: WxString, format: int, width: int): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
+  {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxEvtHandler
 
-proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: cint, data: WxClosure): cint
-  {.cdecl, dynlib: WXCLibName, importc.}
-
-proc wxPanel_Create*(prt: WxWindow , id: WxId, lft, top, wdt, hgt: int, stl: int): WxPanel
+proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: int, data: WxClosure): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxMessageDialog_Create*(prt: WxWindow, msg: WxString, cap: WxString, spc: WxDialogSpecs): WxMessageDialog
