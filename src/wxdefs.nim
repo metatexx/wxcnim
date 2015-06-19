@@ -392,3 +392,14 @@ type WxBitmapType* = enum
 
   wxBITMAP_TYPE_MAX,
   wxBITMAP_TYPE_ANY = 50
+
+type WxFileDialogStyle* = int
+const
+  wxFD_OPEN*: WxFileDialogStyle = 0x0001
+  wxFD_SAVE*: WxFileDialogStyle = 0x0002
+  wxFD_OVERWRITE_PROMPT*: WxFileDialogStyle = 0x0004
+  wxFD_FILE_MUST_EXIST*: WxFileDialogStyle = 0x0010
+  wxFD_MULTIPLE*: WxFileDialogStyle = 0x0020
+  wxFD_CHANGE_DIR*: WxFileDialogStyle = 0x0080
+  wxFD_PREVIEW*: WxFileDialogStyle = 0x0100
+  wxFD_DEFAULT_STYLE* = wxFD_OPEN

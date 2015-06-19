@@ -27,6 +27,9 @@ type WxBitmapButton* = WxControl
 
 type WxMessageDialog* = ptr object
 
+type WxDialog* = ptr object
+type WxFileDialog* = WxDialog
+
 type WxClosureTypes* = ptr object
 
 type WxMenu* = ptr object

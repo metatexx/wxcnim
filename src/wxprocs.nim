@@ -45,7 +45,7 @@ proc ELJApp_GetUserName*(): WxString
 proc ELJApp_InitAllImageHandlers*()
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc ELJApp_GetUserHome*(): WxString
+proc ELJApp_GetUserHome*(user: WxString): WxString
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc ELJApp_FindWindowById*(id: int, prt: WxWindow): WxWindow
@@ -296,6 +296,13 @@ proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
 proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: int, data: WxClosure): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
+# wxDialog
+
+proc wxDialog_ShowModal*(obj: WxDialog): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxMessageDialog
+
 proc wxMessageDialog_Create*(prt: WxWindow, msg: WxString, cap: WxString, spc: WxDialogSpecs): WxMessageDialog
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -304,5 +311,14 @@ proc wxMessageDialog_Delete*(obj: WxMessageDialog)
 
 proc wxMessageDialog_ShowModal*(obj: WxMessageDialog): WxId
   {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxFileDialog
+
+proc wxFileDialog_Create*(prt: WxWindow, msg: WxString, dir: WxString, fle: WxString, wcd: WxString, lft: int = 0, top: int = 0, stl: WxFileDialogStyle = wxFD_DEFAULT_STYLE): WxFileDialog
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxFileDialog_GetPath*(obj: WxFileDialog): WxString
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 
 # (c) Hans Raaf - METATEXX GmbH

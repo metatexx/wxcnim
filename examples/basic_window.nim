@@ -9,13 +9,25 @@ const ScolledId = 1
 
 #import mxstring (not needed atm)
 
-proc myMenuSelected(fun, data, evn: pointer) =
+proc myMenuNew(fun, data, evn: pointer) =
   if cast[int](evn) == 0:
     return
   echo "Menu Event: ", evn.repr
   echo "Menu Data: ", data.repr
   # bell (wau wau)
   ELJApp_Bell()
+
+proc myMenuOpen(fun, data, evn: pointer) =
+  if cast[int](evn) == 0:
+    return
+  let dir = eljGetUserHome(eljGetUserName())
+
+  let fileDlg = wxFileDialog(nil, "Select a text file (*.txt)!",
+    dir,  "test.txt",  "Text Files|*.txt", stl(wxFD_OPEN))
+  if fileDlg.showModal() != wxID_CANCEL:
+    echo "File selected: ", fileDlg.getPath()
+  else:
+    echo "File selection canceled"
 
 proc button1Clicked(fun: pointer, parent: WxWindow, evn: pointer) =
   if cast[int](evn) == 0:
@@ -33,7 +45,7 @@ proc button1Clicked(fun: pointer, parent: WxWindow, evn: pointer) =
     "You pushed the button!",
     wxYES_NO or wxNO_DEFAULT)
 
-  if msgDlg.wxMessageDialog_ShowModal == wxID_YES:
+  if msgDlg.showModal() == wxID_YES:
     echo "Ending..."
     ELJApp_ExitMainLoop() # this will end the mainloop
 
@@ -105,15 +117,21 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let menuBar = wxMenuBar(0)
   let fileMenu = wxMenu("", 0)
   let fileNew = wxMenuItemEx(-1, "Neu", "", 0, nil)
+  let fileOpen = wxMenuItemEx(-1, "Öffnen...", "", 0, nil)
   
   let fileNewId = fileNew.getId
+  let fileOpenId = fileOpen.getId
 
   fileMenu.appendItem(fileNew)
+  fileMenu.appendItem(fileOpen)
   discard menuBar.append(fileMenu, "File")
   wxFrame_SetMenuBar(mainFrame, menuBar)
 
-  var cl_menu_new = wxClosure(myMenuSelected, app)
+  var cl_menu_new = wxClosure(myMenuNew, app)
+  var cl_menu_open = wxClosure(myMenuOpen, app)
   discard menuBar.connect(fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
+
+  discard menuBar.connect(fileOpenId, fileOpenId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_open)
 
   # creating a vertical sizer
   let vsiz = wxBoxSizer(wxVERTICAL)

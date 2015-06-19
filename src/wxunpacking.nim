@@ -76,7 +76,7 @@ template wxcUnpacking(nimname,extname) =
         add(s, repr(x))
       
     add(s, ")")
-    echo s
+    #echo s
     result = parseStmt(s)
 
 # This works like a method call for the as "what" given type
@@ -130,6 +130,7 @@ template wxcUnpackingT(what,nimname,extname) =
 wxcUnpacking(eljGetApp, ELJApp_GetApp)
 wxcUnpacking(eljDisplaySize, ELJApp_DisplaySize)
 wxcUnpacking(eljGetUserName, ELJApp_GetUserName)
+wxcUnpacking(eljGetUserHome, ELJApp_GetUserHome)
 wxcUnpacking(eljInitAllImageHandlers, ELJApp_InitAllImageHandlers)
 
 # wxString
@@ -216,7 +217,14 @@ wxcUnpackingT(WxListCtrl, getColumnCount, wxListCtrl_GetColumnCount)
 wxcUnpacking(wxStaticText, wxStaticText_Create)
 
 # Requester
+wxcUnpackingT(WxDialog, showModal, wxDialog_ShowModal)
+
 wxcUnpacking(wxMessageDialog, wxMessageDialog_Create)
+
+wxcUnpackingT(WxMessageDialog, showModal, wxMessageDialog_ShowModal)
+
+wxcUnpacking(wxFileDialog, wxFileDialog_Create)
+wxcUnpackingT(WxFileDialog, getPath, wxFileDialog_GetPath)
 
 # Menu(bar) related
 wxcUnpacking(wxMenuBar, wxMenuBar_Create)
