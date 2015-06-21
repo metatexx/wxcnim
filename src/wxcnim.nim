@@ -26,25 +26,18 @@ proc `$`*(self: WxString): string =
   if self.wxString_Length == 0:
     result = ""
   else:
-    when defined(mswindows):
-      var s = newSeq[int16](self.wxString_Length)
-      discard wxString_GetString(self, addr s[0])
-      result = ""
-      for w in s:
-        result.add Rune(w).toUTF8
-    else:
-      var s = newSeq[int32](self.wxString_Length)
-      discard wxString_GetString(self, addr s[0])
-      result = ""
-      for w in s:
-        result.add Rune(w).toUTF8
+    var s = newSeq[WxcWide](self.wxString_Length)
+    discard wxString_GetString(self, addr s[0])
+    result = ""
+    for w in s:
+      result.add Rune(w).toUTF8
 
 # Creates a wide string
 proc wxcWideString*(s: string): WxcWideStringShadow =
-  result = newSeq[int32](s.len+1)
+  result = newSeq[WxcWide](s.len+1)
   var i=0
   for r in runes(s):
-    result[i]=int32(r)
+    result[i]=WxcWide(r)
     i+=1
   result[i]=0
 
@@ -52,7 +45,7 @@ proc wxcArrayWideStrings*(a: openArray[string]): WxcArrayWideStringsShadow =
   result = new WxcArrayWideStringsShadowObj
 
   result.shadow = newSeq[WxcWideStringShadow](a.len)
-  result.build = newSeq[ptr int32](a.len)
+  result.build = newSeq[ptr WxcWide](a.len)
 
   var i = 0
   for x in a:
@@ -69,7 +62,7 @@ converter toWxcArrayWideStrings*(s: WxcArrayWideStringsShadow): WxcArrayWideStri
 
 when isMainModule:
   var ss = wxcArrayWideStrings(["1test","2me","3bla"])
-  echo ss[].proxy[0].repr
+  echo ss[].proxy.repr
 
 # Makes a new WxString from a "string"
 converter toWxString*(s: string): WxString = 

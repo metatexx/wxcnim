@@ -1,6 +1,9 @@
 # wxtypes include
 
-type WxcWide = int32
+when defined(mswindows):
+  type WxcWide = int16
+else:
+  type WxcWide = int32
 
 type WxcWideString* = ptr WxcWide
 type WxcArrayWideStrings* = ptr ptr WxcWide

@@ -136,9 +136,15 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # creating a vertical sizer
   let vsiz = wxBoxSizer(wxVERTICAL)
 
+  # Add the sizer into the main window
+  mainPanel.setSizer(vsiz)
+
   # creating a horizontal sizer for our buttons
   let hsiz = wxBoxSizer(wxHORIZONTAL)
  
+  # add it to the vsizer
+  vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
+
   # some "extra" size at the left of our buttons
   hsiz.add(wxSize(100,0), 1, wxEXPAND)
 
@@ -166,9 +172,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let bt5 = wxBitmapButton(mainPanel, wxID_ANY, wxbmp, 0, 0, wxbmp.getWidth()+10, -1, 0)
   hsiz.addWindow(bt5, 0, wxALL xor wxLEFT, 10, nil)
 
-  #hsiz.layout
- 
-  vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
+  #vsiz.layout
 
   # add some text (right aligned for fun, does not work on ubuntu it seems)
   #let pst1 = wxPanel(mainPanel)
@@ -253,6 +257,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   grid.setCellValue(1,1, "2")
   grid.setCellValue(1,2, "3")
 
+  grid.setCellTextColour(0,0, wxColourRGB(255,0,0))
+
   grid.setReadOnly(0 , 0, true)
 
   var ss = wxcArrayWideStrings(["Kölle", "Alaaf!"])
@@ -265,10 +271,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let ged_rw = wxGridCellChoiceEditor_Ctor(ss.len, ss, true)
   grid.setCellEditor(0 , 2, ged_rw)
 
-  vsiz.addWindow(grid, 0, wxEXPAND or wxAll, 10, nil)
-
-  # Add the sizer into the main window
-  mainPanel.setSizer(vsiz)
+  # the grid does only receive input on windows if not in a panel!?
+  mainSizer.addWindow(grid, 0, wxEXPAND or wxAll, 0, nil)
 
   when false:
     # playing around .. using array as argument
@@ -276,17 +280,17 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
     # this constrains the windows min size
     mainFrame.setMinSize(size_array)
 
-  # playing around .. using tuple as argument
-  var tuple_size: WxSizeObj = (800, 600)
-  # this constrains the windows max size
-  mainFrame.setMaxSize(tuple_size)
-
-  mainPanel.fit
+  when false:
+    # playing around .. using tuple as argument
+    var tuple_size: WxSizeObj = (800, 600)
+    # this constrains the windows max size
+    mainFrame.setMaxSize(tuple_size)
 
   # so you can't make the window smaller than the buttons sizer
   hsiz.setSizeHints(mainFrame)
   vsiz.setSizeHints(mainFrame)
 
+  mainFrame.fit
   mainFrame.show
   mainFrame.`raise` # do I want mainFrame.raize?
 

@@ -181,6 +181,9 @@ proc wxGrid_SetReadOnly*(obj: WxGrid, row: int, col: int, readOnly: bool)
 proc wxGrid_SetCellValue*(obj: WxGrid, row: int, col: int, value: WxString)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxGrid_SetCellTextColour*(obj: WxGrid, row: int, col: int, value: WxColour)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 #
 
 proc wxGridCellChoiceEditor_Ctor*( count: int , choices: WxcArrayWideStrings, alllowOthers = true): WxGridCellChoiceEditor

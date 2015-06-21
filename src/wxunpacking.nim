@@ -201,6 +201,7 @@ wxcUnpackingT(WxGrid, createGrid, wxGrid_CreateGrid)
 wxcUnpackingT(WxGrid, setCellEditor, wxGrid_SetCellEditor)
 wxcUnpackingT(WxGrid, setReadOnly, wxGrid_SetReadOnly)
 wxcUnpackingT(WxGrid, setCellValue, wxGrid_SetCellValue)
+wxcUnpackingT(WxGrid, setCellTextColour, wxGrid_SetCellTextColour)
 
 # WxFrame
 wxcUnpacking(wxFrame, wxFrame_Create)
