@@ -128,7 +128,9 @@ template wxcUnpackingT(what,nimname,extname) =
 
 # App wrapper
 wxcUnpacking(eljGetApp, ELJApp_GetApp)
+wxcUnpacking(eljBell, ELJApp_Bell)
 wxcUnpacking(eljDisplaySize, ELJApp_DisplaySize)
+wxcUnpackingT(WxId, eljFindWindowById, ELJApp_FindWindowById)
 wxcUnpacking(eljGetUserName, ELJApp_GetUserName)
 wxcUnpacking(eljGetUserHome, ELJApp_GetUserHome)
 wxcUnpacking(eljInitAllImageHandlers, ELJApp_InitAllImageHandlers)
@@ -172,6 +174,7 @@ wxcUnpackingT(WxWindow, show, wxWindow_Show)
 wxcUnpackingT(WxWindow, fit, wxWindow_Fit)
 wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
 wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
+wxcUnpackingT(WxWindow, destroy, wxWindow_Destroy)
 
 wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
 wxcUnpackingT(WxWindow, setBackgroundColour, wxWindow_SetBackgroundColour)
@@ -198,6 +201,10 @@ wxcUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
 # WxGrid
 wxcUnpacking(wxGrid, wxGrid_Create)
 wxcUnpackingT(WxGrid, createGrid, wxGrid_CreateGrid)
+wxcUnpackingT(WxGrid, beginBatch, wxGrid_BeginBatch)
+wxcUnpackingT(WxGrid, endBatch, wxGrid_EndBatch)
+wxcUnpackingT(WxGrid, disableDragRowSize, wxGrid_DisableDragRowSize)
+wxcUnpackingT(WxGrid, disableDragColSize, wxGrid_DisableDragColSize)
 wxcUnpackingT(WxGrid, setCellEditor, wxGrid_SetCellEditor)
 wxcUnpackingT(WxGrid, setReadOnly, wxGrid_SetReadOnly)
 wxcUnpackingT(WxGrid, setCellValue, wxGrid_SetCellValue)
@@ -228,8 +235,8 @@ wxcUnpacking(wxStaticText, wxStaticText_Create)
 wxcUnpackingT(WxDialog, showModal, wxDialog_ShowModal)
 
 wxcUnpacking(wxMessageDialog, wxMessageDialog_Create)
-
 wxcUnpackingT(WxMessageDialog, showModal, wxMessageDialog_ShowModal)
+wxcUnpackingT(WxMessageDialog, delete, wxMessageDialog_delete)
 
 wxcUnpacking(wxFileDialog, wxFileDialog_Create)
 wxcUnpackingT(WxFileDialog, getPath, wxFileDialog_GetPath)

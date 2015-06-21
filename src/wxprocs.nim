@@ -48,7 +48,7 @@ proc ELJApp_InitAllImageHandlers*()
 proc ELJApp_GetUserHome*(user: WxString): WxString
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc ELJApp_FindWindowById*(id: int, prt: WxWindow): WxWindow
+proc ELJApp_FindWindowById*(id: WxId, prt: WxWindow): WxWindow
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxString
@@ -121,6 +121,9 @@ proc wxWindow_SetAutoLayout*(obj: WxWindow, autolayout: bool)
 proc wxWindow_SetFocus*(obj: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_Destroy*(obj: WxWindow): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxTopLevelWindow
 
 proc wxTopLevelWindow_SetMaxSize*(obj: WxWindow, w,h: int)
@@ -170,6 +173,18 @@ proc wxGrid_Create*(prt: WxWindow, id: int, lft: int = 0, top: int = 0, wdt: int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxGrid_CreateGrid*(obj: WxGrid, rows: int, cols: int, selmode: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_BeginBatch*(obj: WxGrid)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_EndBatch*(obj: WxGrid)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_DisableDragColSize*(obj: WxGrid)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_DisableDragRowSize*(obj: WxGrid)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxGrid_SetCellEditor*(obj: WxGrid, row: int, col: int, editor: WxGridCellEditor)

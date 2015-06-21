@@ -20,6 +20,8 @@ converter toWxId*(x: WxStandardId): WxId = cast[WxId](x)
 converter toWxClosureTypes*(x: WxApp): WxClosureTypes = cast[WxClosureTypes](x)
 converter toWxClosureTypes*(x: WxWindow): WxClosureTypes = cast[WxClosureTypes](x)
 
+converter toWxWindow*(x: WxDialog): WxWindow = cast[WxWindow](x)
+
 # Create a UTF8 String from an WxString (does not consume the WxString)
 proc `$`*(self: WxString): string =
   #echo "DBG: Create string from WxString called"

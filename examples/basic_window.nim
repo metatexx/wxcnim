@@ -5,7 +5,12 @@ import wxcnim
 import strutils
 import os
 
-const ScolledId = 1 
+type WxCustomIds = enum
+  myScrolledId = 1
+  myGridId
+
+
+converter toWxId(x: WxCustomIds): WxId = WxId(x)
 
 #import mxstring (not needed atm)
 
@@ -15,7 +20,16 @@ proc myMenuNew(fun, data, evn: pointer) =
   echo "Menu Event: ", evn.repr
   echo "Menu Data: ", data.repr
   # bell (wau wau)
-  ELJApp_Bell()
+
+  var grid = WxGrid(eljFindWindowById(myGridId, nil))
+
+  grid.beginBatch()
+  for r in 1..9:
+    for i in 0..4:
+      grid.setCellValue(r,i, $(i+1+r*10))
+  grid.endBatch()
+
+  eljBell()
 
 proc myMenuOpen(fun, data, evn: pointer) =
   if cast[int](evn) == 0:
@@ -28,6 +42,8 @@ proc myMenuOpen(fun, data, evn: pointer) =
     echo "File selected: ", fileDlg.getPath()
   else:
     echo "File selection canceled"
+
+  echo if fileDlg.destroy(): "Destroy OK" else: "Destroy failed"
 
 proc button1Clicked(fun: pointer, parent: WxWindow, evn: pointer) =
   if cast[int](evn) == 0:
@@ -56,7 +72,7 @@ proc button1Clicked(fun: pointer, parent: WxWindow, evn: pointer) =
   # GC_fullCollect()
 
   # cleaning up the dialog and exit
-  msgDlg.wxMessageDialog_Delete
+  msgDlg.delete
 
 proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   if cast[int](evn) == 0:
@@ -67,7 +83,7 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
 #  echo "Clicker2 Data: ", parent.repr
   
   # just to have something going on we show the current scrolled window offset
-  let scrolled = ELJApp_FindWindowById(ScolledId, nil)
+  let scrolled = eljFindWindowById(myScrolledId, nil)
   var x, y: int
 
   wxScrolledWindow_GetViewStart(scrolled, addr x, addr y)
@@ -223,7 +239,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   pos = lcTable.insertColumn(lcTable.getColumnCount(), "Alter", 0, 100)
   
   # A scrolling area!
-  let scrolled = wxScrolledWindow(mainFrame, ScolledId, 0, 0, -1, 100, wxSUNKEN_BORDER)
+  let scrolled = wxScrolledWindow(mainFrame, myScrolledId, 0, 0, -1, 100, wxSUNKEN_BORDER)
   
   let scsiz = wxBoxSizer(wxVERTICAL)
   let texts = ["The","Brown","Fox","jumps","over","the","lazy","dog"]
@@ -246,7 +262,9 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # Next a "wxGrid"
 
-  let grid = wxGrid(mainFrame, wxID_ANY, 0, 0, -1, -1, 0)
+  let grid = wxGrid(mainFrame, myGridId, 0, 0, -1, -1, 0)
+
+  grid.disableDragRowSize
 
   grid.createGrid(10,4, 1)
 
