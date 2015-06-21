@@ -164,6 +164,29 @@ proc wxScrolledWindow_Scroll*(obj: WxScrolledWindow, x_pos, y_pos: int)
 proc wxScrolledWindow_GetViewStart*(obj: WxScrolledWindow, x: ptr int, y: ptr int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+# wxGrid
+
+proc wxGrid_Create*(prt: WxWindow, id: int, lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1, stl: int = 0): WxGrid
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_CreateGrid*(obj: WxGrid, rows: int, cols: int, selmode: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_SetCellEditor*(obj: WxGrid, row: int, col: int, editor: WxGridCellEditor)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_SetReadOnly*(obj: WxGrid, row: int, col: int, readOnly: bool)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxGrid_SetCellValue*(obj: WxGrid, row: int, col: int, value: WxString)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+#
+
+proc wxGridCellChoiceEditor_Ctor*( count: int , choices: WxcArrayWideStrings, alllowOthers = true): WxGridCellChoiceEditor
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+
 # wxMenu
 
 proc wxMenu_Create*(title: WxString, style: clong ): WxMenu

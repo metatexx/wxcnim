@@ -1,0 +1,5 @@
+# ToDo as examples
+
+Duplicate the full behaviour of this grid cell editor: http://wiki.wxpython.org/GridCellChoiceEditor
+
+Basically it adds new added text automatically to the list of data to the combo box embedded in the grid

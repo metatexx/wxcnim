@@ -195,6 +195,13 @@ wxcUnpackingT(WxScrolledWindow, setScrollbars, wxScrolledWindow_SetScrollbars)
 wxcUnpackingT(WxScrolledWindow, setScrollRate, wxScrolledWindow_SetScrollRate)
 wxcUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
 
+# WxGrid
+wxcUnpacking(wxGrid, wxGrid_Create)
+wxcUnpackingT(WxGrid, createGrid, wxGrid_CreateGrid)
+wxcUnpackingT(WxGrid, setCellEditor, wxGrid_SetCellEditor)
+wxcUnpackingT(WxGrid, setReadOnly, wxGrid_SetReadOnly)
+wxcUnpackingT(WxGrid, setCellValue, wxGrid_SetCellValue)
+
 # WxFrame
 wxcUnpacking(wxFrame, wxFrame_Create)
 

@@ -39,6 +39,38 @@ proc `$`*(self: WxString): string =
       for w in s:
         result.add Rune(w).toUTF8
 
+# Creates a wide string
+proc wxcWideString*(s: string): WxcWideStringShadow =
+  result = newSeq[int32](s.len+1)
+  var i=0
+  for r in runes(s):
+    result[i]=int32(r)
+    i+=1
+  result[i]=0
+
+proc wxcArrayWideStrings*(a: openArray[string]): WxcArrayWideStringsShadow =
+  result = new WxcArrayWideStringsShadowObj
+
+  result.shadow = newSeq[WxcWideStringShadow](a.len)
+  result.build = newSeq[ptr int32](a.len)
+
+  var i = 0
+  for x in a:
+    var ws = wxcWideString(x)
+    result.shadow[i] = ws
+    result.build[i] = addr(ws[0])
+    inc i
+
+  result.proxy = addr(result.build[0])
+
+proc len*(o: WxcArrayWideStringsShadow): int = o.shadow.len()
+
+converter toWxcArrayWideStrings*(s: WxcArrayWideStringsShadow): WxcArrayWideStrings = s.proxy
+
+when isMainModule:
+  var ss = wxcArrayWideStrings(["1test","2me","3bla"])
+  echo ss[].proxy[0].repr
+
 # Makes a new WxString from a "string"
 converter toWxString*(s: string): WxString = 
   #echo "DBG: string->WxString conversion for " & s

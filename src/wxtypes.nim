@@ -1,5 +1,19 @@
 # wxtypes include
 
+type WxcWide = int32
+
+type WxcWideString* = ptr WxcWide
+type WxcArrayWideStrings* = ptr ptr WxcWide
+
+type WxcWideStringShadow* = seq[WxcWide]
+
+type WxcArrayWideStringsShadowObj* = object
+  proxy*: WxcArrayWideStrings
+  build: seq[WxcWideString]
+  shadow: seq[seq[WxcWide]]
+
+type WxcArrayWideStringsShadow* = ref WxcArrayWideStringsShadowObj
+
 type WxId* = int
 
 type WxClosure* = ptr object
@@ -17,6 +31,10 @@ type WxWindow* = ptr object
 type WxFrame* = WxWindow
 type WxPanel* = WxWindow
 type WxScrolledWindow* = WxWindow
+type WxGrid* = WxWindow
+
+type WxGridCellEditor* = ptr object
+type WxGridCellChoiceEditor* = WxGridCellEditor
 
 # container controls
 type WxControl* = WxWindow

@@ -240,6 +240,33 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   
   vsiz.addWindow(scrolled, 0, wxEXPAND or wxAll, 10, nil)
 
+  # Next a "wxGrid"
+
+  let grid = wxGrid(mainFrame, wxID_ANY, 0, 0, -1, -1, 0)
+
+  grid.createGrid(10,4, 1)
+
+  grid.setCellValue(0,0, "Read only!")
+  grid.setCellValue(0,1, "Kölle")
+  grid.setCellValue(0,2, "Alaaf!")
+  grid.setCellValue(1,0, "1")
+  grid.setCellValue(1,1, "2")
+  grid.setCellValue(1,2, "3")
+
+  grid.setReadOnly(0 , 0, true)
+
+  var ss = wxcArrayWideStrings(["Kölle", "Alaaf!"])
+
+  # only allows data from the list of strings
+  let ged_ro = wxGridCellChoiceEditor_Ctor(ss.len, ss, false)
+  grid.setCellEditor(0 , 1, ged_ro)
+
+  # allows your own data too
+  let ged_rw = wxGridCellChoiceEditor_Ctor(ss.len, ss, true)
+  grid.setCellEditor(0 , 2, ged_rw)
+
+  vsiz.addWindow(grid, 0, wxEXPAND or wxAll, 10, nil)
+
   # Add the sizer into the main window
   mainPanel.setSizer(vsiz)
 
@@ -259,7 +286,6 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # so you can't make the window smaller than the buttons sizer
   hsiz.setSizeHints(mainFrame)
   vsiz.setSizeHints(mainFrame)
-
 
   mainFrame.show
   mainFrame.`raise` # do I want mainFrame.raize?
