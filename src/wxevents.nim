@@ -8,3 +8,6 @@ proc expEVT_COMMAND_MENU_SELECTED*(): int
 
 proc expEVT_KEY_UP*(): int
   {.cdecl, dynlib: WXCLibName, importc.}
+
+proc expEVT_TIMER*(): int
+  {.cdecl, dynlib: WXCLibName, importc.}

@@ -20,8 +20,13 @@ type WxcArrayWideStringsShadow* = ref WxcArrayWideStringsShadowObj
 type WxId* = int
 
 type WxObject* = ptr object of RootObj
+
 type WxEvent* = ptr object of WxObject
 type WxKeyEvent* = ptr object of WxEvent
+type WxTimerEvent* = ptr object of WxEvent
+
+type WxTimer* = ptr object of WxObject
+type WxTimerEx* = ptr object of WxTimer
 
 type WxClosure* = ptr object
 type WxApp* = ptr object
@@ -32,7 +37,7 @@ type WxBitmap* = ptr object
 type WxColour* = ptr object
 
 # Baseclass for all widgets!
-type WxWindow* = ptr object
+type WxWindow* = ptr object of RootObj
 
 # container widgets
 type WxFrame* = WxWindow
@@ -57,9 +62,9 @@ type WxFileDialog* = WxDialog
 
 type WxClosureTypes* = ptr object
 
-type WxMenu* = ptr object
-type WxMenuBar* = ptr object
-type WxMenuItem* = ptr object
+type WxMenu* = ptr object of WxWindow
+type WxMenuBar* = ptr object of WxWindow
+type WxMenuItem* = ptr object of WxWindow
 
 type WxSizer* = ptr object
 type WxBoxSizer* = WxSizer

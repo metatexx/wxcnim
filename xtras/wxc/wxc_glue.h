@@ -5255,7 +5255,6 @@ void       wxTimer_Delete( TSelf(wxTimer) _obj );
 int        wxTimer_GetInterval( TSelf(wxTimer) _obj );
 TBool      wxTimer_IsOneShot( TSelf(wxTimer) _obj );
 TBool      wxTimer_IsRuning( TSelf(wxTimer) _obj );
-TBool      wxTimer_Start( TSelf(wxTimer) _obj, int _int, TBool _one );
 void       wxTimer_Stop( TSelf(wxTimer) _obj );
 
 /* wxTimerBase */

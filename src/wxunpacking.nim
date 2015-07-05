@@ -241,6 +241,25 @@ wxcUnpackingT(WxMenuBar, append, wxMenuBar_Append)
 
 wxcUnpackingT(WxMenuItem, getId, wxMenuItem_GetId)
 
+# wxTimer
+
+wxcUnpacking(wxTimer, wxTimer_Create)
+wxcUnpackingT(WxTimer, delete, wxTimer_Delete)
+wxcUnpackingT(WxTimer, start, wxTimer_Start)
+wxcUnpackingT(WxTimer, stop, wxTimer_Stop)
+wxcUnpackingT(WxTimer, getInterval, wxTimer_GetInterval)
+wxcUnpackingT(WxTimer, isOneShot, wxTimer_IsOneShot)
+wxcUnpackingT(WxTimer, isRuning, wxTimer_IsRuning)
+
+# wxTimerEx
+
+wxcUnpacking(wxTimerEx, wxTimerEx_Create)
+wxcUnpackingT(WxTimerEx, connect, wxTimerEx_Connect)
+
+# wxTimerEvent
+
+wxcUnpackingT(WxTimerEvent, getInterval, wxTimerEvent_GetInterval)
+
 when isMainModule:
   proc wxButton_Create(a: WxWindow, b:WxId, c:string, d:int, e:int, f:int, g:int, h:int): WxButton =
     #echo locals()

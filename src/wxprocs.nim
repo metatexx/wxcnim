@@ -334,7 +334,7 @@ proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
 
 # wxEvtHandler
 
-proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: int, data: WxClosure): int
+proc wxEvtHandler_Connect*(obj: WxWindow, first: WxId, last: WxId, kind: int, data: WxClosure): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxEvent
@@ -369,6 +369,42 @@ proc wxKeyEvent_GetX*(obj: WxKeyEvent): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxKeyEvent_GetY*(obj: WxKeyEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxTimer
+
+proc wxTimer_Create*(prt: WxWindow, id: WxId): WxTimer
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimer_Delete*(obj: WxTimer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimer_Start*(obj: WxTimer, millisecs: int = 1000, oneshot: bool = false): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimer_Stop*(obj: WxTimer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimer_GetInterval*(evn: WxTimer): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimer_IsOneShot*(evn: WxTimer): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimer_IsRuning*(evn: WxTimer): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxTimerEx
+
+proc wxTimerEx_Create*(): WxTimerEx
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTimerEx_Connect*(timer: WxTimerEx, cl: WxClosure)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxTimerEvent
+
+proc wxTimerEvent_GetInterval*(evn: WxTimerEvent): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxDialog
