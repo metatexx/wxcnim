@@ -143,7 +143,7 @@ proc wxPanel_Create*(prt: WxWindow, id: WxId = -1, lft: int = 0, top: int = 0, w
 
 # wxScrolledWindow
 
-proc wxScrolledWindow_Create*(prt: WxWindow, id: int, lft, top, wdt, hgt: int, stl: int): WxScrolledWindow
+proc wxScrolledWindow_Create*(prt: WxWindow, id: int, lft, top, wdt, hgt: int, stl: WxBorder): WxScrolledWindow
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxScrolledWindow_AdjustScrollbars*(obj: WxScrolledWindow)
@@ -229,8 +229,8 @@ proc wxMenuBar_Append*(onj: WxMenuBar, menu: WxMenu, title: WxString): int
 proc wxMenuItem_Create*(): WxMenuItem
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxMenuItem_CreateEx*(id: int, label: WxString, help: WxString,
-  itemkind: int, submenu: WxMenu): WxMenuItem
+proc wxMenuItem_CreateEx*(id: int, label: WxString = wxString_CreateUTF8("Does this work?"), help: WxString = wxString_CreateUTF8(""),
+  itemkind: int = 0, submenu: WxMenu = nil): WxMenuItem
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxMenuItem_SetCheckable*(obj: WxMenuItem, checkable: bool)
@@ -280,7 +280,7 @@ proc wxBitmap_GetWidth*(obj: WxBitmap): int
 
 # wxBitmapButton
 
-proc wxBitmapButton_Create*(prt: WxWindow, id: int, bmp: WxBitmap, lft, top, wdt, hgt: int, stl: int): WxBitmapButton
+proc wxBitmapButton_Create*(prt: WxWindow, id: int, bmp: WxBitmap, lft, top, wdt, hgt: int, stl: WxBorder): WxBitmapButton
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxBoxSizer
@@ -293,13 +293,13 @@ proc wxBoxSizer_Create*(orient: WxOrientation): WxBoxSizer
 
 # wxSizer (abstract)
 
-proc wxSizer_Add*(obj: WxSizer, wdt: int = 0, hgt: int = 0, opt: int = 0, flg: int = 0, brd: int = 0, udt: pointer = nil)
+proc wxSizer_Add*(obj: WxSizer, wdt: int = 0, hgt: int = 0, opt: int = 0, flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0, flg: int = 0, brd: int = 0, udt: pointer = nil)
+proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0, flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, opt: int = 0, flg: int = 0, brd: int = 0, udt: pointer)
+proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, opt: int = 0, flg: WxStretch = 0, brd: int = 0, udt: pointer)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_Layout*(obj: WxSizer)
@@ -335,6 +335,40 @@ proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
 # wxEvtHandler
 
 proc wxEvtHandler_Connect*(obj: pointer, first: WxId, last: WxId, kind: int, data: WxClosure): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxEvent
+
+proc wxEvent_GetEventType*(obj: WxEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxEvent_GetEventObject*(obj: WxEvent): WxWindow
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxEvent_GetId*(obj: WxEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxEvent_GetTimestamp*(obj: WxEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxEvent_SetId*(obj: WxEvent, id: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxEvent_Skip*(obj: WxEvent)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxKeyEvent
+
+proc wxKeyEvent_GetKeyCode*(obj: WxKeyEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxKeyEvent_GetModifiers*(obj: WxKeyEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxKeyEvent_GetX*(obj: WxKeyEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxKeyEvent_GetY*(obj: WxKeyEvent): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxDialog

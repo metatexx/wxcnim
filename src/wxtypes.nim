@@ -19,6 +19,10 @@ type WxcArrayWideStringsShadow* = ref WxcArrayWideStringsShadowObj
 
 type WxId* = int
 
+type WxObject* = ptr object of RootObj
+type WxEvent* = ptr object of WxObject
+type WxKeyEvent* = ptr object of WxEvent
+
 type WxClosure* = ptr object
 type WxApp* = ptr object
 type WxString* = ptr object

@@ -9,8 +9,13 @@ type WxCustomIds = enum
   myScrolledId = 1
   myGridId
 
-
 converter toWxId(x: WxCustomIds): WxId = WxId(x)
+
+proc makeButton(parent: WxFrame, text: string, cb: proc (fun: WxClosure, parent: WxWindow, evn: pointer)): WxButton =
+  result = wxButton(parent, wxID_ANY, text, 0, 0, -1, -1, 0)
+  var cl = wxClosure(cb, parent)
+  #echo "cl: ", result.repr
+  discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
 
 #import mxstring (not needed atm)
 
@@ -26,7 +31,7 @@ proc myMenuNew(fun, data, evn: pointer) =
   grid.beginBatch()
   for r in 1..9:
     for i in 0..4:
-      grid.setCellValue(r,i, $(i+1+r*10))
+      grid.setCellValue(r, i, $(i+1+r*10))
   grid.endBatch()
 
   eljBell()
@@ -37,7 +42,7 @@ proc myMenuOpen(fun, data, evn: pointer) =
   let dir = eljGetUserHome(eljGetUserName())
 
   let fileDlg = wxFileDialog(nil, "Select a text file (*.txt)!",
-    dir,  "test.txt",  "Text Files|*.txt", stl(wxFD_OPEN))
+    dir,  "test.txt",  "Text Files|*.txt", stl=wxFD_OPEN)
   if fileDlg.showModal() != wxID_CANCEL:
     echo "File selected: ", fileDlg.getPath()
   else:
@@ -45,7 +50,7 @@ proc myMenuOpen(fun, data, evn: pointer) =
 
   echo if fileDlg.destroy(): "Destroy OK" else: "Destroy failed"
 
-proc button1Clicked(fun: pointer, parent: WxWindow, evn: pointer) =
+proc button1Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   if cast[int](evn) == 0:
     return
 
@@ -90,15 +95,6 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   #discard wxFrame_ShowFullScreen(mainFrame, true, 0)
   echo y
 
-
-
-proc makeButton(parent: WxFrame, text: string, cb: proc): WxButton =
-  result = wxButton(parent, wxID_ANY, text, 0, 0, -1, -1, 0)
-  var cl = wxClosure(cb, parent)
-  #echo "cl: ", result.repr
-  discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
-
-
 proc appMain(argc: pointer, argv: openArray[cstring]) =
   # argc und argv do not make sense to me :(
 
@@ -133,7 +129,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let menuBar = wxMenuBar(0)
   let fileMenu = wxMenu("", 0)
   let fileNew = wxMenuItemEx(-1, "Neu", "", 0, nil)
-  let fileOpen = wxMenuItemEx(-1, "Öffnen...", "", 0, nil)
+  let fileOpen = wxMenuItemEx(-1, "Öffnen...") # skip defaults
   
   let fileNewId = fileNew.getId
   let fileOpenId = fileOpen.getId

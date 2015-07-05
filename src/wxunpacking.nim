@@ -1,5 +1,9 @@
 import macros
 
+# make it compilable and therefor testable
+when isMainModule:
+  import wxtypes
+
 # we need these dummy constructors due to the wrong implementation
 # of 'varargs[untyped]' in the compiler:
 
@@ -9,35 +13,14 @@ proc wxSize*(w, h: int): int = discard
 proc wxColor*(r, g, b: int): int = discard
 proc wxRect*(a, b, c, d: int): int = discard
 
-# default value proxies
-proc hgt*(val: int) = discard
-proc wdt*(val: int) = discard
-proc top*(val: int) = discard
-proc lft*(val: int) = discard
-proc stl*(val: int) = discard
-proc opt*(val: int) = discard
-proc flg*(val: int) = discard
-proc udt*(val: int) = discard
-proc alpha*(val: int) = discard
-
 template wxcUnpacking(nimname,extname) =
-  macro nimname*(n: varargs[untyped]): untyped =
+  macro nimname*(n: varargs[untyped]): expr =
     var s: string = astToStr(extname) & "("
     var first = true
     for x in n.children:
       var unpack = false
       if x.kind in nnkCallKinds:
-        case $x[0]
-        # "default parameter proxies"
-        of "hgt", "wdt", "top", "lft", "stl", "opt", "flg", "udt", "alpha":
-          expectLen(x, 2)
-          if first: 
-            first = false
-          else:
-            add(s, ", ")
-          add(s, $x[0] & "=" & repr(x[1]))
-          continue
-
+        case $ x[0]
         of "wxPoint":
           expectLen(x, 3)
           unpack = true
@@ -81,19 +64,12 @@ template wxcUnpacking(nimname,extname) =
 
 # This works like a method call for the as "what" given type
 template wxcUnpackingT(what,nimname,extname) =
-    macro nimname*(p: what, n: varargs[untyped]): untyped =
+    macro nimname*(p: what, n: varargs[untyped]): expr =
       var s: string = astToStr(extname) & "(" & repr(p)
       for x in n.children:
         var unpack = false
         if x.kind in nnkCallKinds:
           case $x[0]
-          # "default parameter proxies"
-          of "hgt", "wdt", "top", "lft", "stl", "opt", "flg", "udt", "alpha":
-            expectLen(x, 2)
-            add(s, ", ")
-            add(s, $x[0] & "=" & repr(x[1]))
-            continue
-
           of "wxPoint":
             expectLen(x, 3)
             unpack = true
@@ -134,6 +110,19 @@ wxcUnpackingT(WxId, eljFindWindowById, ELJApp_FindWindowById)
 wxcUnpacking(eljGetUserName, ELJApp_GetUserName)
 wxcUnpacking(eljGetUserHome, ELJApp_GetUserHome)
 wxcUnpacking(eljInitAllImageHandlers, ELJApp_InitAllImageHandlers)
+wxcUnpacking(eljExitMainLoop, ELJApp_ExitMainLoop)
+
+# wxEvent
+
+wxcUnpackingT(WxEvent, getEventType, wxEvent_GetEventType)
+wxcUnpackingT(WxEvent, getEventObject, wxEvent_GetEventObject)
+wxcUnpackingT(WxEvent, getId, wxEvent_GetId)
+wxcUnpackingT(WxEvent, getTimestamp, wxEvent_GetTimestamp)
+wxcUnpackingT(WxEvent, skip, wxEvent_Skip)
+wxcUnpackingT(WxEvent, setId, wxEvent_SetId)
+
+# wxKeyEvent
+wxcUnpackingT(WxKeyEvent, getKeyCode, wxKeyEvent_GetKeyCode)
 
 # wxString
 wxcUnpackingT(WxString, delete, wxString_Delete)
@@ -251,3 +240,11 @@ wxcUnpackingT(WxMenu, appendItem, wxMenu_AppendItem)
 wxcUnpackingT(WxMenuBar, append, wxMenuBar_Append)
 
 wxcUnpackingT(WxMenuItem, getId, wxMenuItem_GetId)
+
+when isMainModule:
+  proc wxButton_Create(a: WxWindow, b:WxId, c:string, d:int, e:int, f:int, g:int, h:int): WxButton =
+    #echo locals()
+    return nil
+  
+  let a = wxButton(nil, 0, "test", 0,0, -1,-1, 0)
+  echo a.repr()
