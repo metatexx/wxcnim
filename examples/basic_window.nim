@@ -91,7 +91,7 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   let scrolled = eljFindWindowById(myScrolledId, nil)
   var x, y: int
 
-  wxScrolledWindow_GetViewStart(scrolled, addr x, addr y)
+  scrolled.getViewStart(addr x, addr y)
   #discard wxFrame_ShowFullScreen(mainFrame, true, 0)
   echo y
 
@@ -289,16 +289,12 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   mainSizer.addWindow(grid, 0, wxEXPAND or wxAll, 0, nil)
 
   when false:
-    # playing around .. using array as argument
-    let size_array: array = [100,150]
     # this constrains the windows min size
-    mainFrame.setMinSize(size_array)
+    mainFrame.setMinSize(wxSize(100, 150))
 
-  when false:
-    # playing around .. using tuple as argument
-    var tuple_size: WxSizeObj = (800, 600)
+  when true:
     # this constrains the windows max size
-    mainFrame.setMaxSize(tuple_size)
+    mainFrame.setMaxSize(wxSize(800, 600))
 
   # so you can't make the window smaller than the buttons sizer
   hsiz.setSizeHints(mainFrame)

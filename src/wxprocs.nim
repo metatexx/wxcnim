@@ -3,7 +3,7 @@
 # ELJApp
 
 
-proc ELJApp_InitializeC*(closure: WxClosure, argc: cint, argv: pointer )
+proc ELJApp_InitializeC*(closure: WxClosure, argc: int, argv: pointer )
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc ELJApp_Exit*()
@@ -286,7 +286,7 @@ proc wxBitmapButton_Create*(prt: WxWindow, id: int, bmp: WxBitmap, lft, top, wdt
 # wxBoxSizer
 
 #TClass(wxSize) wxBoxSizer_CalcMin( TSelf(wxBoxSizer) _obj );
-proc wxBoxSizer_Create*(orient: WxOrientation): WxBoxSizer
+proc wxBoxSizer_Create*(orient: WxOrientation = wxVERTICAL): WxBoxSizer
   {.cdecl, dynlib: WXCLibName, importc.}
 #int        wxBoxSizer_GetOrientation( TSelf(wxBoxSizer) _obj );
 #void       wxBoxSizer_RecalcSizes( TSelf(wxBoxSizer) _obj );

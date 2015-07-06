@@ -14,7 +14,6 @@ include wxdefs
 include wxprocs
 include wxunpacking
 
-converter toWxId*(x: int): WxId = result = cast[WxId](x)
 converter toWxId*(x: WxStandardId): WxId = cast[WxId](x)
 
 converter toWxClosureTypes*(x: WxApp): WxClosureTypes = cast[WxClosureTypes](x)

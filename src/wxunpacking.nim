@@ -7,20 +7,20 @@ when isMainModule:
 # we need these dummy constructors due to the wrong implementation
 # of 'varargs[untyped]' in the compiler:
 
-proc wxPoint*(x, y: int): int = discard
-proc wxSize*(w, h: int): int = discard
+proc wxPoint*(x, y: int) = discard
+proc wxSize*(w, h: int) = discard
 
-proc wxColor*(r, g, b: int): int = discard
-proc wxRect*(a, b, c, d: int): int = discard
+proc wxColor*(r, g, b: int) = discard
+proc wxRect*(a, b, c, d: int) = discard
+
 
 template wxcUnpacking(nimname,extname) =
   macro nimname*(n: varargs[untyped]): expr =
-    var s: string = astToStr(extname) & "("
-    var first = true
+    var call = newCall(!astToStr(extname))
     for x in n.children:
       var unpack = false
       if x.kind in nnkCallKinds:
-        case $ x[0]
+        case $x[0]
         of "wxPoint":
           expectLen(x, 3)
           unpack = true
@@ -35,37 +35,19 @@ template wxcUnpacking(nimname,extname) =
           unpack = true
         else: discard
 
-      elif x.kind == nnkSym and ((x.getType).typeKind) in { ntyTuple, ntyArray }:
-        for y in 0 .. x.getType().len()-2:
-          if first: 
-            first = false
-          else:
-            add(s, ", ")
-          add(s, repr(x) & "[" & $y & "]")
-        continue
-
       if unpack:
         for i in 1..<x.len:
-          if first: 
-            first = false
-          else:
-            add(s, ", ")
-          add(s, repr(x[i]))
+          call.add(x[i])
       else:
-        if first: 
-          first = false
-        else:
-          add(s, ", ")
-        add(s, repr(x))
-      
-    add(s, ")")
-    #echo s
-    result = parseStmt(s)
+        call.add(x)
+
+    result = newStmtList(call)
 
 # This works like a method call for the as "what" given type
 template wxcUnpackingT(what,nimname,extname) =
     macro nimname*(p: what, n: varargs[untyped]): expr =
-      var s: string = astToStr(extname) & "(" & repr(p)
+      var call = newCall(!astToStr(extname))
+      call.add(p)
       for x in n.children:
         var unpack = false
         if x.kind in nnkCallKinds:
@@ -83,23 +65,14 @@ template wxcUnpackingT(what,nimname,extname) =
             expectLen(x, 4)
             unpack = true
           else: discard
-        elif x.kind == nnkSym and ((x.getType).typeKind) in { ntyTuple, ntyArray }:
-          for y in 0 .. x.getType().len()-2:
-            add(s, ", ")
-            add(s, repr(x) & "[" & $y & "]")
-          continue
 
         if unpack:
           for i in 1..<x.len:
-            add(s, ", ")
-            add(s, repr(x[i]))
+            call.add(x[i])
         else:
-          add(s, ", ")
-          add(s, repr(x))
-        
-      add(s, ")")
-      #echo s
-      result = parseStmt(s)
+          call.add(x)
+
+      result = newStmtList(call)
 
 
 # App wrapper
@@ -186,6 +159,7 @@ wxcUnpackingT(WxScrolledWindow, showScrollbars, wxScrolledWindow_ShowScrollbars)
 wxcUnpackingT(WxScrolledWindow, setScrollbars, wxScrolledWindow_SetScrollbars)
 wxcUnpackingT(WxScrolledWindow, setScrollRate, wxScrolledWindow_SetScrollRate)
 wxcUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
+wxcUnpackingT(WxScrolledWindow, getViewStart, wxScrolledWindow_GetViewStart)
 
 # WxGrid
 wxcUnpacking(wxGrid, wxGrid_Create)
