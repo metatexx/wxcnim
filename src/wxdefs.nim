@@ -181,18 +181,6 @@ const
   wxID_OSX_HIDE* = wxID_MDI_WINDOW_FIRST
   wxID_OSX_MENU_LAST* = wxID_OSX_SERVICES
 
-type WxFrameStyle* = int64
-
-const
-  wxRESIZE_BORDER*:WxFrameStyle = 64
-  wxMAXIMIZE_BOX*:WxFrameStyle = 512
-  wxMINIMIZE_BOX*:WxFrameStyle = 1024
-  wxSYSTEM_MENU*:WxFrameStyle = 2048
-  wxCLOSE_BOX*:WxFrameStyle = 4096
-  wxCLIP_CHILDREN*:WxFrameStyle = 4194304
-  wxCAPTION*:WxFrameStyle = 0x20000000
-  wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656    
-
 type WxBorder* = int64
 
 const
@@ -214,6 +202,22 @@ const wxSIMPLE_BORDER* = wxBORDER_SIMPLE
 const wxSTATIC_BORDER* = wxBORDER_STATIC
 const wxRAISED_BORDER* = wxBORDER_RAISED
 const wxSUNKEN_BORDER* = wxBORDER_SUNKEN
+
+type WxFrameStyle* = int64
+
+const
+  wxRESIZE_BORDER*:WxFrameStyle = 64
+  wxMAXIMIZE_BOX*:WxFrameStyle = 512
+  wxRESIZE_BOX*:WxFrameStyle = wxMAXIMIZE_BOX
+  wxMINIMIZE_BOX*:WxFrameStyle = 1024
+  wxSYSTEM_MENU*:WxFrameStyle = 2048
+  wxCLOSE_BOX*:WxFrameStyle = 4096
+  wxMAXIMIZE*:WxFrameStyle = 0x2000
+  wxCLIP_CHILDREN*:WxFrameStyle = 4194304
+  wxNO_BORDER*:WxFrameStyle = wxBORDER_NONE
+  wxCAPTION*:WxFrameStyle = 0x20000000
+  wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656    
+  wxDEFAULT_DIALOG_STYLE*:WxFrameStyle = wxCAPTION or wxMAXIMIZE or wxCLOSE_BOX or wxNO_BORDER
 
 type WxDialogSpecs* = int64
 
@@ -403,3 +407,100 @@ const
   wxFD_CHANGE_DIR*: WxFileDialogStyle = 0x0080
   wxFD_PREVIEW*: WxFileDialogStyle = 0x0100
   wxFD_DEFAULT_STYLE* = wxFD_OPEN
+
+
+type WxDeprecatedGUIConstants* = enum 
+    # Text font families
+    wxDEFAULT    = 70,
+    wxDECORATIVE,
+    wxROMAN,
+    wxSCRIPT,
+    wxSWISS,
+    wxMODERN,
+    wxTELETYPE,  # @@@@
+
+    #  Proportional or Fixed width fonts (not yet used)
+    wxVARIABLE   = 80,
+    wxFIXED,
+
+    wxNORMAL     = 90,
+    wxLIGHT,
+    wxBOLD,
+    # Also wxNORMAL for normal (non-italic text)
+    wxITALIC,
+    wxSLANT,
+
+    # Pen styles
+    wxSOLID      =   100,
+    wxDOT,
+    wxLONG_DASH,
+    wxSHORT_DASH,
+    wxDOT_DASH,
+    wxUSER_DASH,
+
+    wxTRANSPARENT,
+
+    # Brush & Pen Stippling. Note that a stippled pen cannot be dashed!!
+    # Note also that stippling a Pen IS meaningful, because a Line is 
+    wxSTIPPLE_MASK_OPAQUE, # mask is used for blitting monochrome using text fore and back ground colors
+    wxSTIPPLE_MASK,        # mask is used for masking areas in the stipple bitmap (TO DO)
+    # drawn with a Pen, and without any Brush -- and it can be stippled.
+    wxSTIPPLE =          110#,
+
+    #wxBDIAGONAL_HATCH = wxHATCHSTYLE_BDIAGONAL,
+    #wxCROSSDIAG_HATCH = wxHATCHSTYLE_CROSSDIAG,
+    #wxFDIAGONAL_HATCH = wxHATCHSTYLE_FDIAGONAL,
+    #wxCROSS_HATCH = wxHATCHSTYLE_CROSS,
+    #wxHORIZONTAL_HATCH = wxHATCHSTYLE_HORIZONTAL,
+    #wxVERTICAL_HATCH = wxHATCHSTYLE_VERTICAL,
+    #wxFIRST_HATCH = wxHATCHSTYLE_FIRST,
+    #wxLAST_HATCH = wxHATCHSTYLE_LAST
+
+type WxPenStyle = int or WxDeprecatedGUIConstants
+
+const
+  wxPENSTYLE_INVALID*: WxPenStyle = -1
+
+  wxPENSTYLE_SOLID*: WxPenStyle = wxSOLID
+  wxPENSTYLE_DOT*: WxPenStyle = wxDOT
+  wxPENSTYLE_LONG_DASH*: WxPenStyle = wxLONG_DASH
+  wxPENSTYLE_SHORT_DASH*: WxPenStyle = wxSHORT_DASH
+  wxPENSTYLE_DOT_DASH*: WxPenStyle = wxDOT_DASH
+  wxPENSTYLE_USER_DASH*: WxPenStyle = wxUSER_DASH
+
+  wxPENSTYLE_TRANSPARENT*: WxPenStyle = wxTRANSPARENT
+
+  wxPENSTYLE_STIPPLE_MASK_OPAQUE*: WxPenStyle = wxSTIPPLE_MASK_OPAQUE
+  wxPENSTYLE_STIPPLE_MASK*: WxPenStyle = wxSTIPPLE_MASK
+  wxPENSTYLE_STIPPLE*: WxPenStyle = wxSTIPPLE
+
+#  wxPENSTYLE_BDIAGONAL_HATCH = wxHATCHSTYLE_BDIAGONAL,
+#  wxPENSTYLE_CROSSDIAG_HATCH = wxHATCHSTYLE_CROSSDIAG,
+#  wxPENSTYLE_FDIAGONAL_HATCH = wxHATCHSTYLE_FDIAGONAL,
+#  wxPENSTYLE_CROSS_HATCH = wxHATCHSTYLE_CROSS,
+#  wxPENSTYLE_HORIZONTAL_HATCH = wxHATCHSTYLE_HORIZONTAL,
+#  wxPENSTYLE_VERTICAL_HATCH = wxHATCHSTYLE_VERTICAL,
+#  wxPENSTYLE_FIRST_HATCH = wxHATCHSTYLE_FIRST,
+#  wxPENSTYLE_LAST_HATCH = wxHATCHSTYLE_LAST
+
+
+type WxBrushStyle* = int or WxDeprecatedGUIConstants
+
+const
+  wxBRUSHSTYLE_INVALID*: WxBrushStyle = -1
+  
+  wxBRUSHSTYLE_SOLID*: WxBrushStyle = wxSOLID
+  wxBRUSHSTYLE_TRANSPARENT*: WxBrushStyle = wxTRANSPARENT
+  wxBRUSHSTYLE_STIPPLE_MASK_OPAQUE*: WxBrushStyle = wxSTIPPLE_MASK_OPAQUE
+  wxBRUSHSTYLE_STIPPLE_MASK*: WxBrushStyle = wxSTIPPLE_MASK
+  wxBRUSHSTYLE_STIPPLE*: WxBrushStyle = wxSTIPPLE
+
+  #wxBRUSHSTYLE_BDIAGONAL_HATCH = wxHATCHSTYLE_BDIAGONAL,
+  #wxBRUSHSTYLE_CROSSDIAG_HATCH = wxHATCHSTYLE_CROSSDIAG,
+  #wxBRUSHSTYLE_FDIAGONAL_HATCH = wxHATCHSTYLE_FDIAGONAL,
+  #wxBRUSHSTYLE_CROSS_HATCH = wxHATCHSTYLE_CROSS,
+  #wxBRUSHSTYLE_HORIZONTAL_HATCH = wxHATCHSTYLE_HORIZONTAL,
+  #wxBRUSHSTYLE_VERTICAL_HATCH = wxHATCHSTYLE_VERTICAL,
+  #wxBRUSHSTYLE_FIRST_HATCH = wxHATCHSTYLE_FIRST,
+  #wxBRUSHSTYLE_LAST_HATCH = wxHATCHSTYLE_LAST
+

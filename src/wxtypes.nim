@@ -32,12 +32,22 @@ type WxClosure* = ptr object
 type WxApp* = ptr object
 type WxString* = ptr object
 
-type WxBitmap* = ptr object
+type WxBitmap* = ptr object of RootObj
+
+type WxIcon* = ptr object of WxBitmap
 
 type WxColour* = ptr object
 
 # Baseclass for all widgets!
 type WxWindow* = ptr object of RootObj
+
+# DC and related
+type WxDC = ptr object of RootObj
+type WxClientDC = ptr object of WxDC
+type WxPaintDC = ptr object of WxDC
+
+type WxPen = ptr object of RootObj
+type WxBrush = ptr object of RootObj
 
 # container widgets
 type WxFrame* = WxWindow

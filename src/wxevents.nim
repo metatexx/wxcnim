@@ -11,3 +11,6 @@ proc expEVT_KEY_UP*(): int
 
 proc expEVT_TIMER*(): int
   {.cdecl, dynlib: WXCLibName, importc.}
+
+proc expEVT_PAINT*(): int
+  {.cdecl, dynlib: WXCLibName, importc.}

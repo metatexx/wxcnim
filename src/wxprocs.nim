@@ -136,9 +136,66 @@ proc wxTopLevelWindow_SetMinSize*(obj: WxWindow, w,h: int)
 proc wxTopLevelWindow_Maximize*(obj: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxTopLevelWindow_SetIcon*(obj: WxWindow, icon: WxIcon)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxIcon
+
+proc wxIcon_CreateDefault*(): WxIcon
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxIcon_CopyFromBitmap*(obj: WxIcon, bmp: WxBitmap)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxIcon_CreateLoad*(name: WxString, kind: WxBitmapType = wxBITMAP_TYPE_XBM, wdt: int = -1, hgt: int = -1): WxIcon
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxIcon_FromXPM*(data: pointer): WxIcon
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxPanel
 
-proc wxPanel_Create*(prt: WxWindow, id: WxId = -1, lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1, stl: int = 0): WxPanel
+proc wxPanel_Create*(prt: WxWindow, id: WxId = -1, lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1, stl: WxBorder = 0): WxPanel
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxDC
+
+proc wxDC_SetPen*(obj: WxDC, pen: WxPen)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_SetBrush*(obj: WxDC, pen: WxBrush)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_DrawCircle*(obj: WxDC, x,y : int, radius: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_DrawLine*(obj: WxDC, x1,y1, x2,y2 : int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxClientDC
+
+proc wxClientDC_Create*(win: WxWindow): WxClientDC
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxClientDC_Delete*(obj: WxClientDC)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxPaintDC
+
+proc wxPaintDC_Create*(win: WxWindow): WxPaintDC
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxPaintDC_Delete*(obj: WxPaintDC)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxPen
+
+proc wxPen_CreateFromColour*(col: WxColour, width: int, style: WxPenStyle): WxPen
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxPen
+
+proc wxBrush_CreateFromColour*(col: WxColour, style: WxBrushStyle): WxBrush
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxScrolledWindow
@@ -264,9 +321,15 @@ proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: int, top: int
 proc wxColour_CreateRGB*(red, green, blue, alpha: int = 255): WxColour
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxColour_CreateByName*(name: WxString): WxColour
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxBitmap
 
 proc wxBitmap_CreateLoad*(name: WxString, kind: WxBitmapType): WxBitmap
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBitmap_CreateFromXPM*(data: pointer): WxBitmap
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxBitmap_Delete*(obj: WxBitmap)

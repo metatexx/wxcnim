@@ -102,6 +102,7 @@ wxcUnpackingT(WxString, delete, wxString_Delete)
 
 # wxBitmap
 wxcUnpacking(wxBitmapLoad, wxBitmap_CreateLoad)
+wxcUnpacking(wxBitmapFromXPM, wxBitmap_Create_FromXPM)
 
 wxcUnpackingT(WxBitmap, delete, wxBitmap_Delete)
 wxcUnpackingT(WxBitmap, getHeight, wxBitmap_GetHeight)
@@ -110,8 +111,13 @@ wxcUnpackingT(WxBitmap, getWidth, wxBitmap_GetWidth)
 # wxBitmapButton
 wxcUnpacking(wxBitmapButton, wxBitmapButton_Create)
 
+# wxIcon
+wxcUnpacking(wxIconFromXPM, wxIcon_Create_FromXPM)
+
 # wxColour
 wxcUnpacking(wxColourRGB, wxColour_CreateRGB)
+
+wxcUnpacking(wxColourByName, wxColour_CreateByName)
 
 # Events + Closure (Glue)
 wxcUnpacking(wxClosure, wxClosure_Create)
@@ -161,6 +167,22 @@ wxcUnpackingT(WxScrolledWindow, setScrollRate, wxScrolledWindow_SetScrollRate)
 wxcUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
 wxcUnpackingT(WxScrolledWindow, getViewStart, wxScrolledWindow_GetViewStart)
 
+# WxClientDC
+
+wxcUnpacking(wxClientDC, wxClientDC_Create)
+wxcUnpackingT(WxClientDC, delete, wxClientDC_Delete)
+
+# WxPaintDC
+
+wxcUnpacking(wxPaintDC, wxPaintDC_Create)
+wxcUnpackingT(WxPaintDC, delete, wxPaintDC_Delete)
+
+# WxDC
+wxcUnpackingT(WxDC, setPen, wxDC_SetPen)
+wxcUnpackingT(WxDC, setBrush, wxDC_SetBrush)
+wxcUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
+wxcUnpackingT(WxDC, drawLine, wxDC_DrawLine)
+
 # WxGrid
 wxcUnpacking(wxGrid, wxGrid_Create)
 wxcUnpackingT(WxGrid, createGrid, wxGrid_CreateGrid)
@@ -172,6 +194,9 @@ wxcUnpackingT(WxGrid, setCellEditor, wxGrid_SetCellEditor)
 wxcUnpackingT(WxGrid, setReadOnly, wxGrid_SetReadOnly)
 wxcUnpackingT(WxGrid, setCellValue, wxGrid_SetCellValue)
 wxcUnpackingT(WxGrid, setCellTextColour, wxGrid_SetCellTextColour)
+
+# wxGridCellChoiceEditor
+wxcUnpacking(wxGridCellChoiceEditor, wxGridCellChoiceEditor_Ctor)
 
 # WxFrame
 wxcUnpacking(wxFrame, wxFrame_Create)

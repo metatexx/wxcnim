@@ -62,7 +62,7 @@ proc button1Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   #let parent = cast[WxWindow](data)
   let msgDlg = wxMessageDialog(
     parent,
-    "Do you really want to quit?", 
+    "Do you really want to quit?",
     "You pushed the button!",
     wxYES_NO or wxNO_DEFAULT)
 
@@ -86,7 +86,7 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
 #  echo "Clicked '", fun.repr
 #  echo "Clicker2 Event: ", evn.repr
 #  echo "Clicker2 Data: ", parent.repr
-  
+
   # just to have something going on we show the current scrolled window offset
   let scrolled = eljFindWindowById(myScrolledId, nil)
   var x, y: int
@@ -109,7 +109,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   echo dispSize.w, " x ", dispSize.h
 
   let txt = eljGetUserName()
-  
+
   echo "txt is: " & normalize(txt)
 
   let mainFrame = wxFrame(nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
@@ -120,7 +120,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
     let mainPanel = wxPanel(mainFrame, wxID_ANY)
     let mainSizer = wxBoxSizer(wxVERTICAL)
     mainSizer.addWindow(mainPanel,1, wxEXPAND)
-    mainFrame.setSizer(mainSizer)  
+    mainFrame.setSizer(mainSizer)
   else:
     let mainPanel = mainFrame # try that to see the effect (on windows / linux)
 
@@ -130,7 +130,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   let fileMenu = wxMenu("", 0)
   let fileNew = wxMenuItemEx(-1, "Neu", "", 0, nil)
   let fileOpen = wxMenuItemEx(-1, "Öffnen...") # skip defaults
-  
+
   let fileNewId = fileNew.getId
   let fileOpenId = fileOpen.getId
 
@@ -153,7 +153,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # creating a horizontal sizer for our buttons
   let hsiz = wxBoxSizer(wxHORIZONTAL)
- 
+
   # add it to the vsizer
   vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
 
@@ -171,10 +171,10 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   hsiz.addWindow(bt3, 0, wxALL xor wxLEFT, 10, nil)
 
   # make something more complex: a bitmap button
-  
+
   # load an png image to a bitmap for usage as button
   let wxbmp = wxBitmapLoad("bitmap1.png", wxBITMAP_TYPE_PNG)
-  
+
   # mache a borderless button (just the bitmap)
   let bt4 = wxBitmapButton(mainPanel, wxID_ANY, wxbmp, 0, 0, -1, -1, wxBORDER_NONE)
   hsiz.addWindow(bt4, 0, wxALL xor wxLEFT, 10, nil)
@@ -189,7 +189,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # add some text (right aligned for fun, does not work on ubuntu it seems)
   #let pst1 = wxPanel(mainPanel)
   let st1 = wxStaticText(mainPanel, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
- 
+
   # highlight the background of the static text window
   let col1 = wxColourRGB(255,255,200)
   let col2 = wxColourRGB(255,220,200)
@@ -201,13 +201,13 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # again some text right alighn but this time using a sizer
   let hp = wxBoxSizer(wxHORIZONTAL)
   let st2 = wxStaticText(mainPanel, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
-    
+
   discard st2.setBackgroundColour(col2)
 
   hp.add(0, 0, 1, wxEXPAND, 0, nil)
   hp.addWindow(st2, 0, 0, 0, nil)
   vsiz.addSizer(hp, 0, wxLEFT or wxRIGHT or wxEXPAND, 10, nil)
- 
+
   # The lable is not so static :)
   # following uses converters "magically"
   st2.setLabel("User: " & toUpper(eljGetUserName()))
@@ -233,10 +233,10 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   pos = lcTable.insertColumn(pos+1, "Name", 0, 100)
   pos = lcTable.insertColumn(0, "Id", 0, 30) # insert 'in front'
   pos = lcTable.insertColumn(lcTable.getColumnCount(), "Alter", 0, 100)
-  
+
   # A scrolling area!
   let scrolled = wxScrolledWindow(mainFrame, myScrolledId, 0, 0, -1, 100, wxSUNKEN_BORDER)
-  
+
   let scsiz = wxBoxSizer(wxVERTICAL)
   let texts = ["The","Brown","Fox","jumps","over","the","lazy","dog"]
 
@@ -250,10 +250,10 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   #scrolled.adjustScrollbars # ?
   #scrolled.enableScrolling(false,true) # stops scrolling but not the scrollbar movement
   #scrolled.showScrollbars(0,0) ??
-  
+
   # on windows it will only scroll by mousewheel if it has the focus
   scrolled.setFocus() # focus scrolled on first display of the window
-  
+
   vsiz.addWindow(scrolled, 0, wxEXPAND or wxAll, 10, nil)
 
   # Next a "wxGrid"
@@ -277,6 +277,9 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   var ss = wxcArrayWideStrings(["Kölle", "Alaaf!"])
 
+  # the grid does only receive input on windows if not in a panel!?
+  mainSizer.addWindow(grid, 0, wxEXPAND or wxAll, 0, nil)
+
   # only allows data from the list of strings
   let ged_ro = wxGridCellChoiceEditor_Ctor(ss.len, ss, false)
   grid.setCellEditor(0 , 1, ged_ro)
@@ -284,9 +287,6 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   # allows your own data too
   let ged_rw = wxGridCellChoiceEditor_Ctor(ss.len, ss, true)
   grid.setCellEditor(0 , 2, ged_rw)
-
-  # the grid does only receive input on windows if not in a panel!?
-  mainSizer.addWindow(grid, 0, wxEXPAND or wxAll, 0, nil)
 
   when false:
     # this constrains the windows min size
@@ -306,7 +306,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # after the mainframe is visible we can "scroll" with a proc
   scrolled.scroll(0, 10)
-  
+
   echo "appMain finished"
 
   # not needed
