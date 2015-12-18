@@ -13,67 +13,42 @@ proc wxSize*(w, h: int) = discard
 proc wxColor*(r, g, b: int) = discard
 proc wxRect*(a, b, c, d: int) = discard
 
+proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
+  var call = newCall(!extname)
+  if not what.isNil: call.add(what)
+  for x in n.children:
+    var unpack = false
+    if x.kind in nnkCallKinds:
+      case $x[0]
+      of "wxPoint":
+        expectLen(x, 3)
+        unpack = true
+      of "wxSize":
+        expectLen(x, 3)
+        unpack = true
+      of "wxRect":
+        expectLen(x, 5)
+        unpack = true
+      of "wxColor":
+        expectLen(x, 4)
+        unpack = true
+      else: discard
+
+    if unpack:
+      for i in 1..<x.len:
+        call.add(x[i])
+    else:
+      call.add(x)
+  result = newStmtList(call)
 
 template wxcUnpacking(nimname,extname) =
   macro nimname*(n: varargs[untyped]): expr =
-    var call = newCall(!astToStr(extname))
-    for x in n.children:
-      var unpack = false
-      if x.kind in nnkCallKinds:
-        case $x[0]
-        of "wxPoint":
-          expectLen(x, 3)
-          unpack = true
-        of "wxSize":
-          expectLen(x, 3)
-          unpack = true
-        of "wxRect":
-          expectLen(x, 5)
-          unpack = true
-        of "wxColor":
-          expectLen(x, 4)
-          unpack = true
-        else: discard
-
-      if unpack:
-        for i in 1..<x.len:
-          call.add(x[i])
-      else:
-        call.add(x)
-
-    result = newStmtList(call)
+    unpackHelper(n, astToStr(extname), nil)
 
 # This works like a method call for the as "what" given type
 template wxcUnpackingT(what,nimname,extname) =
-    macro nimname*(p: what, n: varargs[untyped]): expr =
-      var call = newCall(!astToStr(extname))
-      call.add(p)
-      for x in n.children:
-        var unpack = false
-        if x.kind in nnkCallKinds:
-          case $x[0]
-          of "wxPoint":
-            expectLen(x, 3)
-            unpack = true
-          of "wxSize":
-            expectLen(x, 3)
-            unpack = true
-          of "wxRect":
-            expectLen(x, 5)
-            unpack = true
-          of "wxColor":
-            expectLen(x, 4)
-            unpack = true
-          else: discard
-
-        if unpack:
-          for i in 1..<x.len:
-            call.add(x[i])
-        else:
-          call.add(x)
-
-      result = newStmtList(call)
-
+  macro nimname*(p: what, n: varargs[untyped]): expr =
+    unpackHelper(n, astToStr(extname), p)
 
 # App wrapper
 wxcUnpacking(eljGetApp, ELJApp_GetApp)
@@ -263,6 +238,6 @@ when isMainModule:
   proc wxButton_Create(a: WxWindow, b:WxId, c:string, d:int, e:int, f:int, g:int, h:int): WxButton =
     #echo locals()
     return nil
-  
+
   let a = wxButton(nil, 0, "test", 0,0, -1,-1, 0)
   echo a.repr()
