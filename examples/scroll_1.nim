@@ -43,8 +43,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   grid.setCellEditor(0 , 1, ged_ro)
 
 
-  sizer.addWindow(grid, 0, wxALL , 10, nil)
-  sizer.addWindow(button, 0, wxALL , 10, nil)
+  sizer.addWindow(grid, 0, wxALL, 10, nil)
+  sizer.addWindow(button, 0, wxALL, 10, nil)
 
   #mainFrame.fit
   mainFrame.show
