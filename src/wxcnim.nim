@@ -9,10 +9,10 @@ include wxlibname
 import unicode
 
 include wxtypes
-include wxevents
 include wxdefs
 include wxprocs
 include wxunpacking
+include wxevents
 
 converter toWxId*(x: WxStandardId): WxId = cast[WxId](x)
 
@@ -66,7 +66,7 @@ when isMainModule:
   echo ss[].proxy.repr
 
 # Makes a new WxString from a "string"
-converter toWxString*(s: string): WxString = 
+converter toWxString*(s: string): WxString =
   #echo "DBG: string->WxString conversion for " & s
   result = wxString_CreateUTF8(s)
 
