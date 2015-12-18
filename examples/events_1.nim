@@ -67,39 +67,7 @@ proc buttonQuit(evn: WxEvent) {.nimcall.} =
   evn.skip() # makes that the other one still gets called!
   eljExitMainLoop()
 
-type
-  EventHandler = proc (event: WxEvent) {.closure.}
-  YetAnotherClosure = ref object
-    eventHandler: EventHandler
-
-proc rawEventHandler(fun, data, event: pointer) {.cdecl.} =
-  let d = cast[YetAnotherClosure](data).eventHandler
-  d(cast[WxEvent](event))
-
-proc register(obj: WxWindow; kind: int;
-              eventHandler: EventHandler) =
-  let data = YetAnotherClosure(eventHandler: eventHandler)
-  # we leak the environment here. This seems to be the best we
-  # can do since wxC doesn't offer the possibility to override
-  # the destructor of wxClosure in wrapper.h.
-  GC_ref(data)
-  discard obj.connect(-1, -1, kind, wxClosure(rawEventHandler, cast[pointer](data)))
-
-proc register(obj: WxButton; eventHandler: EventHandler) =
-  register(obj, expEVT_COMMAND_BUTTON_CLICKED(), eventHandler)
-
-proc register(obj: WxTimerEx; eventHandler: EventHandler) =
-  let data = YetAnotherClosure(eventHandler: eventHandler)
-  # we leak the environment here. This seems to be the best we
-  # can do since wxC doesn't offer the possibility to override
-  # the destructor of wxClosure in wrapper.h.
-  GC_ref(data)
-  obj.wxTimerEx_Connect(wxClosure(rawEventHandler, cast[pointer](data)))
-
-
-proc appMain(a, b, c: pointer) {.cdecl.} =
-  # argc und argv do not make sense to me :(
-
+proc appMain() =
   let mainFrame = wxFrame(nil, wxID_ANY, "Hi!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
   #echo "parent: ", mainFrame.repr
 
@@ -133,10 +101,6 @@ proc appMain(a, b, c: pointer) {.cdecl.} =
 
 
 when isMainModule:
-  # Initialising and running "appMain"
-  let cl = wxClosure(appMain, nil) # Create Closure for appMain()
-  cl.initializeC(0, nil) # Das startet alles und geht in den Loop
-
+  callMain appMain
   # ... Mainloop running here ...
-
   echo "Done"
