@@ -68,7 +68,8 @@ proc wxString_GetString*(s: WxString, b: pointer): int
 #proc wxClosure_Create*(fun: proc {.stdcall.} , data: pointer): WxClosure
 #  {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxClosure_Create*(fun: proc {.stdcall.} , data: WxClosureTypes): WxClosure
+proc wxClosure_Create*(fun: proc (fun, data, evt: pointer) {.cdecl.},
+                       data: pointer): WxClosure
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxFrame
@@ -220,7 +221,7 @@ proc wxScrolledWindow_SetScrollbars*(obj: WxScrolledWindow, pixelsPerUnitX, pixe
 
 proc wxScrolledWindow_Scroll*(obj: WxScrolledWindow, x_pos, y_pos: int)
   {.cdecl, dynlib: WXCLibName, importc.}
-  
+
 proc wxScrolledWindow_GetViewStart*(obj: WxScrolledWindow, x: ptr int, y: ptr int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
