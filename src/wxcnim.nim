@@ -78,3 +78,58 @@ converter toString*(s: WxString): string =
   result = $s
   #echo "DBG: WxString->string conversion for " & result
   s.delete
+
+
+# Event Handling with Nim Closure support
+type
+  WxEventHandler* = proc (event: WxEvent) {.closure.}
+  YetAnotherClosure = ref object
+    eventHandler: WxEventHandler
+
+proc rawEventHandler(fun, data, event: pointer) {.cdecl.} =
+  # xxx do not why but that can happen :)
+  if event == nil:
+    return
+  let d = cast[YetAnotherClosure](data).eventHandler
+  d(cast[WxEvent](event))
+
+proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
+  fromId: WxId = -1, toId: WxId = -1) =
+  let data = YetAnotherClosure(eventHandler: eventHandler)
+  # we leak the environment here. This seems to be the best we
+  # can do since wxC doesn't offer the possibility to override
+  # the destructor of wxClosure in wrapper.h.
+  GC_ref(data)
+  discard obj.wxEvtHandler_Connect(fromId, toId, kind,
+    wxClosure(rawEventHandler, cast[pointer](data)))
+
+proc connect*(obj: WxButton; eventHandler: WxEventHandler) =
+  connect(obj, expEVT_COMMAND_BUTTON_CLICKED(), eventHandler)
+
+proc connect*(obj: WxTimerEx; eventHandler: WxEventHandler) =
+  let data = YetAnotherClosure(eventHandler: eventHandler)
+  # we leak the environment here. This seems to be the best we
+  # can do since wxC doesn't offer the possibility to override
+  # the destructor of wxClosure in wrapper.h.
+  GC_ref(data)
+  obj.wxTimerEx_Connect(wxClosure(rawEventHandler, cast[pointer](data)))
+
+proc wxnRunMainLoop*(main: proc() {.nimcall.}) =
+  proc appMain(a, data, c: pointer) {.cdecl.} =
+    cast[proc(){.nimcall.}](data)()
+  let cl = wxClosure(appMain, main)
+  cl.initializeC(0, nil)
+
+# Helpers to make it nicer to use
+proc wxPen*(col: WxColour, width: int, style: WxPenStyle): WxPen =
+  wxPen_CreateFromColour(col, width, style)
+
+proc wxPen*(colname: string, width: int = 1,
+  style: WxPenStyle = wxPENSTYLE_SOLID): WxPen =
+  wxPen_CreateFromColour(wxColourByName(colname), width, style)
+
+proc wxBrush*(col: WxColour, style: WxBrushStyle): WxBrush =
+  wxBrush_CreateFromColour(col, style)
+
+proc wxBrush*(colname: string, style: WxBrushStyle): WxBrush =
+  wxBrush_CreateFromColour(wxColourByName(colname), style)

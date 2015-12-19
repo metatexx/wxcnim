@@ -7,36 +7,32 @@ include icon_data
 
 var panel: WxPanel
 
-proc buttonQuit(fun: pointer, parent: WxWindow, evn: WxEvent) =
-  if evn == nil:
-    return
-  eljExitMainLoop()
+proc buttonQuit(evn: WxEvent) =
+  wxnExitMainLoop()
 
-proc onPaint(fun: pointer, parent: WxWindow, evn: WxEvent) =
-  if evn == nil:
-    return
+proc onPaint(evn: WxEvent) =
+  let dc = wxPaintDC(panel) # PaintDC because we are in PaintEvent
 
-  #let dc = wxClientDC(panel)
-  let dc = wxPaintDC(panel)
-  echo repr(cast[int](dc))
-
-  let colBlue = wxColourByName("Blue")
-  let bluePen = wxPen_CreateFromColour(colBlue, 2, wxSOLID)
-
-  let colRed = wxColourByName("Red")
-  let blueBrush = wxBrush_CreateFromColour(colRed, wxSolid)
+  let redBrush = wxBrush(wxColourByName("Red"), wxSolid)
+  # yet a shorter way
+  #let bluePen = wxPen("Blue", 2, wxSolid)
+  # should work with the "or" type from nimdefs too
+  #let bluePen = wxPen("Blue", 2, wxPENSTYLE_SOLID)
+  let bluePen = wxPen("Blue", 2)
 
   dc.setPen(bluePen)
-  dc.setBrush(blueBrush)
+  dc.setBrush(redBrush)
   dc.drawCircle(100, 100, 50)
   dc.drawLine(0,0, 300,300)
 
-proc appMain(argc: pointer, argv: openArray[cstring]) =
-  # argc und argv do not make sense to me :(
-  
-  eljInitAllImageHandlers()
-  
-  let mainFrame = wxFrame(nil, wxID_ANY, "Nim Bombs!", -1, -1, 300, 300, wxDEFAULT_DIALOG_STYLE or wxMINIMIZE_BOX)
+  # we need to delete it (if not we get drawing artefacts)
+  dc.delete()
+
+proc appMain() =
+  wxnInitAllImageHandlers()
+
+  let mainFrame = wxFrame(title="Nim Bombs!", w=300, h=300,
+    stl = wxDEFAULT_DIALOG_STYLE or wxMINIMIZE_BOX or wxRESIZE_BOX)
 
   let bmp = wxBitmapFromXPM(addr icon_data[0])
 
@@ -49,18 +45,18 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   #let button = wxButton(mainFrame, -12, "Quit", 0,0, -1,-1, 0)
 
-  var cl = wxClosure(buttonQuit, mainFrame)
-  discard mainFrame.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
-  
+  mainFrame.connect(expEVT_COMMAND_BUTTON_CLICKED(), buttonQuit)
+
   mainFrame.setSizer(sizer)
 
   panel = wxPanel(mainFrame, wxID_ANY, 0,0, -1,-1, wxBORDER_RAISED)
 
+  #let dc = wxClientDC(panel)
+
   sizer.addWindow(panel, 1, wxALL or wxEXPAND, 10, nil)
   sizer.addWindow(button, 0, wxALL, 10, nil)
 
-  var paintcl = wxClosure(onPaint, panel)
-  discard panel.connect(-1, -1, expEVT_PAINT(), paintcl)
+  panel.connect(expEVT_PAINT(), onPaint)
 
   #mainFrame.fit
   mainFrame.show
@@ -68,9 +64,6 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
 when isMainModule:
   # Initialising and running "appMain"
-  let cl = wxClosure(appMain, nil) # Create Closure for appMain()
-  cl.initializeC(0, nil) # Das startet alles und geht in den Loop
-
+  wxnRunMainLoop appMain
   # ... Mainloop running here ...
-
   echo "Done"

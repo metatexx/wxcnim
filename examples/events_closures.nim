@@ -13,10 +13,10 @@ proc appMain() =
   let sizer = wxBoxSizer(wxVertical)
   let button = wxButton(mainFrame, -12, "Quit", 0,0, -1,-1, 0)
 
-  button.register(proc (event: WxEvent) = eljExitMainLoop())
+  button.connect(proc (event: WxEvent) = wxnExitMainLoop())
 
   let panel = wxPanel(mainFrame, wxID_ANY)
-  panel.register(expEVT_KEY_UP()) do (evn: WxEvent):
+  panel.connect(expEVT_KEY_UP()) do (evn: WxEvent):
     let evn = WxKeyEvent(evn)
     if evn == nil:
       return
@@ -28,7 +28,7 @@ proc appMain() =
     echo "Modifiers: ", wxKeyEvent_GetModifiers(evn)
     if wxKeyEvent_GetKeyCode(evn)==67 and wxKeyEvent_GetModifiers(evn)==16:
       # ctrl+c :)
-      eljExitMainLoop()
+      wxnExitMainLoop()
 
   mainFrame.setSizer(sizer)
   sizer.addWindow(button, 0, wxALL, 10, nil)
@@ -36,14 +36,14 @@ proc appMain() =
   # new timer owned by mainFrame
   timerWx = wxTimer(mainFrame, wxID_ANY)
   # add event listener for timer events to mainFrame
-  mainFrame.register(expEVT_TIMER(), proc (evn: WxEvent) =
+  mainFrame.connect(expEVT_TIMER(), proc (evn: WxEvent) =
     echo "One shot TimerWx Boom!")
   # start the timer as one shot after 5 seconds
   discard timerWx.start(5000, true)
 
   # this is just "a timer" with a callback not bound to anything really
   timerEx = wxTimerEx()
-  timerEx.register proc(evn: WxEvent) {.nimcall.} =
+  timerEx.connect proc(evn: WxEvent) {.nimcall.} =
     if evn == nil:
       return
     let evn = WxTimerEvent(evn)
@@ -69,6 +69,6 @@ proc appMain() =
 
 
 when isMainModule:
-  callMain appMain
+  wxnRunMainLoop appMain
   # ... Mainloop running here ...
   echo "Done"

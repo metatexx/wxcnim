@@ -4,6 +4,7 @@
 import wxcnim
 import strutils
 import os
+#import mxstring (not needed atm)
 
 type WxCustomIds = enum
   myScrolledId = 1
@@ -11,22 +12,15 @@ type WxCustomIds = enum
 
 converter toWxId(x: WxCustomIds): WxId = WxId(x)
 
-proc makeButton(parent: WxFrame, text: string, cb: proc (fun: WxClosure, parent: WxWindow, evn: pointer)): WxButton =
+proc makeButton(parent: WxFrame, text: string, cb: proc (evn: WxEvent) {.nimcall.}): WxButton =
   result = wxButton(parent, wxID_ANY, text, 0, 0, -1, -1, 0)
-  var cl = wxClosure(cb, parent)
-  #echo "cl: ", result.repr
-  discard result.connect(-1, -1, expEVT_COMMAND_BUTTON_CLICKED(), cl)
+  result.connect(expEVT_COMMAND_BUTTON_CLICKED(), cb)
 
-#import mxstring (not needed atm)
-
-proc myMenuNew(fun, data, evn: pointer) =
-  if cast[int](evn) == 0:
-    return
+proc myMenuNew(evn: WxEvent) =
   echo "Menu Event: ", evn.repr
-  echo "Menu Data: ", data.repr
   # bell (wau wau)
 
-  var grid = WxGrid(eljFindWindowById(myGridId, nil))
+  var grid = WxGrid(wxnFindWindowById(myGridId, nil))
 
   grid.beginBatch()
   for r in 1..9:
@@ -34,12 +28,12 @@ proc myMenuNew(fun, data, evn: pointer) =
       grid.setCellValue(r, i, $(i+1+r*10))
   grid.endBatch()
 
-  eljBell()
+  wxnBell()
 
-proc myMenuOpen(fun, data, evn: pointer) =
+proc myMenuOpen(evn: WxEvent) =
   if cast[int](evn) == 0:
     return
-  let dir = eljGetUserHome(eljGetUserName())
+  let dir = wxnGetUserHome(wxnGetUserName())
 
   let fileDlg = wxFileDialog(nil, "Select a text file (*.txt)!",
     dir,  "test.txt",  "Text Files|*.txt", stl=wxFD_OPEN)
@@ -50,16 +44,12 @@ proc myMenuOpen(fun, data, evn: pointer) =
 
   echo if fileDlg.destroy(): "Destroy OK" else: "Destroy failed"
 
-proc button1Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
-  if cast[int](evn) == 0:
-    return
-
-  echo "Clicker Fun: ", fun.repr
-  echo "Clicker Event: ", evn.repr
-  echo "Clicker Data: ", parent.repr
+proc button1Clicked(evn: WxEvent) =
+  # We hide the button (for fun)
+  let parent = wxEvent_GetEventObject(evn)
+  parent.hide()
 
   # This will show a no/yes modal dialog
-  #let parent = cast[WxWindow](data)
   let msgDlg = wxMessageDialog(
     parent,
     "Do you really want to quit?",
@@ -72,6 +62,9 @@ proc button1Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
 
   # continue running
 
+  # We show the button again
+  parent.show()
+
   # let ms: MxString = "Test"
   # Forcing a full GC run for debugging my MxString (not used right now)
   # GC_fullCollect()
@@ -79,8 +72,8 @@ proc button1Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
   # cleaning up the dialog and exit
   msgDlg.delete
 
-proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
-  if cast[int](evn) == 0:
+proc button2Clicked(evn: WxEvent) =
+  if evn == nil:
     return
 
 #  echo "Clicked '", fun.repr
@@ -88,31 +81,30 @@ proc button2Clicked(fun: WxClosure, parent: WxWindow, evn: pointer) =
 #  echo "Clicker2 Data: ", parent.repr
 
   # just to have something going on we show the current scrolled window offset
-  let scrolled = eljFindWindowById(myScrolledId, nil)
+  let scrolled = wxnFindWindowById(myScrolledId, nil)
   var x, y: int
 
   scrolled.getViewStart(addr x, addr y)
   #discard wxFrame_ShowFullScreen(mainFrame, true, 0)
   echo y
 
-proc appMain(argc: pointer, argv: openArray[cstring]) =
-  # argc und argv do not make sense to me :(
-
+proc appMain() =
   # we need this so wxImage can load our wxBitmap from
   # the PNG file later!
-  eljInitAllImageHandlers()
+  wxnInitAllImageHandlers()
 
-  let app = eljGetApp()
+  #let app = wxnGetApp()
 
-  #echo ELJApp_Initialized()
-  let dispSize = eljDisplaySize()
+  let dispSize = wxnDisplaySize()
   echo dispSize.w, " x ", dispSize.h
 
-  let txt = eljGetUserName()
+  let txt = wxnGetUserName()
 
   echo "txt is: " & normalize(txt)
 
-  let mainFrame = wxFrame(nil, wxID_ANY, "Hallo Nim World!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+#  let mainFrame = wxFrame(nil, wxID_ANY, "Hello Nim World!",
+#    -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame(title="Hello Nim World!")
 
   # now using a "panel" instead of the raw frame.
   # This should look much better on windows (and older linux?)
@@ -137,13 +129,10 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
   fileMenu.appendItem(fileNew)
   fileMenu.appendItem(fileOpen)
   discard menuBar.append(fileMenu, "File")
-  wxFrame_SetMenuBar(mainFrame, menuBar)
+  mainFrame.setMenuBar(menuBar)
 
-  var cl_menu_new = wxClosure(myMenuNew, app)
-  var cl_menu_open = wxClosure(myMenuOpen, app)
-  discard menuBar.connect(fileNewId, fileNewId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_new)
-
-  discard menuBar.connect(fileOpenId, fileOpenId, expEVT_COMMAND_MENU_SELECTED(), cl_menu_open)
+  menuBar.connect(expEVT_COMMAND_MENU_SELECTED(), myMenuNew, fileNewId, fileNewId)
+  menuBar.connect(expEVT_COMMAND_MENU_SELECTED(), myMenuOpen, fileOpenId, fileOpenId)
 
   # creating a vertical sizer
   let vsiz = wxBoxSizer(wxVERTICAL)
@@ -188,7 +177,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # add some text (right aligned for fun, does not work on ubuntu it seems)
   #let pst1 = wxPanel(mainPanel)
-  let st1 = wxStaticText(mainPanel, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
+  let st1 = wxStaticText(mainPanel, wxID_ANY, "This is static Text 1", 0, 0, -1, -1, wxALIGN_RIGHT)
 
   # highlight the background of the static text window
   let col1 = wxColourRGB(255,255,200)
@@ -200,7 +189,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # again some text right alighn but this time using a sizer
   let hp = wxBoxSizer(wxHORIZONTAL)
-  let st2 = wxStaticText(mainPanel, wxID_ANY, "This is a static Text", 0, 0, -1, -1, wxALIGN_RIGHT)
+  let st2 = wxStaticText(mainPanel, wxID_ANY, "This is static Text 2", 0, 0, -1, -1, wxALIGN_RIGHT)
 
   discard st2.setBackgroundColour(col2)
 
@@ -210,7 +199,7 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   # The lable is not so static :)
   # following uses converters "magically"
-  st2.setLabel("User: " & toUpper(eljGetUserName()))
+  st2.setLabel("User: " & toUpper(wxnGetUserName()))
 
   # memory leak testing (you need to free GetLabel)
   when false:
@@ -309,15 +298,8 @@ proc appMain(argc: pointer, argv: openArray[cstring]) =
 
   echo "appMain finished"
 
-  # not needed
-  #ELJApp_MainLoop()
-  #ELJApp_Exit()
-
 when isMainModule:
   # Initialising and running "appMain"
-  let cl = wxClosure(appMain, nil) # Create Closure for appMain()
-  cl.initializeC(0, nil) # Das startet alles und geht in den Loop
-
+  wxnRunMainLoop appMain
   # ... Mainloop running here ...
-
   echo "Done"

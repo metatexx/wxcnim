@@ -216,7 +216,7 @@ const
   wxCLIP_CHILDREN*:WxFrameStyle = 4194304
   wxNO_BORDER*:WxFrameStyle = wxBORDER_NONE
   wxCAPTION*:WxFrameStyle = 0x20000000
-  wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656    
+  wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656
   wxDEFAULT_DIALOG_STYLE*:WxFrameStyle = wxCAPTION or wxMAXIMIZE or wxCLOSE_BOX or wxNO_BORDER
 
 type WxDialogSpecs* = int64
@@ -409,7 +409,7 @@ const
   wxFD_DEFAULT_STYLE* = wxFD_OPEN
 
 
-type WxDeprecatedGUIConstants* = enum 
+type WxDeprecatedGUIConstants* = enum
     # Text font families
     wxDEFAULT    = 70,
     wxDECORATIVE,
@@ -441,7 +441,7 @@ type WxDeprecatedGUIConstants* = enum
     wxTRANSPARENT,
 
     # Brush & Pen Stippling. Note that a stippled pen cannot be dashed!!
-    # Note also that stippling a Pen IS meaningful, because a Line is 
+    # Note also that stippling a Pen IS meaningful, because a Line is
     wxSTIPPLE_MASK_OPAQUE, # mask is used for blitting monochrome using text fore and back ground colors
     wxSTIPPLE_MASK,        # mask is used for masking areas in the stipple bitmap (TO DO)
     # drawn with a Pen, and without any Brush -- and it can be stippled.
@@ -456,7 +456,12 @@ type WxDeprecatedGUIConstants* = enum
     #wxFIRST_HATCH = wxHATCHSTYLE_FIRST,
     #wxLAST_HATCH = wxHATCHSTYLE_LAST
 
-type WxPenStyle = int or WxDeprecatedGUIConstants
+
+# xxx because following does not work
+#type WxPenStyle* = int or WxDeprecatedGUIConstants
+# I did this
+type WxPenStyle* = int
+converter toInt*(x: WxDeprecatedGUIConstants): int = cast[int](x)
 
 const
   wxPENSTYLE_INVALID*: WxPenStyle = -1
@@ -484,11 +489,14 @@ const
 #  wxPENSTYLE_LAST_HATCH = wxHATCHSTYLE_LAST
 
 
-type WxBrushStyle* = int or WxDeprecatedGUIConstants
+# xxx because following does not work
+#type WxBrushStyle* = int or WxDeprecatedGUIConstants
+# I did this (as with the WxPenStyle)
+type WxBrushStyle* = int
 
 const
   wxBRUSHSTYLE_INVALID*: WxBrushStyle = -1
-  
+
   wxBRUSHSTYLE_SOLID*: WxBrushStyle = wxSOLID
   wxBRUSHSTYLE_TRANSPARENT*: WxBrushStyle = wxTRANSPARENT
   wxBRUSHSTYLE_STIPPLE_MASK_OPAQUE*: WxBrushStyle = wxSTIPPLE_MASK_OPAQUE
@@ -503,4 +511,3 @@ const
   #wxBRUSHSTYLE_VERTICAL_HATCH = wxHATCHSTYLE_VERTICAL,
   #wxBRUSHSTYLE_FIRST_HATCH = wxHATCHSTYLE_FIRST,
   #wxBRUSHSTYLE_LAST_HATCH = wxHATCHSTYLE_LAST
-

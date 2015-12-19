@@ -7,8 +7,6 @@ var timerWx: WxTimer = nil
 var timerEx: WxTimerEx = nil
 
 proc timerExEvent(evn: WxEvent) {.nimcall.} =
-  if evn == nil:
-    return
   let evn = WxTimerEvent(evn)
 
   inc timecounter
@@ -26,8 +24,6 @@ proc timerExEvent(evn: WxEvent) {.nimcall.} =
     echo "timerEx stopped"
 
 proc timerWxEvent(evn: WxEvent) {.nimcall.} =
-  if evn == nil:
-    return
   echo "One shot TimerWx Boom!"
 
 proc keyPressed(evn: WxEvent) {.nimcall.} =
@@ -43,7 +39,7 @@ proc keyPressed(evn: WxEvent) {.nimcall.} =
 
   if wxKeyEvent_GetKeyCode(evn)==67 and wxKeyEvent_GetModifiers(evn)==16:
     # ctrl+c :)
-    eljExitMainLoop()
+    wxnExitMainLoop()
 
 
 proc buttonPressed(evn: WxEvent) {.nimcall.} =
@@ -65,7 +61,7 @@ proc buttonQuit(evn: WxEvent) {.nimcall.} =
   echo "id: ", evn.getId
 
   evn.skip() # makes that the other one still gets called!
-  eljExitMainLoop()
+  wxnExitMainLoop()
 
 proc appMain() =
   let mainFrame = wxFrame(nil, wxID_ANY, "Hi!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
@@ -74,11 +70,11 @@ proc appMain() =
   let sizer = wxBoxSizer(wxVertical)
   let button = wxButton(mainFrame, -12, "Quit", 0,0, -1,-1, 0)
 
-  button.register(buttonPressed)
-  mainFrame.register(expEVT_COMMAND_BUTTON_CLICKED(), buttonQuit)
+  button.connect(buttonPressed)
+  mainFrame.connect(expEVT_COMMAND_BUTTON_CLICKED(), buttonQuit)
 
   let panel = wxPanel(mainFrame, wxID_ANY)
-  panel.register(expEVT_KEY_UP(), keyPressed)
+  panel.connect(expEVT_KEY_UP(), keyPressed)
 
   mainFrame.setSizer(sizer)
   sizer.addWindow(button, 0, wxALL, 10, nil)
@@ -86,13 +82,13 @@ proc appMain() =
   # new timer owned by mainFrame
   timerWx = wxTimer(mainFrame, wxID_ANY)
   # add event listener for timer events to mainFrame
-  mainFrame.register(expEVT_TIMER(), timerWxEvent)
+  mainFrame.connect(expEVT_TIMER(), timerWxEvent)
   # start the timer as one shot after 5 seconds
   discard timerWx.start(5000, true)
 
   # this is just "a timer" with a callback not bound to anything really
   timerEx = wxTimerEx()
-  timerEx.register(timerExEvent)
+  timerEx.connect(timerExEvent)
   discard timerEx.start(1000, false)
 
   mainFrame.fit
@@ -101,6 +97,6 @@ proc appMain() =
 
 
 when isMainModule:
-  callMain appMain
+  wxnRunMainLoop appMain
   # ... Mainloop running here ...
   echo "Done"

@@ -51,14 +51,15 @@ template wxcUnpackingT(what,nimname,extname) =
     unpackHelper(n, astToStr(extname), p)
 
 # App wrapper
-wxcUnpacking(eljGetApp, ELJApp_GetApp)
-wxcUnpacking(eljBell, ELJApp_Bell)
-wxcUnpacking(eljDisplaySize, ELJApp_DisplaySize)
-wxcUnpackingT(WxId, eljFindWindowById, ELJApp_FindWindowById)
-wxcUnpacking(eljGetUserName, ELJApp_GetUserName)
-wxcUnpacking(eljGetUserHome, ELJApp_GetUserHome)
-wxcUnpacking(eljInitAllImageHandlers, ELJApp_InitAllImageHandlers)
-wxcUnpacking(eljExitMainLoop, ELJApp_ExitMainLoop)
+wxcUnpacking(wxnGetApp, ELJApp_GetApp)
+wxcUnpacking(wxnBell, ELJApp_Bell)
+wxcUnpacking(wxnDisplaySize, ELJApp_DisplaySize)
+wxcUnpackingT(WxId, wxnFindWindowById, ELJApp_FindWindowById)
+wxcUnpacking(wxnGetUserName, ELJApp_GetUserName)
+wxcUnpacking(wxnGetUserHome, ELJApp_GetUserHome)
+wxcUnpacking(wxnInitAllImageHandlers, ELJApp_InitAllImageHandlers)
+wxcUnpacking(wxnExitMainLoop, ELJApp_ExitMainLoop)
+wxcUnpacking(wxnInitialized, ELJApp_Initialized)
 
 # wxEvent
 
@@ -99,7 +100,7 @@ wxcUnpacking(wxClosure, wxClosure_Create)
 
 wxcUnpackingT(WxClosure, initializeC, ELJApp_InitializeC)
 
-wxcUnpacking(connect, wxEvtHandler_Connect)
+#wxcUnpacking(connect, wxEvtHandler_Connect)
 
 # Sizers
 wxcUnpacking(wxBoxSizer, wxBoxSizer_Create)
@@ -114,6 +115,7 @@ wxcUnpackingT(WxSizer, setSizeHints, wxSizer_SetSizeHints)
 # WxWindow
 wxcUnpackingT(WxWindow, getLabel, wxWindow_GetLabel)
 wxcUnpackingT(WxWindow, show, wxWindow_Show)
+wxcUnpackingT(WxWindow, hide, wxWindow_Hide)
 wxcUnpackingT(WxWindow, fit, wxWindow_Fit)
 wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
 wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
@@ -157,6 +159,8 @@ wxcUnpackingT(WxDC, setPen, wxDC_SetPen)
 wxcUnpackingT(WxDC, setBrush, wxDC_SetBrush)
 wxcUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
 wxcUnpackingT(WxDC, drawLine, wxDC_DrawLine)
+wxcUnpackingT(WxDC, isOk, wxDC_IsOk)
+wxcUnpackingT(WxDC, clear, wxDC_Clear)
 
 # WxGrid
 wxcUnpacking(wxGrid, wxGrid_Create)
@@ -175,6 +179,7 @@ wxcUnpacking(wxGridCellChoiceEditor, wxGridCellChoiceEditor_Ctor)
 
 # WxFrame
 wxcUnpacking(wxFrame, wxFrame_Create)
+wxcUnpackingT(WxFrame, setMenuBar, wxFrame_SetMenuBar)
 
 # WxPanel
 wxcUnpacking(wxPanel, wxPanel_Create)
@@ -228,7 +233,7 @@ wxcUnpackingT(WxTimer, isRuning, wxTimer_IsRuning)
 # wxTimerEx
 
 wxcUnpacking(wxTimerEx, wxTimerEx_Create)
-wxcUnpackingT(WxTimerEx, connect, wxTimerEx_Connect)
+#wxcUnpackingT(WxTimerEx, connect, wxTimerEx_Connect)
 
 # wxTimerEvent
 

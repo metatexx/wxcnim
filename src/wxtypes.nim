@@ -46,12 +46,12 @@ type WxColour* = ptr object
 type WxWindow* = ptr object of WxObjectObj
 
 # DC and related
-type WxDC = ptr object of WxObjectObj
-type WxClientDC = ptr object of WxDC
-type WxPaintDC = ptr object of WxDC
+type WxDC* = ptr object of WxObjectObj
+type WxClientDC* = ptr object of WxDC
+type WxPaintDC* = ptr object of WxDC
 
-type WxPen = ptr object of WxObjectObj
-type WxBrush = ptr object of WxObjectObj
+type WxPen* = ptr object of WxObjectObj
+type WxBrush* = ptr object of WxObjectObj
 
 # container widgets
 type WxFrame* = WxWindow

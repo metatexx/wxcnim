@@ -1,7 +1,10 @@
 # wxprocs include
 
 # ELJApp
-
+when isMainModule:
+  include wxlibname
+  include wxdefs
+  include wxtypes
 
 proc ELJApp_InitializeC*(closure: WxClosure, argc: int, argv: pointer )
   {.cdecl, dynlib: WXCLibName, importc.}
@@ -73,9 +76,10 @@ proc wxClosure_Create*(fun: proc (fun, data, evt: pointer) {.cdecl.},
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxFrame
-
-proc wxFrame_Create*(p: WxWindow, id: WxId, txt: WxString,
-  x: int, y: int, w: int, h: int , stl: WxFrameStyle): WxFrame
+proc wxFrame_Create*(p: WxWindow = nil, id: WxId = WxId(wxID_ANY),
+  title: WxString = wxString_CreateUTF8("Default Frame Title"),
+  x: int = -1, y: int = -1, w: int = -1, h: int = -1,
+  stl: WxFrameStyle = wxDEFAULT_FRAME_STYLE): WxFrame
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxFrame_SetMenuBar*(obj: WxFrame, menubar: WxMenuBar)
@@ -148,7 +152,9 @@ proc wxIcon_CreateDefault*(): WxIcon
 proc wxIcon_CopyFromBitmap*(obj: WxIcon, bmp: WxBitmap)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxIcon_CreateLoad*(name: WxString, kind: WxBitmapType = wxBITMAP_TYPE_XBM, wdt: int = -1, hgt: int = -1): WxIcon
+proc wxIcon_CreateLoad*(name: WxString,
+  kind: WxBitmapType = wxBITMAP_TYPE_XBM,
+  wdt: int = -1, hgt: int = -1): WxIcon
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxIcon_FromXPM*(data: pointer): WxIcon
@@ -156,7 +162,9 @@ proc wxIcon_FromXPM*(data: pointer): WxIcon
 
 # wxPanel
 
-proc wxPanel_Create*(prt: WxWindow, id: WxId = -1, lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1, stl: WxBorder = 0): WxPanel
+proc wxPanel_Create*(prt: WxWindow, id: WxId = -1,
+  lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1,
+  stl: WxBorder = 0): WxPanel
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxDC
@@ -171,6 +179,12 @@ proc wxDC_DrawCircle*(obj: WxDC, x,y : int, radius: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxDC_DrawLine*(obj: WxDC, x1,y1, x2,y2 : int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_IsOk*(obj: WxDC): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_Clear*(obj: WxDC)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxClientDC
@@ -201,7 +215,8 @@ proc wxBrush_CreateFromColour*(col: WxColour, style: WxBrushStyle): WxBrush
 
 # wxScrolledWindow
 
-proc wxScrolledWindow_Create*(prt: WxWindow, id: int, lft, top, wdt, hgt: int, stl: WxBorder): WxScrolledWindow
+proc wxScrolledWindow_Create*(prt: WxWindow, id: int,
+  lft, top, wdt, hgt: int, stl: WxBorder): WxScrolledWindow
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxScrolledWindow_AdjustScrollbars*(obj: WxScrolledWindow)
@@ -216,7 +231,9 @@ proc wxScrolledWindow_ShowScrollbars*(obj: WxScrolledWindow, showh, showv: int)
 proc wxScrolledWindow_SetScrollRate*(obj: WxScrolledWindow, rateh, ratev: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxScrolledWindow_SetScrollbars*(obj: WxScrolledWindow, pixelsPerUnitX, pixelsPerUnitY, noUnitsX, noUnitsY, xPos, yPos: int, noRefresh:bool )
+proc wxScrolledWindow_SetScrollbars*(obj: WxScrolledWindow,
+  pixelsPerUnitX, pixelsPerUnitY, noUnitsX, noUnitsY,
+  xPos, yPos: int, noRefresh:bool )
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxScrolledWindow_Scroll*(obj: WxScrolledWindow, x_pos, y_pos: int)
@@ -227,7 +244,9 @@ proc wxScrolledWindow_GetViewStart*(obj: WxScrolledWindow, x: ptr int, y: ptr in
 
 # wxGrid
 
-proc wxGrid_Create*(prt: WxWindow, id: int, lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1, stl: int = 0): WxGrid
+proc wxGrid_Create*(prt: WxWindow, id: int,
+  lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1,
+  stl: int = 0): WxGrid
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxGrid_CreateGrid*(obj: WxGrid, rows: int, cols: int, selmode: int)
@@ -245,7 +264,8 @@ proc wxGrid_DisableDragColSize*(obj: WxGrid)
 proc wxGrid_DisableDragRowSize*(obj: WxGrid)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxGrid_SetCellEditor*(obj: WxGrid, row: int, col: int, editor: WxGridCellEditor)
+proc wxGrid_SetCellEditor*(obj: WxGrid, row: int, col: int,
+  editor: WxGridCellEditor)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxGrid_SetReadOnly*(obj: WxGrid, row: int, col: int, readOnly: bool)
@@ -259,7 +279,8 @@ proc wxGrid_SetCellTextColour*(obj: WxGrid, row: int, col: int, value: WxColour)
 
 #
 
-proc wxGridCellChoiceEditor_Ctor*( count: int , choices: WxcArrayWideStrings, alllowOthers = true): WxGridCellChoiceEditor
+proc wxGridCellChoiceEditor_Ctor*( count: int ,
+  choices: WxcArrayWideStrings, alllowOthers = true): WxGridCellChoiceEditor
   {.cdecl, dynlib: WXCLibName, importc.}
 
 
@@ -287,7 +308,9 @@ proc wxMenuBar_Append*(onj: WxMenuBar, menu: WxMenu, title: WxString): int
 proc wxMenuItem_Create*(): WxMenuItem
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxMenuItem_CreateEx*(id: int, label: WxString = wxString_CreateUTF8("Does this work?"), help: WxString = wxString_CreateUTF8(""),
+proc wxMenuItem_CreateEx*(id: int,
+  label: WxString = wxString_CreateUTF8("Does this work?"),
+  help: WxString = wxString_CreateUTF8(""),
   itemkind: int = 0, submenu: WxMenu = nil): WxMenuItem
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -307,14 +330,15 @@ proc wxMenuItem_GetLabelText*(obj: WxWindow): WxString
   {.cdecl, dynlib: WXCLibName, importc.}
 
 
-#    void       wxMenuItem_SetSubMenu( TSelf(wxMenuItem) _obj, TClass(wxMenu) menu );
+# void wxMenuItem_SetSubMenu( TSelf(wxMenuItem) _obj, TClass(wxMenu) menu );
 
 proc wxMenuItem_SetItemLabel*(obj: WxMenuItem, str: WxString)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxButton
 
-proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: int, top: int, wdt: int, hgt: int, stl: int): WxButton
+proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString,
+  lft: int, top: int, wdt: int, hgt: int, stl: int): WxButton
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxColour
@@ -344,7 +368,8 @@ proc wxBitmap_GetWidth*(obj: WxBitmap): int
 
 # wxBitmapButton
 
-proc wxBitmapButton_Create*(prt: WxWindow, id: int, bmp: WxBitmap, lft, top, wdt, hgt: int, stl: WxBorder): WxBitmapButton
+proc wxBitmapButton_Create*(prt: WxWindow, id: int, bmp: WxBitmap,
+  lft, top, wdt, hgt: int, stl: WxBorder): WxBitmapButton
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxBoxSizer
@@ -357,13 +382,16 @@ proc wxBoxSizer_Create*(orient: WxOrientation = wxVERTICAL): WxBoxSizer
 
 # wxSizer (abstract)
 
-proc wxSizer_Add*(obj: WxSizer, wdt: int = 0, hgt: int = 0, opt: int = 0, flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
+proc wxSizer_Add*(obj: WxSizer, wdt: int = 0, hgt: int = 0, opt: int = 0,
+  flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0, flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
+proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0,
+  flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, opt: int = 0, flg: WxStretch = 0, brd: int = 0, udt: pointer)
+proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, opt: int = 0,
+  flg: WxStretch = 0, brd: int = 0, udt: pointer)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_Layout*(obj: WxSizer)
@@ -381,16 +409,19 @@ proc wxControl_SetLabel*(obj: WxControl, txt: WxString)
 
 # wxStaticText
 
-proc wxStaticText_Create*(prt: WxWindow, id: WxId, txt: WxString, lft: cint, top: cint,
-  wdt: cint, hgt: cint, stl: WxStaticTextStyle): WxStaticText
+proc wxStaticText_Create*(prt: WxWindow, id: WxId, txt: WxString,
+  lft: cint, top: cint, wdt: cint, hgt: cint,
+  stl: WxStaticTextStyle): WxStaticText
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxListCtrl
 
-proc wxListCtrl_Create*(prt: WxWindow, id: WxId, lft: int, top: int, wdt: int, hgt: int, stl: WxLCStyle): WxListCtrl
+proc wxListCtrl_Create*(prt: WxWindow, id: WxId,
+  lft: int, top: int, wdt: int, hgt: int, stl: WxLCStyle): WxListCtrl
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: int, heading: WxString, format: int, width: int): int
+proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: int,
+  heading: WxString, format: int, width: int): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
@@ -398,7 +429,8 @@ proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
 
 # wxEvtHandler
 
-proc wxEvtHandler_Connect*(obj: WxWindow, first: WxId, last: WxId, kind: int, data: WxClosure): int
+proc wxEvtHandler_Connect*(obj: WxWindow, first: WxId = -1, last: WxId = -1,
+  kind: int, data: WxClosure): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxEvent
@@ -443,7 +475,8 @@ proc wxTimer_Create*(prt: WxWindow, id: WxId): WxTimer
 proc wxTimer_Delete*(obj: WxTimer)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxTimer_Start*(obj: WxTimer, millisecs: int = 1000, oneshot: bool = false): bool
+proc wxTimer_Start*(obj: WxTimer, millisecs: int = 1000,
+  oneshot: bool = false): bool
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxTimer_Stop*(obj: WxTimer)
@@ -478,7 +511,8 @@ proc wxDialog_ShowModal*(obj: WxDialog): int
 
 # wxMessageDialog
 
-proc wxMessageDialog_Create*(prt: WxWindow, msg: WxString, cap: WxString, spc: WxDialogSpecs): WxMessageDialog
+proc wxMessageDialog_Create*(prt: WxWindow, msg: WxString, cap: WxString,
+  spc: WxDialogSpecs): WxMessageDialog
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxMessageDialog_Delete*(obj: WxMessageDialog)
@@ -489,7 +523,10 @@ proc wxMessageDialog_ShowModal*(obj: WxMessageDialog): WxId
 
 # wxFileDialog
 
-proc wxFileDialog_Create*(prt: WxWindow, msg: WxString, dir: WxString, fle: WxString, wcd: WxString, lft: int = 0, top: int = 0, stl: WxFileDialogStyle = wxFD_DEFAULT_STYLE): WxFileDialog
+proc wxFileDialog_Create*(prt: WxWindow, msg: WxString, dir: WxString,
+  fle: WxString, wcd: WxString,
+  lft: int = 0, top: int = 0,
+  stl: WxFileDialogStyle = wxFD_DEFAULT_STYLE): WxFileDialog
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxFileDialog_GetPath*(obj: WxFileDialog): WxString
