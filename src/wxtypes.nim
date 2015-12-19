@@ -19,7 +19,9 @@ type WxcArrayWideStringsShadow* = ref WxcArrayWideStringsShadowObj
 
 type WxId* = int
 
-type WxObject* = ptr object of RootObj
+type
+  WxObjectObj {.pure, inheritable.} = object
+  WxObject* = ptr WxObjectObj
 
 type WxEvent* = ptr object of WxObject
 type WxKeyEvent* = ptr object of WxEvent
@@ -32,22 +34,24 @@ type WxClosure* = ptr object
 type WxApp* = ptr object
 type WxString* = ptr object
 
-type WxBitmap* = ptr object of RootObj
+type
+  WxBitmapObj {.pure, inheritable.} = object
+  WxBitmap* = ptr WxBitmapObj
 
 type WxIcon* = ptr object of WxBitmap
 
 type WxColour* = ptr object
 
 # Baseclass for all widgets!
-type WxWindow* = ptr object of RootObj
+type WxWindow* = ptr object of WxObjectObj
 
 # DC and related
-type WxDC = ptr object of RootObj
+type WxDC = ptr object of WxObjectObj
 type WxClientDC = ptr object of WxDC
 type WxPaintDC = ptr object of WxDC
 
-type WxPen = ptr object of RootObj
-type WxBrush = ptr object of RootObj
+type WxPen = ptr object of WxObjectObj
+type WxBrush = ptr object of WxObjectObj
 
 # container widgets
 type WxFrame* = WxWindow
