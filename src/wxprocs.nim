@@ -21,6 +21,9 @@ proc ELJApp_ExitMainLoop*()
 proc ELJApp_SetTopWindow*( wnd: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc ELJApp_GetTopWindow*(): WxWindow
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc ELJApp_MainLoop*(): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -97,6 +100,9 @@ proc wxWindow_Show*(p: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxWindow_Hide*(p: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxWindow_Close*(p: WxWindow, force: bool = false)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxWindow_Fit*(p: WxWindow)

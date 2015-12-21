@@ -53,6 +53,8 @@ template wxcUnpackingT(what,nimname,extname) =
 
 # App wrapper
 wxcUnpacking(wxnGetApp, ELJApp_GetApp)
+wxcUnpacking(wxnGetTopWindow, ELJApp_GetTopWindow)
+wxcUnpacking(wxnSetTopWindow, ELJApp_SetTopWindow)
 wxcUnpacking(wxnBell, ELJApp_Bell)
 wxcUnpacking(wxnDisplaySize, ELJApp_DisplaySize)
 wxcUnpackingT(WxId, wxnFindWindowById, ELJApp_FindWindowById)
@@ -124,6 +126,7 @@ wxcUnpackingT(WxSizer, setSizeHints, wxSizer_SetSizeHints)
 wxcUnpackingT(WxWindow, getLabel, wxWindow_GetLabel)
 wxcUnpackingT(WxWindow, show, wxWindow_Show)
 wxcUnpackingT(WxWindow, hide, wxWindow_Hide)
+wxcUnpackingT(WxWindow, close, wxWindow_Close)
 wxcUnpackingT(WxWindow, setSize, wxWindow_SetSize)
 wxcUnpackingT(WxWindow, fit, wxWindow_Fit)
 wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
