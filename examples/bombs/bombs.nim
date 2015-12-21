@@ -24,10 +24,10 @@ const UNIT = 30
 
 type
   CellBits = enum
-    ckHIDDEN = 16
-    ckBOMB = 32
-    ckMARK = 64
-    ckEXPLODED = 128
+    ckHIDDEN
+    ckBOMB
+    ckMARK
+    ckEXPLODED
 
   CellKind = tuple[flags: set[CellBits], count: byte]
 
