@@ -91,15 +91,17 @@ type
     eventHandler: WxEventHandlerM
 
 proc rawEventHandler(fun, data, event: pointer) {.cdecl.} =
-  # xxx do not why but that can happen :)
   if event == nil:
+    # gets called with nil on destruction of the closure
+    GC_unref(cast[ref YetAnotherClosure](data))
     return
   let d = cast[YetAnotherClosure](data).eventHandler
   d(cast[WxEvent](event))
 
 proc rawEventHandlerM(fun, data, event: pointer) {.cdecl.} =
-  # xxx do not why but that can happen :)
   if event == nil:
+    # gets called with nil on destruction of the closure
+    GC_unref(cast[ref YetAnotherClosureM](data))
     return
   let d = cast[YetAnotherClosureM](data).eventHandler
   d(cast[WxMouseEvent](event))
@@ -107,9 +109,7 @@ proc rawEventHandlerM(fun, data, event: pointer) {.cdecl.} =
 proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
   fromId: WxId = -1, toId: WxId = -1) =
   let data = YetAnotherClosure(eventHandler: eventHandler)
-  # we leak the environment here. This seems to be the best we
-  # can do since wxC doesn't offer the possibility to override
-  # the destructor of wxClosure in wrapper.h.
+  # will be unref on destruction of the underlaying closure
   GC_ref(data)
   discard obj.wxEvtHandler_Connect(fromId, toId, kind,
     wxClosure(rawEventHandler, cast[pointer](data)))
@@ -117,9 +117,7 @@ proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
 proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandlerM,
   fromId: WxId = -1, toId: WxId = -1) =
   let data = YetAnotherClosureM(eventHandler: eventHandler)
-  # we leak the environment here. This seems to be the best we
-  # can do since wxC doesn't offer the possibility to override
-  # the destructor of wxClosure in wrapper.h.
+  # will be unref on destruction of the underlaying closure
   GC_ref(data)
   discard obj.wxEvtHandler_Connect(fromId, toId, kind,
     wxClosure(rawEventHandlerM, cast[pointer](data)))
@@ -129,9 +127,7 @@ proc connect*(obj: WxButton; eventHandler: WxEventHandler) =
 
 proc connect*(obj: WxTimerEx; eventHandler: WxEventHandler) =
   let data = YetAnotherClosure(eventHandler: eventHandler)
-  # we leak the environment here. This seems to be the best we
-  # can do since wxC doesn't offer the possibility to override
-  # the destructor of wxClosure in wrapper.h.
+  # will be unref on destruction of the underlaying closure
   GC_ref(data)
   obj.wxTimerEx_Connect(wxClosure(rawEventHandler, cast[pointer](data)))
 
