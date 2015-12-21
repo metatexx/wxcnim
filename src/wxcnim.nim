@@ -86,12 +86,23 @@ type
   YetAnotherClosure = ref object
     eventHandler: WxEventHandler
 
+  WxEventHandlerM* = proc (event: WxMouseEvent) {.closure.}
+  YetAnotherClosureM = ref object
+    eventHandler: WxEventHandlerM
+
 proc rawEventHandler(fun, data, event: pointer) {.cdecl.} =
   # xxx do not why but that can happen :)
   if event == nil:
     return
   let d = cast[YetAnotherClosure](data).eventHandler
   d(cast[WxEvent](event))
+
+proc rawEventHandlerM(fun, data, event: pointer) {.cdecl.} =
+  # xxx do not why but that can happen :)
+  if event == nil:
+    return
+  let d = cast[YetAnotherClosureM](data).eventHandler
+  d(cast[WxMouseEvent](event))
 
 proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
   fromId: WxId = -1, toId: WxId = -1) =
@@ -102,6 +113,16 @@ proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
   GC_ref(data)
   discard obj.wxEvtHandler_Connect(fromId, toId, kind,
     wxClosure(rawEventHandler, cast[pointer](data)))
+
+proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandlerM,
+  fromId: WxId = -1, toId: WxId = -1) =
+  let data = YetAnotherClosureM(eventHandler: eventHandler)
+  # we leak the environment here. This seems to be the best we
+  # can do since wxC doesn't offer the possibility to override
+  # the destructor of wxClosure in wrapper.h.
+  GC_ref(data)
+  discard obj.wxEvtHandler_Connect(fromId, toId, kind,
+    wxClosure(rawEventHandlerM, cast[pointer](data)))
 
 proc connect*(obj: WxButton; eventHandler: WxEventHandler) =
   connect(obj, expEVT_COMMAND_BUTTON_CLICKED(), eventHandler)
@@ -121,15 +142,43 @@ proc wxnRunMainLoop*(main: proc() {.nimcall.}) =
   cl.initializeC(0, nil)
 
 # Helpers to make it nicer to use
-proc wxPen*(col: WxColour, width: int, style: WxPenStyle): WxPen =
+proc wxPen*(col: WxColour, width: int = 1,
+  style: WxPenStyle = wxPENSTYLE_SOLID): WxPen =
   wxPen_CreateFromColour(col, width, style)
 
 proc wxPen*(colname: string, width: int = 1,
   style: WxPenStyle = wxPENSTYLE_SOLID): WxPen =
   wxPen_CreateFromColour(wxColourByName(colname), width, style)
 
-proc wxBrush*(col: WxColour, style: WxBrushStyle): WxBrush =
+proc wxPen*(r,g,b: int, width: int = 1,
+  style: WxPenStyle = wxPENSTYLE_SOLID): WxPen =
+  wxPen_CreateFromColour(wxColourRGB(r,g,b), width, style)
+
+# its magic colors :)
+proc wxRedPen*(): WxPen = wxPen_CreateFromStock(0)
+proc wxCyanPen*(): WxPen = wxPen_CreateFromStock(1)
+proc wxGreenPen*(): WxPen = wxPen_CreateFromStock(2)
+proc wxBlackPen*(): WxPen = wxPen_CreateFromStock(3)
+proc wxWhitePen*(): WxPen = wxPen_CreateFromStock(4)
+proc wxTransparentPen*(): WxPen = wxPen_CreateFromStock(5)
+proc wxBlackDashedPen*(): WxPen = wxPen_CreateFromStock(6)
+proc wxGreyPen*(): WxPen = wxPen_CreateFromStock(7)
+proc wxMediumGreyPen*(): WxPen = wxPen_CreateFromStock(8)
+proc wxLightGreyPen*(): WxPen = wxPen_CreateFromStock(9)
+
+proc wxBrush*(col: WxColour, style: WxBrushStyle = wxBRUSHSTYLE_SOLID): WxBrush =
   wxBrush_CreateFromColour(col, style)
 
-proc wxBrush*(colname: string, style: WxBrushStyle): WxBrush =
+proc wxBrush*(colname: string, style: WxBrushStyle = wxBRUSHSTYLE_SOLID): WxBrush =
   wxBrush_CreateFromColour(wxColourByName(colname), style)
+
+proc wxBlueBrush*(): WxBrush = wxBrush_CreateFromStock(0)
+proc wxGreenBrush*(): WxBrush = wxBrush_CreateFromStock(1)
+proc wxWhiteBrush*(): WxBrush = wxBrush_CreateFromStock(2)
+proc wxBlackBrush*(): WxBrush = wxBrush_CreateFromStock(3)
+proc wxGreyBrush*(): WxBrush = wxBrush_CreateFromStock(4)
+proc wxMediumGreyBrush*(): WxBrush = wxBrush_CreateFromStock(5)
+proc wxLightGreyBrush*(): WxBrush = wxBrush_CreateFromStock(6)
+proc wxTransparentBrush*(): WxBrush = wxBrush_CreateFromStock(7)
+proc wxCyanBrush*(): WxBrush = wxBrush_CreateFromStock(8)
+proc wxRedBrush*(): WxBrush = wxBrush_CreateFromStock(9)

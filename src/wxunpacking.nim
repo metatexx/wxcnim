@@ -3,6 +3,7 @@ import macros
 # make it compilable and therefor testable
 when isMainModule:
   import wxtypes
+  import wxprocs
 
 # we need these dummy constructors due to the wrong implementation
 # of 'varargs[untyped]' in the compiler:
@@ -72,6 +73,13 @@ wxcUnpackingT(WxEvent, setId, wxEvent_SetId)
 
 # wxKeyEvent
 wxcUnpackingT(WxKeyEvent, getKeyCode, wxKeyEvent_GetKeyCode)
+wxcUnpackingT(WxKeyEvent, getX, wxKeyEvent_GetX)
+wxcUnpackingT(WxKeyEvent, getY, wxKeyEvent_GetY)
+
+# wxMouseEvent
+wxcUnpackingT(WxMouseEvent, getX, wxMouseEvent_GetX)
+wxcUnpackingT(WxMouseEvent, getY, wxMouseEvent_GetY)
+
 
 # wxString
 wxcUnpackingT(WxString, delete, wxString_Delete)
@@ -116,6 +124,7 @@ wxcUnpackingT(WxSizer, setSizeHints, wxSizer_SetSizeHints)
 wxcUnpackingT(WxWindow, getLabel, wxWindow_GetLabel)
 wxcUnpackingT(WxWindow, show, wxWindow_Show)
 wxcUnpackingT(WxWindow, hide, wxWindow_Hide)
+wxcUnpackingT(WxWindow, setSize, wxWindow_SetSize)
 wxcUnpackingT(WxWindow, fit, wxWindow_Fit)
 wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
 wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
@@ -126,6 +135,8 @@ wxcUnpackingT(WxWindow, setBackgroundColour, wxWindow_SetBackgroundColour)
 
 wxcUnpackingT(WxWindow, setFocus, wxWindow_SetFocus)
 wxcUnpackingT(WxWindow, setAutoLayout, wxWindow_SetAutoLayout)
+
+wxcUnpackingT(WxWindow, refresh, wxWindow_Refresh)
 
 # WxTopLevelWindow
 
@@ -159,6 +170,27 @@ wxcUnpackingT(WxDC, setPen, wxDC_SetPen)
 wxcUnpackingT(WxDC, setBrush, wxDC_SetBrush)
 wxcUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
 wxcUnpackingT(WxDC, drawLine, wxDC_DrawLine)
+wxcUnpackingT(WxDC, drawRectangle, wxDC_DrawRectangle)
+
+proc getTextExtent*(obj: WxDC, text: WxString,
+  theFont: WxFont = nil): WxTextExtent =
+  result = (0,0,0,0)
+  wxDC_GetTextExtent(obj, text, addr(result.w), addr(result.h),
+    addr(result.descent), addr(result.externalLeading),
+  theFont)
+
+wxcUnpackingT(WxDC, setTextForeground, wxDC_SetTextForeground)
+wxcUnpackingT(WxDC, setTextBackground, wxDC_SetTextBackground)
+
+proc getTextForeground*(obj: WxDC): WxColour =
+  result = wxColourRGB(0,0,0)
+  wxDC_GetTextForeground(obj, result)
+
+proc getTextBackground*(obj: WxDC): WxColour =
+  result = wxColourRGB(0,0,0)
+  wxDC_GetTextBackground(obj, result)
+
+wxcUnpackingT(WxDC, drawText, wxDC_DrawText)
 wxcUnpackingT(WxDC, isOk, wxDC_IsOk)
 wxcUnpackingT(WxDC, clear, wxDC_Clear)
 
@@ -240,9 +272,5 @@ wxcUnpacking(wxTimerEx, wxTimerEx_Create)
 wxcUnpackingT(WxTimerEvent, getInterval, wxTimerEvent_GetInterval)
 
 when isMainModule:
-  proc wxButton_Create(a: WxWindow, b:WxId, c:string, d:int, e:int, f:int, g:int, h:int): WxButton =
-    #echo locals()
-    return nil
-
   let a = wxButton(nil, 0, "test", 0,0, -1,-1, 0)
   echo a.repr()

@@ -105,6 +105,9 @@ proc wxWindow_Fit*(p: WxWindow)
 proc wxWindow_FitInside*(p: WxWindow)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_Layout*(p: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc wxWindow_SetLabel*(obj: WxWindow, txt: WxString)
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -117,6 +120,9 @@ proc wxWindow_SetSizer*(obj: WxWindow, sizer: WxSizer)
 proc wxWindow_SetSizeHints*(obj: WxWindow, minW, minH, maxW, maxH, incW, incH: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxWindow_SetSize*(obj: WxWindow, lft, top, wdt, hgt: int, sizeFlags: WxSizeFlags = wxSIZE_AUTO)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc wxWindow_SetBackgroundColour*(obj: WxWindow, colour: WxColour): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -124,6 +130,9 @@ proc wxWindow_SetAutoLayout*(obj: WxWindow, autolayout: bool)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxWindow_SetFocus*(obj: WxWindow)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxWindow_Refresh*(obj: WxWindow, eraseBackground: bool = true)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxWindow_Destroy*(obj: WxWindow): bool
@@ -181,6 +190,28 @@ proc wxDC_DrawCircle*(obj: WxDC, x,y : int, radius: int)
 proc wxDC_DrawLine*(obj: WxDC, x1,y1, x2,y2 : int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxDC_DrawRectangle*(obj: WxDC, lft,top, wdt,hgt : int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_DrawText*(obj: WxDC, text: WxString, lft,top: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_GetTextExtent*(obj: WxDC, text: WxString,
+  w, h, descent, externalLeading: pointer, theFont: WxFont)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_GetTextBackground*(obj: WxDC, colour: pointer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_GetTextForeground*(obj: WxDC, colour: pointer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_SetTextBackground*(obj: WxDC, colour: WxColour)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_SetTextForeground*(obj: WxDC, colour: WxColour)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc wxDC_IsOk*(obj: WxDC): bool
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -208,9 +239,15 @@ proc wxPaintDC_Delete*(obj: WxPaintDC)
 proc wxPen_CreateFromColour*(col: WxColour, width: int, style: WxPenStyle): WxPen
   {.cdecl, dynlib: WXCLibName, importc.}
 
-# wxPen
+proc wxPen_CreateFromStock*(id: int): WxPen
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxBrush
 
 proc wxBrush_CreateFromColour*(col: WxColour, style: WxBrushStyle): WxBrush
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBrush_CreateFromStock*(id: int): WxBrush
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxScrolledWindow
@@ -465,6 +502,14 @@ proc wxKeyEvent_GetX*(obj: WxKeyEvent): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxKeyEvent_GetY*(obj: WxKeyEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxMouseEvent
+
+proc wxMouseEvent_GetX*(obj: WxMouseEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxMouseEvent_GetY*(obj: WxMouseEvent): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxTimer

@@ -26,6 +26,7 @@ type
 type WxEvent* = ptr object of WxObject
 type WxKeyEvent* = ptr object of WxEvent
 type WxTimerEvent* = ptr object of WxEvent
+type WxMouseEvent* = ptr object of WxEvent
 
 type WxTimer* = ptr object of WxObject
 type WxTimerEx* = ptr object of WxTimer
@@ -41,6 +42,8 @@ type
 type WxIcon* = ptr object of WxBitmap
 
 type WxColour* = ptr object
+
+type WxFont* = ptr object
 
 # Baseclass for all widgets!
 type WxWindow* = ptr object of WxObjectObj
@@ -88,3 +91,5 @@ type WxSizeObj* = tuple[w, h: int]
 type WxSize* = ptr tuple[w, h: cint]
 type WxPosPtr* = ptr tuple[w, h: cint]
 #type Rect = (int, int, int, int)
+
+type WxTextExtent* = tuple[w, h, descent, externalLeading: int]
