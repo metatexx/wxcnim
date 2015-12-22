@@ -76,6 +76,7 @@ wxcUnpackingT(WxEvent, setId, wxEvent_SetId)
 
 # wxKeyEvent
 wxcUnpackingT(WxKeyEvent, getKeyCode, wxKeyEvent_GetKeyCode)
+wxcUnpackingT(WxKeyEvent, getModifiers, wxKeyEvent_GetModifiers)
 wxcUnpackingT(WxKeyEvent, getX, wxKeyEvent_GetX)
 wxcUnpackingT(WxKeyEvent, getY, wxKeyEvent_GetY)
 

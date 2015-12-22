@@ -86,10 +86,6 @@ type
   YetAnotherClosure = ref object
     eventHandler: WxEventHandler
 
-  WxEventHandlerM* = proc (event: WxMouseEvent) {.closure.}
-  YetAnotherClosureM = ref object
-    eventHandler: WxEventHandlerM
-
 proc rawEventHandler(fun, data, event: pointer) {.cdecl.} =
   if event == nil:
     # gets called with nil on destruction of the closure
@@ -98,14 +94,6 @@ proc rawEventHandler(fun, data, event: pointer) {.cdecl.} =
   let d = cast[YetAnotherClosure](data).eventHandler
   d(cast[WxEvent](event))
 
-proc rawEventHandlerM(fun, data, event: pointer) {.cdecl.} =
-  if event == nil:
-    # gets called with nil on destruction of the closure
-    GC_unref(cast[ref YetAnotherClosureM](data))
-    return
-  let d = cast[YetAnotherClosureM](data).eventHandler
-  d(cast[WxMouseEvent](event))
-
 proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
   fromId: WxId = -1, toId: WxId = -1) =
   let data = YetAnotherClosure(eventHandler: eventHandler)
@@ -113,14 +101,6 @@ proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
   GC_ref(data)
   discard obj.wxEvtHandler_Connect(fromId, toId, kind,
     wxClosure(rawEventHandler, cast[pointer](data)))
-
-proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandlerM,
-  fromId: WxId = -1, toId: WxId = -1) =
-  let data = YetAnotherClosureM(eventHandler: eventHandler)
-  # will be unref on destruction of the underlaying closure
-  GC_ref(data)
-  discard obj.wxEvtHandler_Connect(fromId, toId, kind,
-    wxClosure(rawEventHandlerM, cast[pointer](data)))
 
 proc connect*(obj: WxButton; eventHandler: WxEventHandler) =
   connect(obj, expEVT_COMMAND_BUTTON_CLICKED(), eventHandler)

@@ -28,23 +28,19 @@ proc timerWxEvent(evn: WxEvent) {.nimcall.} =
 
 proc keyPressed(evn: WxEvent) {.nimcall.} =
   let evn = WxKeyEvent(evn)
-  if evn == nil:
-    return
   echo "keyPressed (on Button)..."
   echo "type: ", evn.getEventType
   echo "ts: ", evn.getTimestamp
   echo "id: ", evn.getId
-  echo "KeyCode: ", wxKeyEvent_GetKeyCode(evn)
-  echo "Modifiers: ", wxKeyEvent_GetModifiers(evn)
+  echo "KeyCode: ", evn.getKeyCode
+  echo "Modifiers: ", evn.getModifiers
 
-  if wxKeyEvent_GetKeyCode(evn)==67 and wxKeyEvent_GetModifiers(evn)==16:
+  if evn.getKeyCode()==67 and evn.getModifiers()==16:
     # ctrl+c :)
     wxnExitMainLoop()
 
 
 proc buttonPressed(evn: WxEvent) {.nimcall.} =
-  if evn == nil:
-    return
   echo "buttonPressed (on mainFrame)..."
   echo "type: ", evn.getEventType
   echo "ts: ", evn.getTimestamp
@@ -52,9 +48,6 @@ proc buttonPressed(evn: WxEvent) {.nimcall.} =
   evn.skip() # makes that the other one still gets called!
 
 proc buttonQuit(evn: WxEvent) {.nimcall.} =
-  if evn == nil:
-    return
-
   echo "buttonQuit (on Button)..."
   echo "type: ", evn.getEventType
   echo "ts: ", evn.getTimestamp
@@ -64,7 +57,7 @@ proc buttonQuit(evn: WxEvent) {.nimcall.} =
   wxnExitMainLoop()
 
 proc appMain() =
-  let mainFrame = wxFrame(nil, wxID_ANY, "Hi!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame(title="Hi!")
   #echo "parent: ", mainFrame.repr
 
   let sizer = wxBoxSizer(wxVertical)

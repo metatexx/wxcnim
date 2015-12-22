@@ -175,7 +175,8 @@ proc appMain() =
           f = createField(10, 10)
           panel.refresh()
 
-  panel.connect(expEVT_LEFT_DOWN()) do(evn: WxMouseEvent):
+  panel.connect(expEVT_LEFT_DOWN()) do(evn: WxEvent):
+    let evn = WxMouseEvent(evn)
     if f.normalCells == 0:
       return
     let x = evn.getX() div UNIT
@@ -183,7 +184,8 @@ proc appMain() =
     uncover(x,y)
     panel.refresh()
 
-  panel.connect(expEVT_RIGHT_DOWN()) do(evn: WxMouseEvent):
+  panel.connect(expEVT_RIGHT_DOWN()) do(evn: WxEvent):
+    let evn = WxMouseEvent(evn)
     if f.normalCells == 0:
       return
     let x = evn.getX() div UNIT

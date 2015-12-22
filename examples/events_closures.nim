@@ -7,7 +7,7 @@ var timerWx: WxTimer = nil
 var timerEx: WxTimerEx = nil
 
 proc appMain() =
-  let mainFrame = wxFrame(nil, wxID_ANY, "Hi!", -1, -1, -1, -1, wxDEFAULT_FRAME_STYLE)
+  let mainFrame = wxFrame(title="Hi!")
   #echo "parent: ", mainFrame.repr
 
   let sizer = wxBoxSizer(wxVertical)
@@ -18,15 +18,13 @@ proc appMain() =
   let panel = wxPanel(mainFrame, wxID_ANY)
   panel.connect(expEVT_KEY_UP()) do (evn: WxEvent):
     let evn = WxKeyEvent(evn)
-    if evn == nil:
-      return
     echo "keyPressed (on Button)..."
     echo "type: ", evn.getEventType
     echo "ts: ", evn.getTimestamp
     echo "id: ", evn.getId
-    echo "KeyCode: ", wxKeyEvent_GetKeyCode(evn)
-    echo "Modifiers: ", wxKeyEvent_GetModifiers(evn)
-    if wxKeyEvent_GetKeyCode(evn)==67 and wxKeyEvent_GetModifiers(evn)==16:
+    echo "KeyCode: ", evn.getKeyCode
+    echo "Modifiers: ", evn.getModifiers
+    if evn.getKeyCode()==67 and evn.getModifiers==16:
       # ctrl+c :)
       wxnExitMainLoop()
 
@@ -44,8 +42,6 @@ proc appMain() =
   # this is just "a timer" with a callback not bound to anything really
   timerEx = wxTimerEx()
   timerEx.connect proc(evn: WxEvent) {.nimcall.} =
-    if evn == nil:
-      return
     let evn = WxTimerEvent(evn)
 
     inc timecounter
