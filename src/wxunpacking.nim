@@ -216,6 +216,9 @@ wxcUnpacking(wxGridCellChoiceEditor, wxGridCellChoiceEditor_Ctor)
 wxcUnpacking(wxFrame, wxFrame_Create)
 wxcUnpackingT(WxFrame, setMenuBar, wxFrame_SetMenuBar)
 
+wxcUnpackingT(WxFrame, createStatusBar, wxFrame_CreateStatusBar)
+wxcUnpackingT(WxFrame, getStatusBar, wxFrame_GetStatusBar)
+
 # WxPanel
 wxcUnpacking(wxPanel, wxPanel_Create)
 
@@ -254,6 +257,9 @@ wxcUnpackingT(WxMenu, appendItem, wxMenu_AppendItem)
 wxcUnpackingT(WxMenuBar, append, wxMenuBar_Append)
 
 wxcUnpackingT(WxMenuItem, getId, wxMenuItem_GetId)
+
+# StatusBar related
+wxcUnpackingT(WxStatusBar, setStatusText, wxStatusBar_SetStatusText)
 
 # wxTimer
 

@@ -91,6 +91,26 @@ proc wxFrame_SetMenuBar*(obj: WxFrame, menubar: WxMenuBar)
 proc wxFrame_ShowFullScreen*(obj: WxFrame, show: bool, style: int): bool
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxFrame_CreateStatusBar*(obj: WxFrame, number: int = 1,
+  style: WxSTBStyle = wxSTB_DEFAULT_STYLE): WxStatusBar
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxFrame_GetStatusBar*(obj: WxFrame): WxStatusBar
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxFrame_SetStatusBar*(obj: WxFrame, status: WxStatusBar)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxFrame_SetStatusText*(obj: WxFrame, text: WxString, num: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxStatusBar_SetStatusText*(obj: WxStatusBar, text: WxString, num: int)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxFrame_SetStatusWidths*(obj: WxStatusBar, num: int, widths: pointer)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+
 # wxWindow
 
 proc wxWindow_Raise*(p: WxWindow)

@@ -4,7 +4,6 @@
 #
 # Todos:
 #  Fix first click behavior (no bomb!)
-#  Display counter
 #  Make different level (sizes)
 #  Add the graphics
 #  Add sound
@@ -85,6 +84,13 @@ proc dump(f: Field) =
         row &= $f.cell(x, y).count
     echo row
 
+proc updateStatus(status: WxStatusBar, f: Field) =
+  # xxx triggered closure bug if used inside appMain
+  #let status = mainFrame.getStatusBar
+  status.setStatusText("Bombs: " & $f.bombs, 0)
+  status.setStatusText("Cells: " & $f.normalCells, 1)
+  status.setStatusText("Level: " & $f.level, 2)
+
 proc appMain() =
   wxnInitAllImageHandlers()
 
@@ -111,8 +117,14 @@ proc appMain() =
     panel.fit()
     panel.refresh()
 
-  mainFrame.setSizer(sizer)
+  let status = mainFrame.createStatusBar(3, wxSTB_SIZEGRIP)
+  #mainFrame.wxFrame_SetStatusBar(status)
+  #var fields = [100,-1]
+  #wxFrame_SetStatusWidths(status, 2, addr(fields[0]))
 
+  updateStatus(status, f)
+
+  mainFrame.setSizer(sizer)
   panel = wxPanel(mainFrame, wxID_ANY, 0,0, (f.w * UNIT), f.h * UNIT, wxBORDER_NONE)
 
   sizer.addWindow(panel, 1, wxALL, 10)
@@ -133,6 +145,7 @@ proc appMain() =
           echo "BOOM"
           f.cell(x, y).flags.incl( ckEXPLODED )
           f.normalCells = 0
+          updateStatus(status, f)
           uncoverAll()
           return
 
@@ -148,6 +161,7 @@ proc appMain() =
                   uncover(x + xx, y + yy)
 
         dec f.normal_cells;
+        updateStatus(status, f)
         if f.normal_cells == 0:
           uncoverAll()
           let msgDlg = wxMessageDialog_Create(

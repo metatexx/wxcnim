@@ -83,6 +83,8 @@ type WxMenu* = ptr object of WxWindow
 type WxMenuBar* = ptr object of WxWindow
 type WxMenuItem* = ptr object of WxWindow
 
+type WxStatusBar* = ptr object of WxWindow
+
 type WxSizer* = ptr object
 type WxBoxSizer* = WxSizer
 
