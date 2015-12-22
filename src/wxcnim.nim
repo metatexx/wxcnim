@@ -137,7 +137,29 @@ proc wxnRunMainLoop*(main: proc() {.nimcall.}) =
   let cl = wxClosure(appMain, main)
   cl.initializeC(0, nil)
 
-# Helpers to make it nicer to use
+# Stubs for stuff which is not just unpacking
+
+# wxColour Helpers
+
+proc set*(col: WxColour, red, green, blue, alpha: int = 255) =
+  wxColour_Set(col, red, green, blue, alpha)
+
+proc set*(col: WxColour, name: WxString) =
+  wxColour_SetByName(col, name)
+
+proc validColourName*(name: WxString): bool =
+  wxColour_ValidName(name)
+
+proc wxBLACK*(): WxColour = wxColour_CreateFromStock(0)
+proc wxWHITE*(): WxColour = wxColour_CreateFromStock(1)
+proc wxRED*(): WxColour = wxColour_CreateFromStock(2)
+proc wxBLUE*(): WxColour = wxColour_CreateFromStock(3)
+proc wxGREEN*(): WxColour = wxColour_CreateFromStock(4)
+proc wxCYAN*(): WxColour = wxColour_CreateFromStock(5)
+proc wxLIGHT_GREY*(): WxColour = wxColour_CreateFromStock(6)
+
+# wxPen Helpers
+
 proc wxPen*(col: WxColour, width: int = 1,
   style: WxPenStyle = wxPENSTYLE_SOLID): WxPen =
   wxPen_CreateFromColour(col, width, style)
@@ -150,7 +172,6 @@ proc wxPen*(r,g,b: int, width: int = 1,
   style: WxPenStyle = wxPENSTYLE_SOLID): WxPen =
   wxPen_CreateFromColour(wxColourRGB(r,g,b), width, style)
 
-# its magic colors :)
 proc wxRedPen*(): WxPen = wxPen_CreateFromStock(0)
 proc wxCyanPen*(): WxPen = wxPen_CreateFromStock(1)
 proc wxGreenPen*(): WxPen = wxPen_CreateFromStock(2)
@@ -161,6 +182,8 @@ proc wxBlackDashedPen*(): WxPen = wxPen_CreateFromStock(6)
 proc wxGreyPen*(): WxPen = wxPen_CreateFromStock(7)
 proc wxMediumGreyPen*(): WxPen = wxPen_CreateFromStock(8)
 proc wxLightGreyPen*(): WxPen = wxPen_CreateFromStock(9)
+
+# wxBrush Helpers
 
 proc wxBrush*(col: WxColour, style: WxBrushStyle = wxBRUSHSTYLE_SOLID): WxBrush =
   wxBrush_CreateFromColour(col, style)
@@ -178,3 +201,21 @@ proc wxLightGreyBrush*(): WxBrush = wxBrush_CreateFromStock(6)
 proc wxTransparentBrush*(): WxBrush = wxBrush_CreateFromStock(7)
 proc wxCyanBrush*(): WxBrush = wxBrush_CreateFromStock(8)
 proc wxRedBrush*(): WxBrush = wxBrush_CreateFromStock(9)
+
+# Text functions
+
+proc getTextExtent*(obj: WxDC, text: WxString,
+  theFont: WxFont = nil): WxTextExtent =
+  result = (0,0,0,0)
+  wxDC_GetTextExtent(obj, text, addr(result.w), addr(result.h),
+    addr(result.descent), addr(result.externalLeading),
+  theFont)
+
+
+proc getTextForeground*(obj: WxDC): WxColour =
+  result = wxColourRGB(0,0,0)
+  wxDC_GetTextForeground(obj, result)
+
+proc getTextBackground*(obj: WxDC): WxColour =
+  result = wxColourRGB(0,0,0)
+  wxDC_GetTextBackground(obj, result)

@@ -10,6 +10,7 @@
 #  Better data structure!
 
 import wxcnim
+import mxstring # managed WxString
 
 import strutils
 import os
@@ -147,6 +148,7 @@ proc appMain() =
           f.normalCells = 0
           updateStatus(status, f)
           uncoverAll()
+          wxnBell() # whatever sound it makes
           return
 
         # uncover field
@@ -160,7 +162,7 @@ proc appMain() =
                 if xx != 0 or yy != 0:
                   uncover(x + xx, y + yy)
 
-        dec f.normal_cells;
+        dec f.normal_cells
         updateStatus(status, f)
         if f.normal_cells == 0:
           uncoverAll()
@@ -199,16 +201,18 @@ proc appMain() =
     let brushGrey {.global.} = wxBrush(wxColourRGB(150,150,150))
     #let brushGrey = wxGreyBrush()
     #let brushWhite {.global.} = wxBrush(wxColourRGB(255,255,255))
-    let brushWhite = wxWhiteBrush()
-    let brushRed = wxRedBrush()
+    let brushWhite {.global.} = wxWhiteBrush()
+    let brushRed {.global.} = wxRedBrush()
 
     let dc = wxPaintDC(panel) # PaintDC because we are in PaintEvent
+
+    #echo validColourName("RAINBOW") #is false :)
+    #echo validColourName("MEDIUM FOREST GREEN") #is true :)
 
     for x in 0 ..< f.w:
       for y in 0 ..< f.h:
         let (flags, count) = f.cell(x, y)
-        dc.setPen(wxBlackPen())
-        #dc.drawRectangle(x * UNIT + UNIT - 1, y * UNIT, 1, UNIT )
+
         if (ckHIDDEN in flags) or (ckMARK in flags):
           dc.setBrush(brushGrey)
         elif ckBOMB in flags:
@@ -216,27 +220,30 @@ proc appMain() =
         else:
           dc.setBrush(brushWhite)
 
+        dc.setPen(wxBlackPen())
         dc.drawRectangle(x * UNIT, y * UNIT, UNIT-1, UNIT-1)
 
-        var txt: WxString
-        var col: WxColour = wxColourRGB(0,0,0)
+        var txt: MxString
+        let col: WxColour = wxColourRGB(0,0,0) # allocated, delete later
         var cross: WxPen = nil
 
         if ckMARK in flags:
           txt = "M"
-          col = wxColourRGB(255,0,0)
           if ckBOMB in flags and ckHIDDEN notin flags:
-            col = wxColourRGB(0,0,255)
-            cross = wxBlackPen()
+            col.set("BLUE") # just showing that it works with names
+            cross = wxPen(0,0,0) # not wxBlackPen() because we have no static
+                                 # blue one and so we need to delete it later
+          else:
+            col.set(255,0,0)
         elif ckHIDDEN notin flags:
           if ckBOMB in flags:
             txt = "B"
           else:
             txt = $count
-            col = case count:
-              of 0: wxColourRGB(0,180,0)
-              of 1: wxColourRGB(0,0,255)
-              else: wxColourRGB(0,0,0)
+            case count:
+              of 0: col.set(0,180,0)
+              of 1: col.set(0,0,255)
+              else: col.set(0,0,0)
         else:
           txt = "?"
 
@@ -251,9 +258,11 @@ proc appMain() =
           dc.setPen(cross)
           dc.drawLine(x * UNIT, y * UNIT, x * UNIT + UNIT - 1, y * UNIT + UNIT - 1 )
           dc.drawLine(x * UNIT, y * UNIT + UNIT - 1, x * UNIT + UNIT - 1, y * UNIT )
+          cross.delete # pen is not consumed
 
+        col.delete # colors are not consumed
     # we need to delete it (if not we get drawing artefacts)
-    dc.delete()
+    dc.delete
 
   mainFrame.fit
   mainFrame.show

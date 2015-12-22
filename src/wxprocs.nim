@@ -268,12 +268,18 @@ proc wxPen_CreateFromColour*(col: WxColour, width: int, style: WxPenStyle): WxPe
 proc wxPen_CreateFromStock*(id: int): WxPen
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxPen_Delete*(pen: WxPen)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxBrush
 
 proc wxBrush_CreateFromColour*(col: WxColour, style: WxBrushStyle): WxBrush
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxBrush_CreateFromStock*(id: int): WxBrush
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBrush_Delete*(brush: WxBrush)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxScrolledWindow
@@ -410,6 +416,39 @@ proc wxColour_CreateRGB*(red, green, blue, alpha: int = 255): WxColour
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxColour_CreateByName*(name: WxString): WxColour
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_CreateEmpty*(): WxColour
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_CreateFromStock*(id: int): WxColour
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Delete*(col: WxColour)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Set*(col: WxColour, red, green, blue, alpha: int = 255)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_SetByName*(col: WxColour, name: WxString)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_ValidName*(name: WxString): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Copy*(col: WxColour): WxColour
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Alpha*(col: WxColour): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Red*(col: WxColour): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Green*(col: WxColour): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxColour_Blue*(col: WxColour): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxBitmap

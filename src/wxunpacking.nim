@@ -2,6 +2,7 @@ import macros
 
 # make it compilable and therefor testable
 when isMainModule:
+  import wxdefs
   import wxtypes
   import wxprocs
 
@@ -11,7 +12,7 @@ when isMainModule:
 proc wxPoint*(x, y: int) = discard
 proc wxSize*(w, h: int) = discard
 
-proc wxColor*(r, g, b: int) = discard
+#proc wxColor*(r, g, b: int) = discard
 proc wxRect*(a, b, c, d: int) = discard
 
 proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
@@ -30,9 +31,9 @@ proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
       of "wxRect":
         expectLen(x, 5)
         unpack = true
-      of "wxColor":
-        expectLen(x, 4)
-        unpack = true
+#      of "wxColor":
+#        expectLen(x, 4)
+#        unpack = true
       else: discard
 
     if unpack:
@@ -101,9 +102,18 @@ wxcUnpacking(wxBitmapButton, wxBitmapButton_Create)
 wxcUnpacking(wxIconFromXPM, wxIcon_Create_FromXPM)
 
 # wxColour
+wxcUnpacking(wxColour, wxColour_CreateEmpty)
 wxcUnpacking(wxColourRGB, wxColour_CreateRGB)
-
 wxcUnpacking(wxColourByName, wxColour_CreateByName)
+wxcUnpacking(wxColourFromStock, wxColour_CreateFromStock)
+
+wxcUnpackingT(WxColour, copy, wxColour_Copy)
+
+wxcUnpackingT(WxColour, delete, wxColour_Delete)
+wxcUnpackingT(WxColour, alpha, wxColour_Alpha)
+wxcUnpackingT(WxColour, red, wxColour_Red)
+wxcUnpackingT(WxColour, green, wxColour_Green)
+wxcUnpackingT(WxColour, blue, wxColour_Blue)
 
 # Events + Closure (Glue)
 wxcUnpacking(wxClosure, wxClosure_Create)
@@ -175,23 +185,8 @@ wxcUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
 wxcUnpackingT(WxDC, drawLine, wxDC_DrawLine)
 wxcUnpackingT(WxDC, drawRectangle, wxDC_DrawRectangle)
 
-proc getTextExtent*(obj: WxDC, text: WxString,
-  theFont: WxFont = nil): WxTextExtent =
-  result = (0,0,0,0)
-  wxDC_GetTextExtent(obj, text, addr(result.w), addr(result.h),
-    addr(result.descent), addr(result.externalLeading),
-  theFont)
-
 wxcUnpackingT(WxDC, setTextForeground, wxDC_SetTextForeground)
 wxcUnpackingT(WxDC, setTextBackground, wxDC_SetTextBackground)
-
-proc getTextForeground*(obj: WxDC): WxColour =
-  result = wxColourRGB(0,0,0)
-  wxDC_GetTextForeground(obj, result)
-
-proc getTextBackground*(obj: WxDC): WxColour =
-  result = wxColourRGB(0,0,0)
-  wxDC_GetTextBackground(obj, result)
 
 wxcUnpackingT(WxDC, drawText, wxDC_DrawText)
 wxcUnpackingT(WxDC, isOk, wxDC_IsOk)
@@ -279,6 +274,12 @@ wxcUnpacking(wxTimerEx, wxTimerEx_Create)
 # wxTimerEvent
 
 wxcUnpackingT(WxTimerEvent, getInterval, wxTimerEvent_GetInterval)
+
+# wxPen
+wxcUnpackingT(WxPen, delete, wxPen_Delete)
+
+# wxBrush
+wxcUnpackingT(WxBrush, delete, wxBrush_Delete)
 
 when isMainModule:
   let a = wxButton(nil, 0, "test", 0,0, -1,-1, 0)
