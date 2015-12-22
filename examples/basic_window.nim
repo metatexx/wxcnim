@@ -73,13 +73,6 @@ proc button1Clicked(evn: WxEvent) =
   msgDlg.delete
 
 proc button2Clicked(evn: WxEvent) =
-  if evn == nil:
-    return
-
-#  echo "Clicked '", fun.repr
-#  echo "Clicker2 Event: ", evn.repr
-#  echo "Clicker2 Data: ", parent.repr
-
   # just to have something going on we show the current scrolled window offset
   let scrolled = wxnFindWindowById(myScrolledId, nil)
   var x, y: int
