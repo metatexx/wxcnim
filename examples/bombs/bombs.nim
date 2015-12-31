@@ -3,8 +3,9 @@
 # This is still WIP!
 #
 # Todos:
-#  Fix first click behavior (no bomb!)
 #  Make different level (sizes)
+#  Make it really random :)
+#  Add some meaningful buttons and remove bitmap
 
 import wxcnim
 import mxstring # managed WxString
@@ -36,6 +37,7 @@ proc appMain() =
     fw, fh: int
     normalCells, bombs: int
     fd: seq[CellKind]
+    firstClick: bool
 
   proc cell(x, y: int): var CellKind =
     fd[y * fw + x]
@@ -50,20 +52,15 @@ proc appMain() =
           row &= $cell(x, y).count
       echo row
 
-  fw = 10
-  fh = 10
+    echo "Bombs: ", bombs
+    echo ""
 
-  proc createField() =
-    level = 1
-    normalCells = 0
-    bombs = 0
-
-    fd = newSeq[CellKind](fw * fh)
-
-    for i in countdown(fw * fh-1, 0):
-      fd[i].flags = if random(15) < 3: { ckHIDDEN, ckBOMB } else: { ckHIDDEN }
-
+  proc updateCounts() =
     normalCells = 0;
+    bombs = 0
+    for i in countdown(fw * fh-1, 0):
+      fd[i].count = 0
+
     for x in 0 ..< fw:
       for y in 0 ..< fh:
         if ckBOMB notin cell(x, y).flags:
@@ -79,10 +76,24 @@ proc appMain() =
                   inc fd[y * fw + x].count
 
     bombs = fw * fh - normalCells;
+    dump()
+
+  proc createField() =
+    level = 1
+    firstClick = true # first click guarantees not being a bomb!
+
+    fd = newSeq[CellKind](fw * fh)
+
+    # pseudo random for now
+    for i in countdown(fw * fh-1, 0):
+      fd[i].flags = if random(15) < 3: { ckHIDDEN, ckBOMB } else: { ckHIDDEN }
+
+    updateCounts()
+
+  fw = 10
+  fh = 10
 
   createField()
-
-  dump()
 
   let mainFrame = wxFrame(title="Nim Bombs!",
     stl = wxDEFAULT_DIALOG_STYLE or wxMINIMIZE_BOX)
@@ -130,13 +141,35 @@ proc appMain() =
       if ckMARK notin flags and ckHIDDEN in flags:
         # wft.. boom!
         if ckBOMB in flags:
-          echo "BOOM"
-          cell(x, y).flags.incl( ckEXPLODED )
-          normalCells = 0
-          updateStatus()
-          uncoverAll()
-          wxnBell() # whatever sound it makes
-          return
+          if firstClick:
+            # if we hit the bomb with the first click
+            # we move it to another random place :)
+            #echo "FIRST"
+            # remove the bomb from here
+            cell(x, y).flags.excl( ckBOMB )
+            # find the new place for the bomb
+            while true:
+              var
+                rx = random(fw)
+                ry = random(fh)
+              if rx != x and ry != y and ckBOMB notin cell(rx, ry).flags:
+                cell(rx, ry).flags.incl(ckBOMB)
+                break
+            # update the counts for the field
+            updateCounts()
+            # update our vars so we can simply continue
+            (flags, count) = cell(x, y)
+          else:
+            #echo "BOOM"
+            cell(x, y).flags.incl( ckEXPLODED )
+            normalCells = 0
+            updateStatus()
+            uncoverAll()
+            wxnBell() # whatever sound it makes
+            return
+
+        # we did some unhiding here for sure
+        firstClick = false
 
         # uncover field
         flags.excl( ckHIDDEN )
@@ -182,6 +215,9 @@ proc appMain() =
 
     let flags = cell(x, y).flags
     if ckHIDDEN in flags:
+      # this counts as first click too!
+      firstClick = false
+      # toggle the mark for this cell
       if ckMARK in flags:
         cell(x, y).flags.excl(ckMARK)
       else:
