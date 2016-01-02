@@ -3,9 +3,10 @@
 # This is still WIP!
 #
 # Todos:
-#  Make different level (sizes)
-#  Make it really random :)
+#  Create a way to choose the level.
+#  Make it really random (pseudorandom right now)
 #  Add some meaningful buttons and remove bitmap
+#  Add the Nim Crown instead of the ? and a filled version as Bomb?
 
 import wxcnim
 import mxstring # managed WxString
@@ -76,10 +77,9 @@ proc appMain() =
                   inc fd[y * fw + x].count
 
     bombs = fw * fh - normalCells;
-    dump()
+    dump()  # cheating :)
 
   proc createField() =
-    level = 1
     firstClick = true # first click guarantees not being a bomb!
 
     fd = newSeq[CellKind](fw * fh)
@@ -87,13 +87,6 @@ proc appMain() =
     # pseudo random for now
     for i in countdown(fw * fh-1, 0):
       fd[i].flags = if random(15) < 3: { ckHIDDEN, ckBOMB } else: { ckHIDDEN }
-
-    updateCounts()
-
-  fw = 10
-  fh = 10
-
-  createField()
 
   let mainFrame = wxFrame(title="Nim Bombs!",
     stl = wxDEFAULT_DIALOG_STYLE or wxMINIMIZE_BOX)
@@ -106,28 +99,37 @@ proc appMain() =
 
   let sizer = wxBoxSizer(wxVertical)
   let button = wxBitmapButton(mainFrame, wxID_ANY, bmp, 0, 0, -1, -1, wxBORDER_NONE)
-
-  mainFrame.connect(expEVT_COMMAND_BUTTON_CLICKED()) do(evn: WxEvent):
-    #wxnExitMainLoop()
-    createField()
-    #mainFrame.setSize(0, 0, 600, 600, wxSIZE_AUTO)
-    panel.fit()
-    panel.refresh()
-
   let status = mainFrame.createStatusBar(3)
+
+  mainFrame.setSizer(sizer)
+  #panel = wxPanel(mainFrame, wxID_ANY, 0,0, (fw * UNIT), fh * UNIT, wxBORDER_NONE)
+  panel = wxPanel(mainFrame, wxID_ANY, 0,0, 10, 10, wxBORDER_NONE)
+
+  sizer.addWindow(panel, 1, wxALL, 10)
+  sizer.addWindow(button, 0, wxALL, 10)
 
   proc updateStatus() =
     status.setStatusText("Bombs: " & $bombs, 0)
     status.setStatusText("Cells: " & $normalCells, 1)
     status.setStatusText("Level: " & $level, 2)
 
-  updateStatus()
+  proc restartLevel() =
+    fw = 9 + level
+    fh = 9 + level
+    # resize our panel for the field
+    panel.setMinSize(fw * UNIT, fh * UNIT)
+    # fit the main frame
+    mainFrame.fit
+    # create out field
+    createField()
+    # count the bombs
+    updateCounts()
+    # update status bar counts
+    updateStatus()
 
-  mainFrame.setSizer(sizer)
-  panel = wxPanel(mainFrame, wxID_ANY, 0,0, (fw * UNIT), fh * UNIT, wxBORDER_NONE)
-
-  sizer.addWindow(panel, 1, wxALL, 10)
-  sizer.addWindow(button, 0, wxALL, 10)
+  proc startLevel(lev: int) =
+    level = lev
+    restartLevel()
 
   proc uncoverAll() =
     for f in mitems(fd):
@@ -192,8 +194,11 @@ proc appMain() =
             "wxNimBombs",
             wxOK)# or wxICON_INFORMATION)
           discard msgDlg.showModal()
-          createField()
-          panel.refresh()
+          restartLevel()
+
+  mainFrame.connect(expEVT_COMMAND_BUTTON_CLICKED()) do(evn: WxEvent):
+    #wxnExitMainLoop()
+    restartLevel()
 
   # uncover a field
   panel.connect(expEVT_LEFT_DOWN()) do(evn: WxEvent):
@@ -292,9 +297,10 @@ proc appMain() =
     # we need to delete it (if not we get drawing artefacts)
     dc.delete
 
-  mainFrame.fit
   mainFrame.show
   mainFrame.`raise` # do I want mainFrame.raize?
+
+  startLevel(1)
 
 when isMainModule:
   # Initialising and running "appMain"
