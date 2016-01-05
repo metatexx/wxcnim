@@ -27,6 +27,7 @@ type WxEvent* = ptr object of WxObject
 type WxKeyEvent* = ptr object of WxEvent
 type WxTimerEvent* = ptr object of WxEvent
 type WxMouseEvent* = ptr object of WxEvent
+type WxMenuEvent* = ptr object of WxEvent
 
 type WxTimer* = ptr object of WxObject
 type WxTimerEx* = ptr object of WxTimer

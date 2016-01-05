@@ -102,6 +102,21 @@ proc connect*(obj: WxWindow; kind: int;  eventHandler: WxEventHandler,
   discard obj.wxEvtHandler_Connect(fromId, toId, kind,
     wxClosure(rawEventHandler, cast[pointer](data)))
 
+proc connect*(obj: WxWindow, kind: int,
+  fromId: WxId = -1, toId: WxId = -1, eventHandler: WxEventHandler) =
+  let data = YetAnotherClosure(eventHandler: eventHandler)
+  # will be unref on destruction of the underlaying closure
+  GC_ref(data)
+  discard obj.wxEvtHandler_Connect(fromId, toId, kind,
+    wxClosure(rawEventHandler, cast[pointer](data)))
+
+proc connect*(obj: WxMenuBar; id: WxId, eventHandler: WxEventHandler) =
+  connect(obj, expEVT_COMMAND_MENU_SELECTED(), eventHandler, id, id)
+
+proc connect*(obj: WxMenuBar; item: WxMenuItem, eventHandler: WxEventHandler) =
+  let id = item.getId
+  connect(obj, expEVT_COMMAND_MENU_SELECTED(), eventHandler, id, id)
+
 proc connect*(obj: WxButton; eventHandler: WxEventHandler) =
   connect(obj, expEVT_COMMAND_BUTTON_CLICKED(), eventHandler)
 

@@ -3,7 +3,6 @@
 # This is still WIP!
 #
 # Todos:
-#  Create a way to choose the level.
 #  Make it really random (pseudorandom right now)
 #  Add some meaningful buttons and remove bitmap
 #  Add the Nim Crown instead of the ? and a filled version as Bomb?
@@ -29,6 +28,12 @@ type
     ckEXPLODED
 
   CellKind = tuple[flags: set[CellBits], count: byte]
+
+# we use 1 to 5 as WxId for the level Menu
+const levelSizes: array[1..5, (int, int)] = [(10,10),(15,15),(20,20),(30,30),(40,40)]
+
+template levelString(level: int): string =
+  "Level " & $level & " (" & $levelSizes[level][0] & " x " & $levelSizes[level][1] & ")"
 
 proc appMain() =
   wxnInitAllImageHandlers()
@@ -114,8 +119,10 @@ proc appMain() =
     status.setStatusText("Level: " & $level, 2)
 
   proc restartLevel() =
-    fw = 9 + level
-    fh = 9 + level
+    # get level size
+    fw = levelSizes[level][0]
+    fh = levelSizes[level][1]
+    echo fw, " : ", fh
     # resize our panel for the field
     panel.setMinSize(fw * UNIT, fh * UNIT)
     # fit the main frame
@@ -126,6 +133,8 @@ proc appMain() =
     updateCounts()
     # update status bar counts
     updateStatus()
+
+    panel.refresh()
 
   proc startLevel(lev: int) =
     level = lev
@@ -196,8 +205,37 @@ proc appMain() =
           discard msgDlg.showModal()
           restartLevel()
 
-  mainFrame.connect(expEVT_COMMAND_BUTTON_CLICKED()) do(evn: WxEvent):
-    #wxnExitMainLoop()
+  # Menu
+  let menuBar = wxMenuBar(0)
+  let levelMenu = wxMenu("", 0)
+  for idx,siz in levelSizes:
+    let levelItem = wxMenuItemEx(idx, levelString(idx), "", 0, nil)
+    levelMenu.appendItem(levelItem)
+
+  let restartItem = wxMenuItemEx(-1, "Restart", "", 0, nil)
+  levelMenu.appendItem(restartItem)
+  let giveUpItem = wxMenuItemEx(-1, "Give Up", "", 0, nil)
+  levelMenu.appendItem(giveUpItem)
+
+  discard menuBar.append(levelMenu, "Level")
+  mainFrame.setMenuBar(menuBar)
+
+  #menuBar.connect(expEVT_COMMAND_MENU_SELECTED(), myMenuQuit, fileQuit, fileQuitId)
+  #menuBar.connect(expEVT_COMMAND_MENU_SELECTED(), myMenuOpen, fileOpenId, fileOpenId)
+
+  # level selection menu
+  menuBar.connect(expEVT_COMMAND_MENU_SELECTED(), levelSizes.low, levelSizes.high) do(evn: WxEvent):
+    startLevel(evn.getId())
+
+  # restart menu
+  menuBar.connect(restartItem) do(evn: WxEvent):
+    restartLevel()
+
+  # giveUp menu
+  menuBar.connect(giveUpItem) do(evn: WxEvent):
+    uncoverAll()
+
+  mainFrame.connect() do(evn: WxEvent):
     restartLevel()
 
   # uncover a field

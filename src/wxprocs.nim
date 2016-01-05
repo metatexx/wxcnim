@@ -577,6 +577,11 @@ proc wxMouseEvent_GetX*(obj: WxMouseEvent): int
 proc wxMouseEvent_GetY*(obj: WxMouseEvent): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
+# wxMenuEvent
+
+proc wxMenuEvent_GetMenuId*(obj: WxMenuEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxTimer
 
 proc wxTimer_Create*(prt: WxWindow, id: WxId): WxTimer

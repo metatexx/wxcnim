@@ -84,6 +84,9 @@ wxcUnpackingT(WxKeyEvent, getY, wxKeyEvent_GetY)
 wxcUnpackingT(WxMouseEvent, getX, wxMouseEvent_GetX)
 wxcUnpackingT(WxMouseEvent, getY, wxMouseEvent_GetY)
 
+# wxMenuEvent
+wxcUnpackingT(WxMenuEvent, getMenuId, wxMenuEvent_GetMenuId)
+
 
 # wxString
 wxcUnpackingT(WxString, delete, wxString_Delete)
