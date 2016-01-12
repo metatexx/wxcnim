@@ -18,8 +18,6 @@ include icon_data
 
 var panel: WxPanel
 
-const UNIT = 30
-
 type
   CellBits = enum
     ckHIDDEN
@@ -30,7 +28,7 @@ type
   CellKind = tuple[flags: set[CellBits], count: byte]
 
 # we use 1 to 5 as WxId for the level Menu
-const levelSizes: array[1..5, (int, int)] = [(10,10),(15,15),(20,20),(30,30),(40,40)]
+const levelSizes: array[1..4, (int, int, int)] = [(8,8,40),(16,16,30),(30,16,30),(25,25,20)]
 
 template levelString(level: int): string =
   "Level " & $level & " (" & $levelSizes[level][0] & " x " & $levelSizes[level][1] & ")"
@@ -48,10 +46,12 @@ proc appMain() =
   proc cell(x, y: int): var CellKind =
     fd[y * fw + x]
 
+  var unit: int
+
   proc dump() =
-    for y in 0 ..< fw:
+    for y in 0 ..< fh:
       var row = ""
-      for x in 0 ..< fh:
+      for x in 0 ..< fw:
         if ckBOMB in cell(x, y).flags:
           row &= "*"
         else:
@@ -107,7 +107,7 @@ proc appMain() =
   let status = mainFrame.createStatusBar(3)
 
   mainFrame.setSizer(sizer)
-  #panel = wxPanel(mainFrame, wxID_ANY, 0,0, (fw * UNIT), fh * UNIT, wxBORDER_NONE)
+  #panel = wxPanel(mainFrame, wxID_ANY, 0,0, (fw * unit), fh * unit, wxBORDER_NONE)
   panel = wxPanel(mainFrame, wxID_ANY, 0,0, 10, 10, wxBORDER_NONE)
 
   sizer.addWindow(panel, 1, wxALL, 10)
@@ -120,11 +120,10 @@ proc appMain() =
 
   proc restartLevel() =
     # get level size
-    fw = levelSizes[level][0]
-    fh = levelSizes[level][1]
+    (fw, fh, unit) = levelSizes[level]
     echo fw, " : ", fh
     # resize our panel for the field
-    panel.setMinSize(fw * UNIT, fh * UNIT)
+    panel.setMinSize(fw * unit, fh * unit)
     # fit the main frame
     mainFrame.fit
     # create out field
@@ -243,8 +242,8 @@ proc appMain() =
     let evn = WxMouseEvent(evn)
     if normalCells == 0:
       return
-    let x = evn.getX() div UNIT
-    let y = evn.getY() div UNIT
+    let x = evn.getX() div unit
+    let y = evn.getY() div unit
     uncover(x,y)
     panel.refresh()
 
@@ -253,8 +252,8 @@ proc appMain() =
     let evn = WxMouseEvent(evn)
     if normalCells == 0:
       return
-    let x = evn.getX() div UNIT
-    let y = evn.getY() div UNIT
+    let x = evn.getX() div unit
+    let y = evn.getY() div unit
 
     let flags = cell(x, y).flags
     if ckHIDDEN in flags:
@@ -277,6 +276,11 @@ proc appMain() =
 
     let dc = wxPaintDC(panel) # PaintDC because we are in PaintEvent
 
+    # create a matching font for the unit size
+    let font = wxDefaultFont()
+    font.setPointSize(unit * 60 div 100)
+    dc.setFont(font)
+
     #echo validColourName("RAINBOW") #is false :)
     #echo validColourName("MEDIUM FOREST GREEN") #is true :)
 
@@ -292,7 +296,7 @@ proc appMain() =
           dc.setBrush(brushWhite)
 
         dc.setPen(wxBlackPen())
-        dc.drawRectangle(x * UNIT, y * UNIT, UNIT-1, UNIT-1)
+        dc.drawRectangle(x * unit, y * unit, unit-1, unit-1)
 
         var txt: MxString
         let col: WxColour = wxColourRGB(0,0,0) # allocated, delete later
@@ -323,12 +327,12 @@ proc appMain() =
 
         let (w,h,_,_) = dc.getTextExtent(txt)
         dc.setTextForeground(col)
-        dc.drawText(txt, x * UNIT + (UNIT - w) div 2 , y * UNIT + (UNIT - h) div 2)
+        dc.drawText(txt, x * unit + (unit - w) div 2 , y * unit + (unit - h) div 2)
 
         if cross != nil:
           dc.setPen(cross)
-          dc.drawLine(x * UNIT, y * UNIT, x * UNIT + UNIT - 1, y * UNIT + UNIT - 1 )
-          dc.drawLine(x * UNIT, y * UNIT + UNIT - 1, x * UNIT + UNIT - 1, y * UNIT )
+          dc.drawLine(x * unit, y * unit, x * unit + unit - 1, y * unit + unit - 1 )
+          dc.drawLine(x * unit, y * unit + unit - 1, x * unit + unit - 1, y * unit )
           cross.delete # pen is not consumed
 
         col.delete # colors are not consumed

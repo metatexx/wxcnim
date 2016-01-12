@@ -210,6 +210,9 @@ proc wxDC_SetPen*(obj: WxDC, pen: WxPen)
 proc wxDC_SetBrush*(obj: WxDC, pen: WxBrush)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxDC_SetFont*(obj: WxDC, font: WxFont)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 proc wxDC_DrawCircle*(obj: WxDC, x,y : int, radius: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
@@ -280,6 +283,14 @@ proc wxBrush_CreateFromStock*(id: int): WxBrush
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxBrush_Delete*(brush: WxBrush)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxFont
+
+proc wxFont_CreateDefault*(): WxFont
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxFont_SetPointSize*(obj: WxFont, pointSize: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxScrolledWindow

@@ -185,6 +185,7 @@ wxcUnpackingT(WxPaintDC, delete, wxPaintDC_Delete)
 # WxDC
 wxcUnpackingT(WxDC, setPen, wxDC_SetPen)
 wxcUnpackingT(WxDC, setBrush, wxDC_SetBrush)
+wxcUnpackingT(WxDC, setFont, wxDC_SetFont)
 wxcUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
 wxcUnpackingT(WxDC, drawLine, wxDC_DrawLine)
 wxcUnpackingT(WxDC, drawRectangle, wxDC_DrawRectangle)
@@ -284,6 +285,11 @@ wxcUnpackingT(WxPen, delete, wxPen_Delete)
 
 # wxBrush
 wxcUnpackingT(WxBrush, delete, wxBrush_Delete)
+
+# wxFont
+wxcUnpacking(wxDefaultFont, wxFont_CreateDefault)
+wxcUnpackingT(WxFont, setPointSize, wxFont_SetPointSize)
+
 
 when isMainModule:
   let a = wxButton(nil, 0, "test", 0,0, -1,-1, 0)
