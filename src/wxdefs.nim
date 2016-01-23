@@ -206,18 +206,34 @@ const wxSUNKEN_BORDER* = wxBORDER_SUNKEN
 type WxFrameStyle* = int64
 
 const
-  wxRESIZE_BORDER*:WxFrameStyle = 64
-  wxMAXIMIZE_BOX*:WxFrameStyle = 512
-  wxRESIZE_BOX*:WxFrameStyle = wxMAXIMIZE_BOX
-  wxMINIMIZE_BOX*:WxFrameStyle = 1024
-  wxSYSTEM_MENU*:WxFrameStyle = 2048
-  wxCLOSE_BOX*:WxFrameStyle = 4096
-  wxMAXIMIZE*:WxFrameStyle = 0x2000
-  wxCLIP_CHILDREN*:WxFrameStyle = 4194304
-  wxNO_BORDER*:WxFrameStyle = wxBORDER_NONE
-  wxCAPTION*:WxFrameStyle = 0x20000000
-  wxDEFAULT_FRAME_STYLE*:WxFrameStyle = 536878656
-  wxDEFAULT_DIALOG_STYLE*:WxFrameStyle = wxCAPTION or wxMAXIMIZE or wxCLOSE_BOX or wxNO_BORDER
+  wxRESIZE_BORDER*: WxFrameStyle = 64
+  wxMAXIMIZE_BOX*: WxFrameStyle = 512
+  wxRESIZE_BOX*: WxFrameStyle = wxMAXIMIZE_BOX
+  wxMINIMIZE_BOX*: WxFrameStyle = 1024
+  wxSYSTEM_MENU*: WxFrameStyle = 2048
+  wxCLOSE_BOX*: WxFrameStyle = 4096
+  wxMAXIMIZE*: WxFrameStyle = 0x2000
+  wxCLIP_CHILDREN*: WxFrameStyle = 4194304
+  wxNO_BORDER*: WxFrameStyle = wxBORDER_NONE
+  wxCAPTION*: WxFrameStyle = 0x20000000
+  wxDEFAULT_FRAME_STYLE*: WxFrameStyle = 536878656
+  wxDEFAULT_DIALOG_STYLE*: WxFrameStyle = wxCAPTION or wxMAXIMIZE or wxCLOSE_BOX or wxNO_BORDER
+
+type WxBookcontrolStyle* = int64
+const wxBK_DEFAULT*: WxBookcontrolStyle = 0x0000
+const wxBK_TOP*: WxBookcontrolStyle = 0x0010
+const wxBK_BOTTOM*: WxBookcontrolStyle = 0x0020
+const wxBK_LEFT*: WxBookcontrolStyle = 0x0040
+const wxBK_RIGHT*: WxBookcontrolStyle = 0x0080
+const wxBK_ALIGN_MASK*: WxBookcontrolStyle = wxBK_TOP or wxBK_BOTTOM or wxBK_LEFT or wxBK_RIGHT
+
+type WxNotebookStyle* = int64
+
+const
+  wxNB_TOP*: WxNotebookStyle = wxBK_TOP
+  wxNB_BOTTOM*: WxNotebookStyle = wxBK_BOTTOM
+  wxNB_LEFT*: WxNotebookStyle = wxBK_LEFT
+  wxNB_RIGHT*: WxNotebookStyle = wxBK_RIGHT
 
 type WxDialogSpecs* = int64
 
@@ -535,3 +551,8 @@ const
   wxSB_FLAT*: WxSTBStyle = 0x0001
   wxSB_RAISED*: WxSTBStyle = 0x0002
   wxSB_SUNKEN*: WxSTBStyle = 0x0003
+
+type WxTextCtrlStyle* = int
+
+const
+  wxTE_MULTILINE*: WxTextCtrlStyle = 0x0020

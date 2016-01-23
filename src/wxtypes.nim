@@ -69,9 +69,12 @@ type WxGridCellChoiceEditor* = WxGridCellEditor
 # container controls
 type WxControl* = WxWindow
 type WxListCtrl* = WxControl
+type WxTextCtrl* = WxControl
 type WxStaticText* = WxControl
 type WxButton* = WxControl
 type WxBitmapButton* = WxControl
+type WxNotebook* = WxControl
+type WxStaticBox* = WxControl
 
 type WxMessageDialog* = ptr object
 

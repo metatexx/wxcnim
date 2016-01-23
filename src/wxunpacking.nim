@@ -234,8 +234,23 @@ wxcUnpacking(wxListCtrl, wxListCtrl_Create)
 wxcUnpackingT(WxListCtrl, insertColumn, wxListCtrl_InsertColumn)
 wxcUnpackingT(WxListCtrl, getColumnCount, wxListCtrl_GetColumnCount)
 
+# Controls: Text Ctrl
+wxcUnpacking(wxTextCtrl, wxTextCtrl_Create)
+
+wxcUnpackingT(WxTextCtrl, appendText, wxTextCtrl_AppendText)
+
 # Static Widgets
 wxcUnpacking(wxStaticText, wxStaticText_Create)
+
+# wxStaticBox
+wxcUnpacking(wxStaticBox, wxStaticBox_Create)
+
+# wxStaticBoxSizer
+wxcUnpacking(wxStaticBoxSizer, wxStaticBoxSizer_Create)
+
+# WxNotebook
+wxcUnpacking(wxNotebook, wxNotebook_Create)
+wxcUnpackingT(WxNotebook, addPage, wxNotebook_AddPage)
 
 # Requester
 wxcUnpackingT(WxDialog, showModal, wxDialog_ShowModal)

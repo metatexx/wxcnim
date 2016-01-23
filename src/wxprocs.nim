@@ -198,8 +198,8 @@ proc wxIcon_FromXPM*(data: pointer): WxIcon
 # wxPanel
 
 proc wxPanel_Create*(prt: WxWindow, id: WxId = -1,
-  lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1,
-  stl: WxBorder = 0): WxPanel
+  left: int = -1, top: int = -1, width: int = -1, height: int = -1,
+  style: WxBorder = 0): WxPanel
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxDC
@@ -322,11 +322,20 @@ proc wxScrolledWindow_Scroll*(obj: WxScrolledWindow, x_pos, y_pos: int)
 proc wxScrolledWindow_GetViewStart*(obj: WxScrolledWindow, x: ptr int, y: ptr int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
+# wxNotebook
+proc wxNotebook_Create*(prt: WxWindow, id: int,
+  left: int = -1, top: int = -1, width: int = -1, height: int = -1,
+  style: WxNotebookStyle = 0): WxNotebook
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxNotebook_AddPage*(obj: WxNotebook, pPage: WxWindow, label: WxString, select: bool, imageID: int=0): bool
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxGrid
 
 proc wxGrid_Create*(prt: WxWindow, id: int,
-  lft: int = 0, top: int = 0, wdt: int = -1, hgt: int = -1,
-  stl: int = 0): WxGrid
+  left: int = -1, top: int = -1, width: int = -1, height: int = -1,
+  style: int = 0): WxGrid
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxGrid_CreateGrid*(obj: WxGrid, rows: int, cols: int, selmode: int)
@@ -515,6 +524,19 @@ proc wxSizer_SetSizeHints*(obj: WxSizer, wnd: WxWindow)
 
 #TClass(wxSize) wxSizer_CalcMin( TSelf(wxSizer) _obj );
 
+# wxStaticBox
+
+proc wxStaticBox_Create*(prt: WxWindow, id: WxId, label: WxString,
+  left: int = -1, top: int = -1, width: int = -1, height: int = -1,
+  style: int = 0): WxStaticBox
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxStaticBoxSizer
+
+proc wxStaticBoxSizer_Create*(box: WxStaticBox,
+  orient: WxOrientation = wxVERTICAL): WxBoxSizer
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxControl
 
 proc wxControl_SetLabel*(obj: WxControl, txt: WxString)
@@ -525,6 +547,14 @@ proc wxControl_SetLabel*(obj: WxControl, txt: WxString)
 proc wxStaticText_Create*(prt: WxWindow, id: WxId, txt: WxString,
   lft: cint, top: cint, wdt: cint, hgt: cint,
   stl: WxStaticTextStyle): WxStaticText
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxTextCtrl
+
+proc wxTextCtrl_Create*(prt: WxWindow, id: WxId, text: WxString, left: int = -1, top: int = -1, width: int = -1, height: int = -1, style: WxTextCtrlStyle = 0): WxTextCtrl
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxTextCtrl_AppendText*(obj: WxTextCtrl, text: WxString)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxListCtrl
