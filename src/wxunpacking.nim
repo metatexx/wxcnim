@@ -9,11 +9,9 @@ when isMainModule:
 # we need these dummy constructors due to the wrong implementation
 # of 'varargs[untyped]' in the compiler:
 
-proc wxPoint*(x, y: int) = discard
-proc wxSize*(w, h: int) = discard
-
-#proc wxColor*(r, g, b: int) = discard
-proc wxRect*(a, b, c, d: int) = discard
+proc wxnPoint*(x, y: int) = discard
+proc wxnSize*(w, h: int) = discard
+proc wxnRect*(a, b, c, d: int) = discard
 
 proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
   var call = newCall(!extname)
@@ -22,13 +20,13 @@ proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
     var unpack = false
     if x.kind in nnkCallKinds:
       case $x[0]
-      of "wxPoint":
+      of "wxnPoint":
         expectLen(x, 3)
         unpack = true
-      of "wxSize":
+      of "wxnSize":
         expectLen(x, 3)
         unpack = true
-      of "wxRect":
+      of "wxnRect":
         expectLen(x, 5)
         unpack = true
 #      of "wxColor":
@@ -43,278 +41,281 @@ proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
       call.add(x)
   result = newStmtList(call)
 
-template wxcUnpacking(nimname,extname) =
+template wxnUnpacking(nimname,extname) =
   macro nimname*(n: varargs[untyped]): expr =
     unpackHelper(n, astToStr(extname), nil)
 
 # This works like a method call for the as "what" given type
-template wxcUnpackingT(what,nimname,extname) =
+template wxnUnpackingT(what,nimname,extname) =
   macro nimname*(p: what, n: varargs[untyped]): expr =
     unpackHelper(n, astToStr(extname), p)
 
 # App wrapper
-wxcUnpacking(wxnGetApp, ELJApp_GetApp)
-wxcUnpacking(wxnGetTopWindow, ELJApp_GetTopWindow)
-wxcUnpacking(wxnSetTopWindow, ELJApp_SetTopWindow)
-wxcUnpacking(wxnBell, ELJApp_Bell)
-wxcUnpacking(wxnDisplaySize, ELJApp_DisplaySize)
-wxcUnpackingT(WxId, wxnFindWindowById, ELJApp_FindWindowById)
-wxcUnpacking(wxnGetUserName, ELJApp_GetUserName)
-wxcUnpacking(wxnGetUserHome, ELJApp_GetUserHome)
-wxcUnpacking(wxnInitAllImageHandlers, ELJApp_InitAllImageHandlers)
-wxcUnpacking(wxnExitMainLoop, ELJApp_ExitMainLoop)
-wxcUnpacking(wxnInitialized, ELJApp_Initialized)
+wxnUnpacking(wxnGetApp, ELJApp_GetApp)
+wxnUnpacking(wxnGetTopWindow, ELJApp_GetTopWindow)
+wxnUnpacking(wxnSetTopWindow, ELJApp_SetTopWindow)
+wxnUnpacking(wxnBell, ELJApp_Bell)
+wxnUnpacking(wxnDisplaySize, ELJApp_DisplaySize)
+wxnUnpackingT(WxId, wxnFindWindowById, ELJApp_FindWindowById)
+wxnUnpacking(wxnGetUserName, ELJApp_GetUserName)
+wxnUnpacking(wxnGetUserHome, ELJApp_GetUserHome)
+wxnUnpacking(wxnInitAllImageHandlers, ELJApp_InitAllImageHandlers)
+wxnUnpacking(wxnExitMainLoop, ELJApp_ExitMainLoop)
+wxnUnpacking(wxnInitialized, ELJApp_Initialized)
 
 # wxEvent
 
-wxcUnpackingT(WxEvent, getEventType, wxEvent_GetEventType)
-wxcUnpackingT(WxEvent, getEventObject, wxEvent_GetEventObject)
-wxcUnpackingT(WxEvent, getId, wxEvent_GetId)
-wxcUnpackingT(WxEvent, getTimestamp, wxEvent_GetTimestamp)
-wxcUnpackingT(WxEvent, skip, wxEvent_Skip)
-wxcUnpackingT(WxEvent, setId, wxEvent_SetId)
+wxnUnpackingT(WxEvent, getEventType, wxEvent_GetEventType)
+wxnUnpackingT(WxEvent, getEventObject, wxEvent_GetEventObject)
+wxnUnpackingT(WxEvent, getId, wxEvent_GetId)
+wxnUnpackingT(WxEvent, getTimestamp, wxEvent_GetTimestamp)
+wxnUnpackingT(WxEvent, skip, wxEvent_Skip)
+wxnUnpackingT(WxEvent, setId, wxEvent_SetId)
 
 # wxNotifyEvent
 
-wxcUnpackingT(WxNotifyEvent, veto, wxNotifyEvent_Veto)
-wxcUnpackingT(WxNotifyEvent, allow, wxNotifyEvent_Allow)
+wxnUnpackingT(WxNotifyEvent, veto, wxNotifyEvent_Veto)
+wxnUnpackingT(WxNotifyEvent, allow, wxNotifyEvent_Allow)
 
 # wxKeyEvent
-wxcUnpackingT(WxKeyEvent, getKeyCode, wxKeyEvent_GetKeyCode)
-wxcUnpackingT(WxKeyEvent, getModifiers, wxKeyEvent_GetModifiers)
-wxcUnpackingT(WxKeyEvent, getX, wxKeyEvent_GetX)
-wxcUnpackingT(WxKeyEvent, getY, wxKeyEvent_GetY)
+wxnUnpackingT(WxKeyEvent, getKeyCode, wxKeyEvent_GetKeyCode)
+wxnUnpackingT(WxKeyEvent, getModifiers, wxKeyEvent_GetModifiers)
+wxnUnpackingT(WxKeyEvent, getX, wxKeyEvent_GetX)
+wxnUnpackingT(WxKeyEvent, getY, wxKeyEvent_GetY)
 
 # wxMouseEvent
-wxcUnpackingT(WxMouseEvent, getX, wxMouseEvent_GetX)
-wxcUnpackingT(WxMouseEvent, getY, wxMouseEvent_GetY)
+wxnUnpackingT(WxMouseEvent, getX, wxMouseEvent_GetX)
+wxnUnpackingT(WxMouseEvent, getY, wxMouseEvent_GetY)
 
 # wxMenuEvent
-wxcUnpackingT(WxMenuEvent, getMenuId, wxMenuEvent_GetMenuId)
+wxnUnpackingT(WxMenuEvent, getMenuId, wxMenuEvent_GetMenuId)
 
 # wxBookCtrlEvent
-wxcUnpackingT(WxBookCtrlEvent, getSelection, wxBookCtrlEvent_GetSelection)
-wxcUnpackingT(WxBookCtrlEvent, getOldSelection, wxBookCtrlEvent_GetOldSelection)
+wxnUnpackingT(WxBookCtrlEvent, getSelection, wxBookCtrlEvent_GetSelection)
+wxnUnpackingT(WxBookCtrlEvent, getOldSelection, wxBookCtrlEvent_GetOldSelection)
 
 # wxString
-wxcUnpackingT(WxString, delete, wxString_Delete)
+wxnUnpackingT(WxString, delete, wxString_Delete)
 
 # wxBitmap
-wxcUnpacking(wxBitmapLoad, wxBitmap_CreateLoad)
-wxcUnpacking(wxBitmapFromXPM, wxBitmap_Create_FromXPM)
+wxnUnpacking(wxBitmapLoad, wxBitmap_CreateLoad)
+wxnUnpacking(wxBitmapFromXPM, wxBitmap_Create_FromXPM)
 
-wxcUnpackingT(WxBitmap, delete, wxBitmap_Delete)
-wxcUnpackingT(WxBitmap, getHeight, wxBitmap_GetHeight)
-wxcUnpackingT(WxBitmap, getWidth, wxBitmap_GetWidth)
+wxnUnpackingT(WxBitmap, delete, wxBitmap_Delete)
+wxnUnpackingT(WxBitmap, getHeight, wxBitmap_GetHeight)
+wxnUnpackingT(WxBitmap, getWidth, wxBitmap_GetWidth)
 
 # wxBitmapButton
-wxcUnpacking(wxBitmapButton, wxBitmapButton_Create)
+wxnUnpacking(wxBitmapButton, wxBitmapButton_Create)
 
 # wxIcon
-wxcUnpacking(wxIconFromXPM, wxIcon_Create_FromXPM)
+wxnUnpacking(wxIconFromXPM, wxIcon_Create_FromXPM)
 
 # wxColour
-wxcUnpacking(wxColour, wxColour_CreateEmpty)
-wxcUnpacking(wxColourRGB, wxColour_CreateRGB)
-wxcUnpacking(wxColourByName, wxColour_CreateByName)
-wxcUnpacking(wxColourFromStock, wxColour_CreateFromStock)
+wxnUnpacking(wxColour, wxColour_CreateEmpty)
+wxnUnpacking(wxColourRGB, wxColour_CreateRGB)
+wxnUnpacking(wxColourByName, wxColour_CreateByName)
+wxnUnpacking(wxColourFromStock, wxColour_CreateFromStock)
 
-wxcUnpackingT(WxColour, copy, wxColour_Copy)
+wxnUnpackingT(WxColour, copy, wxColour_Copy)
 
-wxcUnpackingT(WxColour, delete, wxColour_Delete)
-wxcUnpackingT(WxColour, alpha, wxColour_Alpha)
-wxcUnpackingT(WxColour, red, wxColour_Red)
-wxcUnpackingT(WxColour, green, wxColour_Green)
-wxcUnpackingT(WxColour, blue, wxColour_Blue)
+wxnUnpackingT(WxColour, delete, wxColour_Delete)
+wxnUnpackingT(WxColour, alpha, wxColour_Alpha)
+wxnUnpackingT(WxColour, red, wxColour_Red)
+wxnUnpackingT(WxColour, green, wxColour_Green)
+wxnUnpackingT(WxColour, blue, wxColour_Blue)
 
 # Events + Closure (Glue)
-wxcUnpacking(wxClosure, wxClosure_Create)
+wxnUnpacking(wxClosure, wxClosure_Create)
 
-wxcUnpackingT(WxClosure, initializeC, ELJApp_InitializeC)
+wxnUnpackingT(WxClosure, initializeC, ELJApp_InitializeC)
 
-#wxcUnpacking(connect, wxEvtHandler_Connect)
+#wxnUnpacking(connect, wxEvtHandler_Connect)
 
 # Sizers
-wxcUnpacking(wxBoxSizer, wxBoxSizer_Create)
+wxnUnpacking(wxBoxSizer, wxBoxSizer_Create)
 
-wxcUnpackingT(WxSizer, add, wxSizer_Add)
-wxcUnpackingT(WxSizer, addWindow, wxSizer_AddWindow)
-wxcUnpackingT(WxSizer, addSizer, wxSizer_AddSizer)
+wxnUnpackingT(WxSizer, add, wxSizer_Add)
+wxnUnpackingT(WxSizer, addWindow, wxSizer_AddWindow)
+wxnUnpackingT(WxSizer, addSizer, wxSizer_AddSizer)
 
-wxcUnpackingT(WxSizer, layout, wxSizer_Layout)
-wxcUnpackingT(WxSizer, setSizeHints, wxSizer_SetSizeHints)
+wxnUnpackingT(WxSizer, layout, wxSizer_Layout)
+wxnUnpackingT(WxSizer, setSizeHints, wxSizer_SetSizeHints)
 
 # WxWindow
-wxcUnpackingT(WxWindow, getLabel, wxWindow_GetLabel)
-wxcUnpackingT(WxWindow, show, wxWindow_Show)
-wxcUnpackingT(WxWindow, hide, wxWindow_Hide)
-wxcUnpackingT(WxWindow, close, wxWindow_Close)
-wxcUnpackingT(WxWindow, setSize, wxWindow_SetSize)
-wxcUnpackingT(WxWindow, fit, wxWindow_Fit)
-wxcUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
-wxcUnpackingT(WxWindow, `raise`, wxWindow_Raise)
-wxcUnpackingT(WxWindow, destroy, wxWindow_Destroy)
+wxnUnpackingT(WxWindow, getLabel, wxWindow_GetLabel)
+wxnUnpackingT(WxWindow, show, wxWindow_Show)
+wxnUnpackingT(WxWindow, hide, wxWindow_Hide)
+wxnUnpackingT(WxWindow, close, wxWindow_Close)
+wxnUnpackingT(WxWindow, setSize, wxWindow_SetSize)
+wxnUnpackingT(WxWindow, fit, wxWindow_Fit)
+wxnUnpackingT(WxWindow, raize, wxWindow_Raise) # raize vs raise!
+wxnUnpackingT(WxWindow, `raise`, wxWindow_Raise)
+wxnUnpackingT(WxWindow, destroy, wxWindow_Destroy)
 
-wxcUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
-wxcUnpackingT(WxWindow, setBackgroundColour, wxWindow_SetBackgroundColour)
+wxnUnpackingT(WxWindow, setSizer, wxWindow_SetSizer)
+wxnUnpackingT(WxWindow, setBackgroundColour, wxWindow_SetBackgroundColour)
 
-wxcUnpackingT(WxWindow, setFocus, wxWindow_SetFocus)
-wxcUnpackingT(WxWindow, setAutoLayout, wxWindow_SetAutoLayout)
+wxnUnpackingT(WxWindow, setFocus, wxWindow_SetFocus)
+wxnUnpackingT(WxWindow, setAutoLayout, wxWindow_SetAutoLayout)
 
-wxcUnpackingT(WxWindow, refresh, wxWindow_Refresh)
+wxnUnpackingT(WxWindow, refresh, wxWindow_Refresh)
 
 # WxTopLevelWindow
 
-wxcUnpackingT(WxWindow, setMinSize, wxTopLevelWindow_SetMinSize)
-wxcUnpackingT(WxWindow, setMaxSize, wxTopLevelWindow_SetMaxSize)
+wxnUnpackingT(WxWindow, setMinSize, wxTopLevelWindow_SetMinSize)
+wxnUnpackingT(WxWindow, setMaxSize, wxTopLevelWindow_SetMaxSize)
 
 # WxScrolledWindow
 
-wxcUnpacking(wxScrolledWindow, wxScrolledWindow_Create)
+wxnUnpacking(wxScrolledWindow, wxScrolledWindow_Create)
 
-wxcUnpackingT(WxScrolledWindow, adjustScrollbars, wxScrolledWindow_AdjustScrollbars)
-wxcUnpackingT(WxScrolledWindow, enableScrolling, wxScrolledWindow_EnableScrolling)
-wxcUnpackingT(WxScrolledWindow, showScrollbars, wxScrolledWindow_ShowScrollbars)
-wxcUnpackingT(WxScrolledWindow, setScrollbars, wxScrolledWindow_SetScrollbars)
-wxcUnpackingT(WxScrolledWindow, setScrollRate, wxScrolledWindow_SetScrollRate)
-wxcUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
-wxcUnpackingT(WxScrolledWindow, getViewStart, wxScrolledWindow_GetViewStart)
+wxnUnpackingT(WxScrolledWindow, adjustScrollbars, wxScrolledWindow_AdjustScrollbars)
+wxnUnpackingT(WxScrolledWindow, enableScrolling, wxScrolledWindow_EnableScrolling)
+wxnUnpackingT(WxScrolledWindow, showScrollbars, wxScrolledWindow_ShowScrollbars)
+wxnUnpackingT(WxScrolledWindow, setScrollbars, wxScrolledWindow_SetScrollbars)
+wxnUnpackingT(WxScrolledWindow, setScrollRate, wxScrolledWindow_SetScrollRate)
+wxnUnpackingT(WxScrolledWindow, scroll, wxScrolledWindow_Scroll)
+wxnUnpackingT(WxScrolledWindow, getViewStart, wxScrolledWindow_GetViewStart)
 
 # WxClientDC
 
-wxcUnpacking(wxClientDC, wxClientDC_Create)
-wxcUnpackingT(WxClientDC, delete, wxClientDC_Delete)
+wxnUnpacking(wxClientDC, wxClientDC_Create)
+wxnUnpackingT(WxClientDC, delete, wxClientDC_Delete)
 
 # WxPaintDC
 
-wxcUnpacking(wxPaintDC, wxPaintDC_Create)
-wxcUnpackingT(WxPaintDC, delete, wxPaintDC_Delete)
+wxnUnpacking(wxPaintDC, wxPaintDC_Create)
+wxnUnpackingT(WxPaintDC, delete, wxPaintDC_Delete)
 
 # WxDC
-wxcUnpackingT(WxDC, setPen, wxDC_SetPen)
-wxcUnpackingT(WxDC, setBrush, wxDC_SetBrush)
-wxcUnpackingT(WxDC, setFont, wxDC_SetFont)
-wxcUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
-wxcUnpackingT(WxDC, drawLine, wxDC_DrawLine)
-wxcUnpackingT(WxDC, drawRectangle, wxDC_DrawRectangle)
+wxnUnpackingT(WxDC, setPen, wxDC_SetPen)
+wxnUnpackingT(WxDC, setBrush, wxDC_SetBrush)
+wxnUnpackingT(WxDC, setFont, wxDC_SetFont)
+wxnUnpackingT(WxDC, drawCircle, wxDC_DrawCircle)
+wxnUnpackingT(WxDC, drawLine, wxDC_DrawLine)
+wxnUnpackingT(WxDC, drawRectangle, wxDC_DrawRectangle)
 
-wxcUnpackingT(WxDC, setTextForeground, wxDC_SetTextForeground)
-wxcUnpackingT(WxDC, setTextBackground, wxDC_SetTextBackground)
+wxnUnpackingT(WxDC, setTextForeground, wxDC_SetTextForeground)
+wxnUnpackingT(WxDC, setTextBackground, wxDC_SetTextBackground)
 
-wxcUnpackingT(WxDC, drawText, wxDC_DrawText)
-wxcUnpackingT(WxDC, isOk, wxDC_IsOk)
-wxcUnpackingT(WxDC, clear, wxDC_Clear)
+wxnUnpackingT(WxDC, drawText, wxDC_DrawText)
+wxnUnpackingT(WxDC, isOk, wxDC_IsOk)
+wxnUnpackingT(WxDC, clear, wxDC_Clear)
 
 # WxGrid
-wxcUnpacking(wxGrid, wxGrid_Create)
-wxcUnpackingT(WxGrid, createGrid, wxGrid_CreateGrid)
-wxcUnpackingT(WxGrid, beginBatch, wxGrid_BeginBatch)
-wxcUnpackingT(WxGrid, endBatch, wxGrid_EndBatch)
-wxcUnpackingT(WxGrid, disableDragRowSize, wxGrid_DisableDragRowSize)
-wxcUnpackingT(WxGrid, disableDragColSize, wxGrid_DisableDragColSize)
-wxcUnpackingT(WxGrid, setCellEditor, wxGrid_SetCellEditor)
-wxcUnpackingT(WxGrid, setReadOnly, wxGrid_SetReadOnly)
-wxcUnpackingT(WxGrid, setCellValue, wxGrid_SetCellValue)
-wxcUnpackingT(WxGrid, setCellTextColour, wxGrid_SetCellTextColour)
+wxnUnpacking(wxGrid, wxGrid_Create)
+wxnUnpackingT(WxGrid, createGrid, wxGrid_CreateGrid)
+wxnUnpackingT(WxGrid, beginBatch, wxGrid_BeginBatch)
+wxnUnpackingT(WxGrid, endBatch, wxGrid_EndBatch)
+wxnUnpackingT(WxGrid, disableDragRowSize, wxGrid_DisableDragRowSize)
+wxnUnpackingT(WxGrid, disableDragColSize, wxGrid_DisableDragColSize)
+wxnUnpackingT(WxGrid, setCellEditor, wxGrid_SetCellEditor)
+wxnUnpackingT(WxGrid, setReadOnly, wxGrid_SetReadOnly)
+wxnUnpackingT(WxGrid, setCellValue, wxGrid_SetCellValue)
+wxnUnpackingT(WxGrid, setCellTextColour, wxGrid_SetCellTextColour)
 
 # wxGridCellChoiceEditor
-wxcUnpacking(wxGridCellChoiceEditor, wxGridCellChoiceEditor_Ctor)
+wxnUnpacking(wxGridCellChoiceEditor, wxGridCellChoiceEditor_Ctor)
 
 # WxFrame
-wxcUnpacking(wxFrame, wxFrame_Create)
-wxcUnpackingT(WxFrame, setMenuBar, wxFrame_SetMenuBar)
+wxnUnpacking(wxFrame, wxFrame_Create)
+wxnUnpackingT(WxFrame, setMenuBar, wxFrame_SetMenuBar)
 
-wxcUnpackingT(WxFrame, createStatusBar, wxFrame_CreateStatusBar)
-wxcUnpackingT(WxFrame, getStatusBar, wxFrame_GetStatusBar)
+wxnUnpackingT(WxFrame, createStatusBar, wxFrame_CreateStatusBar)
+wxnUnpackingT(WxFrame, getStatusBar, wxFrame_GetStatusBar)
 
 # WxPanel
-wxcUnpacking(wxPanel, wxPanel_Create)
+wxnUnpacking(wxPanel, wxPanel_Create)
 
 # Controls: General
-wxcUnpacking(setLabel, wxControl_SetLabel)
+wxnUnpacking(setLabel, wxControl_SetLabel)
 
 # Controls: Button
-wxcUnpacking(wxButton, wxButton_Create)
+wxnUnpacking(wxButton, wxButton_Create)
 
 # Controls: List Ctrl
-wxcUnpacking(wxListCtrl, wxListCtrl_Create)
+wxnUnpacking(wxListCtrl, wxListCtrl_Create)
 
-wxcUnpackingT(WxListCtrl, insertColumn, wxListCtrl_InsertColumn)
-wxcUnpackingT(WxListCtrl, getColumnCount, wxListCtrl_GetColumnCount)
+wxnUnpackingT(WxListCtrl, insertColumn, wxListCtrl_InsertColumn)
+wxnUnpackingT(WxListCtrl, getColumnCount, wxListCtrl_GetColumnCount)
 
 # Controls: CheckListBox
-wxcUnpacking(wxCheckListBox, wxCheckListBox_Create)
+wxnUnpacking(wxCheckListBox, wxCheckListBox_Create)
+
+wxnUnpackingT(WxCheckListBox, delete, wxCheckListBox_Delete)
+wxnUnpackingT(WxCheckListBox, isChecked, wxCheckListBox_IsChecked)
 
 # Controls: Text Ctrl
-wxcUnpacking(wxTextCtrl, wxTextCtrl_Create)
+wxnUnpacking(wxTextCtrl, wxTextCtrl_Create)
 
-wxcUnpackingT(WxTextCtrl, appendText, wxTextCtrl_AppendText)
+wxnUnpackingT(WxTextCtrl, appendText, wxTextCtrl_AppendText)
 
 # Static Widgets
-wxcUnpacking(wxStaticText, wxStaticText_Create)
+wxnUnpacking(wxStaticText, wxStaticText_Create)
 
 # wxStaticBox
-wxcUnpacking(wxStaticBox, wxStaticBox_Create)
+wxnUnpacking(wxStaticBox, wxStaticBox_Create)
 
 # wxStaticBoxSizer
-wxcUnpacking(wxStaticBoxSizer, wxStaticBoxSizer_Create)
+wxnUnpacking(wxStaticBoxSizer, wxStaticBoxSizer_Create)
 
 # WxNotebook
-wxcUnpacking(wxNotebook, wxNotebook_Create)
-wxcUnpackingT(WxNotebook, addPage, wxNotebook_AddPage)
+wxnUnpacking(wxNotebook, wxNotebook_Create)
+wxnUnpackingT(WxNotebook, addPage, wxNotebook_AddPage)
 
 # Requester
-wxcUnpackingT(WxDialog, showModal, wxDialog_ShowModal)
+wxnUnpackingT(WxDialog, showModal, wxDialog_ShowModal)
 
-wxcUnpacking(wxMessageDialog, wxMessageDialog_Create)
-wxcUnpackingT(WxMessageDialog, showModal, wxMessageDialog_ShowModal)
-wxcUnpackingT(WxMessageDialog, delete, wxMessageDialog_delete)
+wxnUnpacking(wxMessageDialog, wxMessageDialog_Create)
+wxnUnpackingT(WxMessageDialog, showModal, wxMessageDialog_ShowModal)
+wxnUnpackingT(WxMessageDialog, delete, wxMessageDialog_delete)
 
-wxcUnpacking(wxFileDialog, wxFileDialog_Create)
-wxcUnpackingT(WxFileDialog, getPath, wxFileDialog_GetPath)
+wxnUnpacking(wxFileDialog, wxFileDialog_Create)
+wxnUnpackingT(WxFileDialog, getPath, wxFileDialog_GetPath)
 
 # Menu(bar) related
-wxcUnpacking(wxMenuBar, wxMenuBar_Create)
-wxcUnpacking(wxMenu, wxMenu_Create)
-wxcUnpacking(wxMenuItem, wxMenuItem_Create)
-wxcUnpacking(wxMenuItemEx, wxMenuItem_CreateEx)
+wxnUnpacking(wxMenuBar, wxMenuBar_Create)
+wxnUnpacking(wxMenu, wxMenu_Create)
+wxnUnpacking(wxMenuItem, wxMenuItem_Create)
+wxnUnpacking(wxMenuItemEx, wxMenuItem_CreateEx)
 
-wxcUnpackingT(WxMenu, appendItem, wxMenu_AppendItem)
-wxcUnpackingT(WxMenuBar, append, wxMenuBar_Append)
+wxnUnpackingT(WxMenu, appendItem, wxMenu_AppendItem)
+wxnUnpackingT(WxMenuBar, append, wxMenuBar_Append)
 
-wxcUnpackingT(WxMenuItem, getId, wxMenuItem_GetId)
+wxnUnpackingT(WxMenuItem, getId, wxMenuItem_GetId)
 
 # StatusBar related
-wxcUnpackingT(WxStatusBar, setStatusText, wxStatusBar_SetStatusText)
+wxnUnpackingT(WxStatusBar, setStatusText, wxStatusBar_SetStatusText)
 
 # wxTimer
 
-wxcUnpacking(wxTimer, wxTimer_Create)
-wxcUnpackingT(WxTimer, delete, wxTimer_Delete)
-wxcUnpackingT(WxTimer, start, wxTimer_Start)
-wxcUnpackingT(WxTimer, stop, wxTimer_Stop)
-wxcUnpackingT(WxTimer, getInterval, wxTimer_GetInterval)
-wxcUnpackingT(WxTimer, isOneShot, wxTimer_IsOneShot)
-wxcUnpackingT(WxTimer, isRuning, wxTimer_IsRuning)
+wxnUnpacking(wxTimer, wxTimer_Create)
+wxnUnpackingT(WxTimer, delete, wxTimer_Delete)
+wxnUnpackingT(WxTimer, start, wxTimer_Start)
+wxnUnpackingT(WxTimer, stop, wxTimer_Stop)
+wxnUnpackingT(WxTimer, getInterval, wxTimer_GetInterval)
+wxnUnpackingT(WxTimer, isOneShot, wxTimer_IsOneShot)
+wxnUnpackingT(WxTimer, isRuning, wxTimer_IsRuning)
 
 # wxTimerEx
 
-wxcUnpacking(wxTimerEx, wxTimerEx_Create)
-#wxcUnpackingT(WxTimerEx, connect, wxTimerEx_Connect)
+wxnUnpacking(wxTimerEx, wxTimerEx_Create)
+#wxnUnpackingT(WxTimerEx, connect, wxTimerEx_Connect)
 
 # wxTimerEvent
 
-wxcUnpackingT(WxTimerEvent, getInterval, wxTimerEvent_GetInterval)
+wxnUnpackingT(WxTimerEvent, getInterval, wxTimerEvent_GetInterval)
 
 # wxPen
-wxcUnpackingT(WxPen, delete, wxPen_Delete)
+wxnUnpackingT(WxPen, delete, wxPen_Delete)
 
 # wxBrush
-wxcUnpackingT(WxBrush, delete, wxBrush_Delete)
+wxnUnpackingT(WxBrush, delete, wxBrush_Delete)
 
 # wxFont
-wxcUnpacking(wxDefaultFont, wxFont_CreateDefault)
-wxcUnpackingT(WxFont, setPointSize, wxFont_SetPointSize)
+wxnUnpacking(wxDefaultFont, wxFont_CreateDefault)
+wxnUnpackingT(WxFont, setPointSize, wxFont_SetPointSize)
 
 
 when isMainModule:

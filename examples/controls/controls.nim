@@ -17,7 +17,7 @@ proc appMain() =
   let mainSizer = wxBoxSizer(wxVERTICAL)
   mainSizer.addWindow(mainPanel,1, wxEXPAND)
   mainFrame.setSizer(mainSizer)
-  mainFrame.setMaxSize(wxSize(800, 600))
+  mainFrame.setMaxSize(wxnSize(800, 600))
 
   # creating a vertical sizer
   let vsiz = wxBoxSizer(wxVERTICAL)
@@ -36,9 +36,6 @@ proc appMain() =
 
   proc logText(msg: string) =
     loggerText.appendText(msg & "\l")
-
-  let choices = wxcArrayWideStrings([ "This", "is", "one of my long and",
-    "wonderful", "examples."])
 
   # page 1
   let page1Panel = wxPanel(nb, wxID_ANY)
@@ -62,19 +59,40 @@ proc appMain() =
   let page1Sizer2 = wxBoxSizer(wxHORIZONTAL)
   page1Sizer.addSizer(page1Sizer2, 0, wxEXPAND)
 
+  let choices = wxcArrayWideStrings([ "This", "is", "one of my long and",
+    "wonderful", "examples."])
+
   let listBox1 = wxCheckListBox(page1Panel, myListbox1Id,
-    wxPoint(10,10), wxSize(120,70), 5, choices,
+    wxnPoint(10,10), wxnSize(120,70), 5, choices,
     wxLB_MULTIPLE or wxLB_ALWAYS_SB or wxHSCROLL )
 
   page1Sizer2.addWindow(listBox1)
 
-  let listBox2 = wxCheckListBox(page1Panel, myListbox1Id,
-    wxPoint(10,10), wxSize(120,70), 3, choices,
+  let listBox2 = wxCheckListBox(page1Panel, myListbox2Id,
+    wxnPoint(10,10), wxnSize(120,70), 3, choices,
     wxLB_SORT or wxHSCROLL)
 
   page1Sizer2.add(0, 0, 1, wxEXPAND)
 
   page1Sizer2.addWindow(listBox2) #, 0, wxEXPAND)
+
+  # add some buttons below
+  let bt1_1 = wxButton(page1Panel, wxID_ANY, "Add 'Test' to CheckBoxLists")
+  bt1_1.connect(expEVT_COMMAND_BUTTON_CLICKED()) do (evn: WxEvent):
+
+    # this time we use the id to find the CheckListBox
+    let w1: WxCheckListBox = wxnFindWindowById(myListBox1Id)
+    if w1 != nil:
+      if w1.isChecked(0):
+        # secret delete left listbox :)
+        # after this the ID will not be found anymore
+        w1.delete()
+        # refresh so no artifacts are left over
+        mainFrame.refresh()
+
+    logText("Button 1_1!")
+
+  page1Sizer.addWindow(bt1_1, 0, wxEXPAND)
 
   # page 2
   let page2Panel = wxPanel(nb, wxID_ANY)
@@ -105,12 +123,14 @@ proc appMain() =
   else:
     echo "Failed to add page 3"
 
+  # we watch the notebook changes
   nb.connect(expEVT_COMMAND_NOTEBOOK_PAGE_CHANGED()) do(evn: WxEvent):
     let evn = WxBookCtrlEvent(evn)
     let page = evn.getSelection()
     logText("Notebook Page changed to " & $page)
     evn.skip() # we do not eat it so the page can update
 
+  # we don't let the user change from Page 3 straight to Page 1 :)
   nb.connect(expEVT_COMMAND_NOTEBOOK_PAGE_CHANGING()) do(evn: WxEvent):
     let evn = WxBookCtrlEvent(evn)
     let frm = evn.getOldSelection()

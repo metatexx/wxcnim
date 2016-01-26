@@ -54,7 +54,7 @@ proc ELJApp_InitAllImageHandlers*()
 proc ELJApp_GetUserHome*(user: WxString): WxString
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc ELJApp_FindWindowById*(id: WxId, prt: WxWindow): WxWindow
+proc ELJApp_FindWindowById*(id: WxId, prt: WxWindow = nil): WxWindow
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxString
@@ -438,7 +438,8 @@ proc wxMenuItem_SetItemLabel*(obj: WxMenuItem, str: WxString)
 # wxButton
 
 proc wxButton_Create*(prt: WxWindow, id: WxId, txt: WxString,
-  lft: int, top: int, wdt: int, hgt: int, stl: int): WxButton
+  left: int = -1, top: int = -1, width: int = -1, heigth: int = -1,
+  style: int64 = 0): WxButton
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxColour
@@ -586,6 +587,12 @@ proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
 proc wxCheckListBox_Create*(prt: WxWindow, id: WxId,
   left: int = -1, top: int = -1, width: int = -1, height: int = -1,
   n: int, str: WxcArrayWideStrings, style: int64 ) : WxCheckListBox
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxCheckListBox_Delete*(obj: WxCheckListBox)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxCheckListBox_IsChecked*(obj: WxCheckListBox, item: int): bool
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxEvtHandler
