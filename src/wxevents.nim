@@ -22,3 +22,9 @@ proc expEVT_LEFT_DOWN*(): int
 
 proc expEVT_RIGHT_DOWN*(): int
   {.cdecl, dynlib: WXCLibName, importc.}
+
+proc expEVT_COMMAND_NOTEBOOK_PAGE_CHANGED*(): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc expEVT_COMMAND_NOTEBOOK_PAGE_CHANGING*(): int
+  {.cdecl, dynlib: WXCLibName, importc.}

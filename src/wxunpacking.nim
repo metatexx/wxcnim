@@ -74,6 +74,11 @@ wxcUnpackingT(WxEvent, getTimestamp, wxEvent_GetTimestamp)
 wxcUnpackingT(WxEvent, skip, wxEvent_Skip)
 wxcUnpackingT(WxEvent, setId, wxEvent_SetId)
 
+# wxNotifyEvent
+
+wxcUnpackingT(WxNotifyEvent, veto, wxNotifyEvent_Veto)
+wxcUnpackingT(WxNotifyEvent, allow, wxNotifyEvent_Allow)
+
 # wxKeyEvent
 wxcUnpackingT(WxKeyEvent, getKeyCode, wxKeyEvent_GetKeyCode)
 wxcUnpackingT(WxKeyEvent, getModifiers, wxKeyEvent_GetModifiers)
@@ -87,6 +92,9 @@ wxcUnpackingT(WxMouseEvent, getY, wxMouseEvent_GetY)
 # wxMenuEvent
 wxcUnpackingT(WxMenuEvent, getMenuId, wxMenuEvent_GetMenuId)
 
+# wxBookCtrlEvent
+wxcUnpackingT(WxBookCtrlEvent, getSelection, wxBookCtrlEvent_GetSelection)
+wxcUnpackingT(WxBookCtrlEvent, getOldSelection, wxBookCtrlEvent_GetOldSelection)
 
 # wxString
 wxcUnpackingT(WxString, delete, wxString_Delete)
@@ -233,6 +241,9 @@ wxcUnpacking(wxListCtrl, wxListCtrl_Create)
 
 wxcUnpackingT(WxListCtrl, insertColumn, wxListCtrl_InsertColumn)
 wxcUnpackingT(WxListCtrl, getColumnCount, wxListCtrl_GetColumnCount)
+
+# Controls: CheckListBox
+wxcUnpacking(wxCheckListBox, wxCheckListBox_Create)
 
 # Controls: Text Ctrl
 wxcUnpacking(wxTextCtrl, wxTextCtrl_Create)

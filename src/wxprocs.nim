@@ -331,6 +331,17 @@ proc wxNotebook_Create*(prt: WxWindow, id: int,
 proc wxNotebook_AddPage*(obj: WxNotebook, pPage: WxWindow, label: WxString, select: bool, imageID: int=0): bool
   {.cdecl, dynlib: WXCLibName, importc.}
 
+proc wxNotebook_SetSelection*(obj: WxNotebook, nPage: int): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxBookCtrlEvent
+
+proc wxBookCtrlEvent_GetSelection*(evn: WxBookCtrlEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxBookCtrlEvent_GetOldSelection*(evn: WxBookCtrlEvent): int
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxGrid
 
 proc wxGrid_Create*(prt: WxWindow, id: int,
@@ -504,8 +515,8 @@ proc wxBoxSizer_Create*(orient: WxOrientation = wxVERTICAL): WxBoxSizer
 
 # wxSizer (abstract)
 
-proc wxSizer_Add*(obj: WxSizer, wdt: int = 0, hgt: int = 0, opt: int = 0,
-  flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
+proc wxSizer_Add*(obj: WxSizer, width: int = 0, heigth: int = 0, opt: int = 0,
+  flags: WxStretch = 0, border: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0,
@@ -513,7 +524,7 @@ proc wxSizer_AddWindow*(obj: WxSizer, wnd: WxWindow, opt: int = 0,
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_AddSizer*(obj: WxSizer, sizer: WxSizer, opt: int = 0,
-  flg: WxStretch = 0, brd: int = 0, udt: pointer)
+  flg: WxStretch = 0, brd: int = 0, udt: pointer = nil)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxSizer_Layout*(obj: WxSizer)
@@ -570,6 +581,13 @@ proc wxListCtrl_InsertColumn*(obj: WxListCtrl, col: int,
 proc wxListCtrl_GetColumnCount*(obj: WxListCtrl): int
   {.cdecl, dynlib: WXCLibName, importc.}
 
+# wxCheckListBox
+
+proc wxCheckListBox_Create*(prt: WxWindow, id: WxId,
+  left: int = -1, top: int = -1, width: int = -1, height: int = -1,
+  n: int, str: WxcArrayWideStrings, style: int64 ) : WxCheckListBox
+  {.cdecl, dynlib: WXCLibName, importc.}
+
 # wxEvtHandler
 
 proc wxEvtHandler_Connect*(obj: WxWindow, first: WxId = -1, last: WxId = -1,
@@ -594,6 +612,11 @@ proc wxEvent_SetId*(obj: WxEvent, id: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxEvent_Skip*(obj: WxEvent)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+# wxNotifyEvent
+
+proc wxNotifyEvent_Veto*(obj: WxNotifyEvent)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxKeyEvent

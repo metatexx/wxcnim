@@ -175,11 +175,15 @@ type WxStandardID* = enum
   wxID_FILECTRL = 5950,
 
   wxID_HIGHEST = 5999
-
 const
   wxID_MDI_WINDOW_CASCADE* = wxID_MDI_WINDOW_FIRST
   wxID_OSX_HIDE* = wxID_MDI_WINDOW_FIRST
   wxID_OSX_MENU_LAST* = wxID_OSX_SERVICES
+
+
+const wxVSCROLL*: int64 = 0x80000000
+const wxHSCROLL*: int64 = 0x40000000
+const vwxCAPTION*: int64 = 0x20000000
 
 type WxBorder* = int64
 
@@ -413,7 +417,7 @@ type WxBitmapType* = enum
   wxBITMAP_TYPE_MAX,
   wxBITMAP_TYPE_ANY = 50
 
-type WxFileDialogStyle* = int
+type WxFileDialogStyle* = int64
 const
   wxFD_OPEN*: WxFileDialogStyle = 0x0001
   wxFD_SAVE*: WxFileDialogStyle = 0x0002
@@ -476,8 +480,8 @@ type WxDeprecatedGUIConstants* = enum
 # xxx because following does not work
 #type WxPenStyle* = int or WxDeprecatedGUIConstants
 # I did this
-type WxPenStyle* = int
-converter toInt*(x: WxDeprecatedGUIConstants): int = cast[int](x)
+type WxPenStyle* = int64
+converter toInt*(x: WxDeprecatedGUIConstants): int64 = int64(x)
 
 const
   wxPENSTYLE_INVALID*: WxPenStyle = -1
@@ -508,7 +512,7 @@ const
 # xxx because following does not work
 #type WxBrushStyle* = int or WxDeprecatedGUIConstants
 # I did this (as with the WxPenStyle)
-type WxBrushStyle* = int
+type WxBrushStyle* = int64
 
 const
   wxBRUSHSTYLE_INVALID*: WxBrushStyle = -1
@@ -528,7 +532,7 @@ const
   #wxBRUSHSTYLE_FIRST_HATCH = wxHATCHSTYLE_FIRST,
   #wxBRUSHSTYLE_LAST_HATCH = wxHATCHSTYLE_LAST
 
-type WxSizeFlags* = int
+type WxSizeFlags* = int64
 
 const
   wxSIZE_AUTO_WIDTH*: WxSizeFlags = 1
@@ -538,7 +542,7 @@ const
 const
   wxFULL_REPAINT_ON_RESIZE* = 0x00010000
 
-type WxSTBStyle* = int
+type WxSTBStyle* = int64
 
 const
   wxSTB_SIZEGRIP*: WxSTBStyle = 0x0010
@@ -552,7 +556,21 @@ const
   wxSB_RAISED*: WxSTBStyle = 0x0002
   wxSB_SUNKEN*: WxSTBStyle = 0x0003
 
-type WxTextCtrlStyle* = int
+type WxTextCtrlStyle* = int64
 
 const
   wxTE_MULTILINE*: WxTextCtrlStyle = 0x0020
+
+type WxListBoxStyle* = int64
+
+const
+  wxLB_SORT*: WxListBoxStyle = 0x0010
+  wxLB_SINGLE*: WxListBoxStyle = 0x0020
+  wxLB_MULTIPLE*: WxListBoxStyle = 0x0040
+  wxLB_EXTENDED*: WxListBoxStyle = 0x0080
+  wxLB_NEEDED_SB*: WxListBoxStyle = 0x0000
+  wxLB_OWNERDRAW*: WxListBoxStyle = 0x0100 # Windows only
+  wxLB_ALWAYS_SB*: WxListBoxStyle = 0x0200
+  wxLB_NO_SB*: WxListBoxStyle = 0x0400
+  wxLB_HSCROLL*: WxListBoxStyle = wxHSCROLL
+  wxLB_INT_HEIGHT*: WxListBoxStyle = 0x0800 # always show an entire number of rows

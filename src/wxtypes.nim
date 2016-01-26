@@ -24,10 +24,12 @@ type
   WxObject* = ptr WxObjectObj
 
 type WxEvent* = ptr object of WxObject
+type WxNotifyEvent* = ptr object of WxEvent
 type WxKeyEvent* = ptr object of WxEvent
 type WxTimerEvent* = ptr object of WxEvent
 type WxMouseEvent* = ptr object of WxEvent
 type WxMenuEvent* = ptr object of WxEvent
+type WxBookCtrlEvent* = ptr object of WxNotifyEvent
 
 type WxTimer* = ptr object of WxObject
 type WxTimerEx* = ptr object of WxTimer
@@ -75,6 +77,7 @@ type WxButton* = WxControl
 type WxBitmapButton* = WxControl
 type WxNotebook* = WxControl
 type WxStaticBox* = WxControl
+type WxCheckListBox* = WxControl
 
 type WxMessageDialog* = ptr object
 
