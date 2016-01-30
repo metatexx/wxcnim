@@ -14,7 +14,7 @@ import strutils
 import os
 import math
 
-include icon_data
+include nim_crown
 
 var panel: WxPanel
 
@@ -96,14 +96,14 @@ proc appMain() =
   let mainFrame = wxFrame(title="Nim Bombs!",
     stl = wxDEFAULT_DIALOG_STYLE or wxMINIMIZE_BOX)
 
-  let bmp = wxBitmapFromXPM(addr icon_data[0])
+  let backDrop = wxBitmapFromXPM(addr crownData[0])
 
   #let icon = wxIconFromXPM(addr icon_data[0])
   #wxIcon_CopyFromBitmap(icon, bmp)
   #wxTopLevelWindow_SetIcon(mainFrame, icon);
 
   let sizer = wxBoxSizer(wxVertical)
-  let button = wxBitmapButton(mainFrame, wxID_ANY, bmp, 0, 0, -1, -1, wxBORDER_NONE)
+  #let button = wxBitmapButton(mainFrame, wxID_ANY, bmp, 0, 0, -1, -1, wxBORDER_NONE)
   let status = mainFrame.createStatusBar(3)
 
   mainFrame.setSizer(sizer)
@@ -111,7 +111,7 @@ proc appMain() =
   panel = wxPanel(mainFrame, wxID_ANY, 0,0, 10, 10, wxBORDER_NONE)
 
   sizer.addWindow(panel, 1, wxALL, 10)
-  sizer.addWindow(button, 0, wxALL, 10)
+  #sizer.addWindow(button, 0, wxALL, 10)
 
   proc updateStatus() =
     status.setStatusText("Bombs: " & $bombs, 0)
@@ -268,7 +268,7 @@ proc appMain() =
 
   ## Paint the playfield
   panel.connect(expEVT_PAINT()) do(evn: WxEvent):
-    let brushGrey {.global.} = wxBrush(wxColourRGB(150,150,150))
+    let brushGrey {.global.} = wxBrush(wxColourRGB(160,160,160))
     #let brushGrey = wxGreyBrush()
     #let brushWhite {.global.} = wxBrush(wxColourRGB(255,255,255))
     let brushWhite {.global.} = wxWhiteBrush()
@@ -319,15 +319,16 @@ proc appMain() =
               of 0: col.set(0,180,0)
               of 1: col.set(0,0,255)
               else: col.set(0,0,0)
-        else:
-          txt = "?"
 
         if ckEXPLODED in flags:
           cross = wxPen(0,0,255)
 
-        let (w,h,_,_) = dc.getTextExtent(txt)
-        dc.setTextForeground(col)
-        dc.drawText(txt, x * unit + (unit - w) div 2 , y * unit + (unit - h) div 2)
+        if txt == nil:
+          dc.drawBitmap(backDrop, x * unit + (unit - 16) div 2 , y * unit + (unit - 16) div 2)
+        else:
+          let (w,h,_,_) = dc.getTextExtent(txt)
+          dc.setTextForeground(col)
+          dc.drawText(txt, x * unit + (unit - w) div 2 , y * unit + (unit - h) div 2)
 
         if cross != nil:
           dc.setPen(cross)

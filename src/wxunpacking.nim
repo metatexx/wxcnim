@@ -202,6 +202,7 @@ wxnUnpackingT(WxDC, setTextBackground, wxDC_SetTextBackground)
 wxnUnpackingT(WxDC, drawText, wxDC_DrawText)
 wxnUnpackingT(WxDC, isOk, wxDC_IsOk)
 wxnUnpackingT(WxDC, clear, wxDC_Clear)
+wxnUnpackingT(WxDC, drawBitmap, wxDC_DrawBitmap)
 
 # WxGrid
 wxnUnpacking(wxGrid, wxGrid_Create)

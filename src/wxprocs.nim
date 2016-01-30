@@ -219,10 +219,10 @@ proc wxDC_DrawCircle*(obj: WxDC, x,y : int, radius: int)
 proc wxDC_DrawLine*(obj: WxDC, x1,y1, x2,y2 : int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxDC_DrawRectangle*(obj: WxDC, lft,top, wdt,hgt : int)
+proc wxDC_DrawRectangle*(obj: WxDC, left, top, width, height : int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
-proc wxDC_DrawText*(obj: WxDC, text: WxString, lft,top: int)
+proc wxDC_DrawText*(obj: WxDC, text: WxString, left, top: int)
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxDC_GetTextExtent*(obj: WxDC, text: WxString,
@@ -245,6 +245,9 @@ proc wxDC_IsOk*(obj: WxDC): bool
   {.cdecl, dynlib: WXCLibName, importc.}
 
 proc wxDC_Clear*(obj: WxDC)
+  {.cdecl, dynlib: WXCLibName, importc.}
+
+proc wxDC_DrawBitmap*(obj: WxDC, bmp: WxBitmap, x: int, y: int, useMask: bool = false )
   {.cdecl, dynlib: WXCLibName, importc.}
 
 # wxClientDC
