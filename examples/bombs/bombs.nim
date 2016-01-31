@@ -1,20 +1,18 @@
-# Simple version of Minesweeper
+# Nim version of Minesweeper using the wxcnim module
 #
 # This is still WIP!
 #
 # Todos:
 #  Make it really random (pseudorandom right now)
-#  Add some meaningful buttons and remove bitmap
-#  Add the Nim Crown instead of the ? and a filled version as Bomb?
+#  Add some meaningful buttons(?)
+#  Create a Bomb image wich adapts in size(?)
+
+import strutils, os, math
 
 import wxcnim
 import mxstring # managed WxString
 
-import strutils
-import os
-import math
-
-include nim_crown
+import nim_crown # the backdrop bitmap
 
 var panel: WxPanel
 
@@ -28,7 +26,11 @@ type
   CellKind = tuple[flags: set[CellBits], count: byte]
 
 # we use 1 to 5 as WxId for the level Menu
-const levelSizes: array[1..4, (int, int, int)] = [(8,8,40),(16,16,30),(30,16,30),(25,25,20)]
+const levelSizes: array[1..4, (int, int, int)] = [
+  (8,8,40),
+  (16,16,30),
+  (30,16,30),
+  (25,25,20)]
 
 template levelString(level: int): string =
   "Level " & $level & " (" & $levelSizes[level][0] & " x " & $levelSizes[level][1] & ")"
@@ -46,7 +48,7 @@ proc appMain() =
   proc cell(x, y: int): var CellKind =
     fd[y * fw + x]
 
-  var unit: int
+  var unit: int # size of one cell in the GUI
 
   proc dump() =
     for y in 0 ..< fh:
@@ -211,7 +213,7 @@ proc appMain() =
     let levelItem = wxMenuItemEx(idx, levelString(idx), "", 0, nil)
     levelMenu.appendItem(levelItem)
 
-  let restartItem = wxMenuItemEx(-1, "Restart", "", 0, nil)
+  let restartItem = wxMenuItemEx(-1, "Restart", "R", 0, nil)
   levelMenu.appendItem(restartItem)
   let giveUpItem = wxMenuItemEx(-1, "Give Up", "", 0, nil)
   levelMenu.appendItem(giveUpItem)

@@ -5,100 +5,99 @@ when defined(mswindows):
 else:
   type WxcWide = int32
 
-type WxcWideString* = ptr WxcWide
-type WxcArrayWideStrings* = ptr ptr WxcWide
-
-type WxcWideStringShadow* = seq[WxcWide]
-
-type WxcArrayWideStringsShadowObj* = object
-  proxy*: WxcArrayWideStrings
-  build: seq[WxcWideString]
-  shadow: seq[seq[WxcWide]]
-
-type WxcArrayWideStringsShadow* = ref WxcArrayWideStringsShadowObj
-
-type WxId* = int
-
 type
+  WxcWideString* = ptr WxcWide
+  WxcArrayWideStrings* = ptr ptr WxcWide
+
+  WxcWideStringShadow* = seq[WxcWide]
+
+  WxcArrayWideStringsShadowObj* = object
+    proxy*: WxcArrayWideStrings
+    build: seq[WxcWideString]
+    shadow: seq[seq[WxcWide]]
+
+  WxcArrayWideStringsShadow* = ref WxcArrayWideStringsShadowObj
+
+  WxId* = int
+
   WxObjectObj {.pure, inheritable.} = object
   WxObject* = ptr WxObjectObj
 
-type WxEvent* = ptr object of WxObject
-type WxNotifyEvent* = ptr object of WxEvent
-type WxKeyEvent* = ptr object of WxEvent
-type WxTimerEvent* = ptr object of WxEvent
-type WxMouseEvent* = ptr object of WxEvent
-type WxMenuEvent* = ptr object of WxEvent
-type WxBookCtrlEvent* = ptr object of WxNotifyEvent
+  WxEvent* = ptr object of WxObject
+  WxNotifyEvent* = ptr object of WxEvent
+  WxKeyEvent* = ptr object of WxEvent
+  WxTimerEvent* = ptr object of WxEvent
+  WxMouseEvent* = ptr object of WxEvent
+  WxMenuEvent* = ptr object of WxEvent
+  WxBookCtrlEvent* = ptr object of WxNotifyEvent
 
-type WxTimer* = ptr object of WxObject
-type WxTimerEx* = ptr object of WxTimer
+  WxTimer* = ptr object of WxObject
+  WxTimerEx* = ptr object of WxTimer
 
-type WxClosure* = ptr object
-type WxApp* = ptr object
-type WxString* = ptr object
+  WxClosure* = ptr object
+  WxApp* = ptr object
+  WxString* = ptr object
 
-type
   WxBitmapObj {.pure, inheritable.} = object
   WxBitmap* = ptr WxBitmapObj
 
-type WxIcon* = ptr object of WxBitmap
+  WxIcon* = ptr object of WxBitmap
 
-type WxColour* = ptr object
+  WxColour* = ptr object
 
-type WxFont* = ptr object
+  WxFont* = ptr object
 
-# Baseclass for all widgets!
-type WxWindow* = ptr object of WxObjectObj
+  # Baseclass for all widgets!
+  WxWindow* = ptr object of WxObjectObj
 
-# DC and related
-type WxDC* = ptr object of WxObjectObj
-type WxClientDC* = ptr object of WxDC
-type WxPaintDC* = ptr object of WxDC
+  # DC related
+  WxDC* = ptr object of WxObjectObj
+  WxClientDC* = ptr object of WxDC
+  WxPaintDC* = ptr object of WxDC
 
-type WxPen* = ptr object of WxObjectObj
-type WxBrush* = ptr object of WxObjectObj
+  WxPen* = ptr object of WxObjectObj
+  WxBrush* = ptr object of WxObjectObj
 
-# container widgets
-type WxFrame* = WxWindow
-type WxPanel* = WxWindow
-type WxScrolledWindow* = WxWindow
-type WxGrid* = WxWindow
+  # container widgets
+  WxFrame* = WxWindow
+  WxPanel* = WxWindow
+  WxScrolledWindow* = WxWindow
+  WxGrid* = WxWindow
 
-type WxGridCellEditor* = ptr object
-type WxGridCellChoiceEditor* = WxGridCellEditor
+  WxGridCellEditor* = ptr object
+  WxGridCellChoiceEditor* = WxGridCellEditor
 
-# container controls
-type WxControl* = WxWindow
-type WxListCtrl* = WxControl
-type WxTextCtrl* = WxControl
-type WxStaticText* = WxControl
-type WxButton* = WxControl
-type WxBitmapButton* = WxControl
-type WxNotebook* = WxControl
-type WxStaticBox* = WxControl
-type WxCheckListBox* = WxControl
+  # container controls
+  WxControl* = WxWindow
+  WxListCtrl* = WxControl
+  WxTextCtrl* = WxControl
+  WxStaticText* = WxControl
+  WxButton* = WxControl
+  WxBitmapButton* = WxControl
+  WxNotebook* = WxControl
+  WxStaticBox* = WxControl
+  WxCheckListBox* = WxControl
 
-type WxMessageDialog* = ptr object
+  WxMessageDialog* = ptr object
 
-type WxDialog* = ptr object
-type WxFileDialog* = WxDialog
+  WxDialog* = ptr object
+  WxFileDialog* = WxDialog
 
-type WxClosureTypes* = ptr object
+  WxClosureTypes* = ptr object
 
-type WxMenu* = ptr object of WxWindow
-type WxMenuBar* = ptr object of WxWindow
-type WxMenuItem* = ptr object of WxWindow
+  WxMenu* = ptr object of WxWindow
+  WxMenuBar* = ptr object of WxWindow
+  WxMenuItem* = ptr object of WxWindow
 
-type WxStatusBar* = ptr object of WxWindow
+  WxStatusBar* = ptr object of WxWindow
 
-type WxSizer* = ptr object
-type WxBoxSizer* = WxSizer
+  WxSizer* = ptr object
+  WxBoxSizer* = WxSizer
 
-type WxSizeObj* = tuple[w, h: int]
+  WxSizeObj* = tuple[w, h: int]
 
-type WxSize* = ptr tuple[w, h: cint]
-type WxPosPtr* = ptr tuple[w, h: cint]
-#type Rect = (int, int, int, int)
+  WxSize* = ptr tuple[w, h: cint]
+  WxPosPtr* = ptr tuple[w, h: cint]
+#  Rect = (int, int, int, int)
 
-type WxTextExtent* = tuple[w, h, descent, externalLeading: int]
+  WxTextExtent* = tuple[w, h, descent, externalLeading: int]
