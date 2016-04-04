@@ -140,7 +140,7 @@ proc appMain() =
   vsiz.addSizer(hsiz, 0, wxEXPAND, 0, nil)
 
   # some "extra" size at the left of our buttons
-  hsiz.add(wxSize(100,0), 1, wxEXPAND)
+  hsiz.add(wxnSize(100,0), 1, wxEXPAND)
 
   # our Buttons
   let bt1 = makeButton(mainPanel,"Click Me 1", button1Clicked) # Button hinzufügen
@@ -208,7 +208,7 @@ proc appMain() =
 
   # ListControl (some of the most important widgets for our case)
 
-  let lcTable = mainPanel.wxListCtrl(wxID_ANY, wxPoint(0, 0), -1, 100, wxLC_REPORT)
+  let lcTable = mainPanel.wxListCtrl(wxID_ANY, wxnPoint(0, 0), -1, 100, wxLC_REPORT)
   vsiz.addWindow(lcTable, 1, wxEXPAND or wxAll, 10, nil)
   var pos = 0
   pos = lcTable.insertColumn(0, "Vorname", 0, 100)
@@ -272,11 +272,11 @@ proc appMain() =
 
   when false:
     # this constrains the windows min size
-    mainFrame.setMinSize(wxSize(100, 150))
+    mainFrame.setMinSize(wxnSize(100, 150))
 
   when true:
     # this constrains the windows max size
-    mainFrame.setMaxSize(wxSize(800, 600))
+    mainFrame.setMaxSize(wxnSize(800, 600))
 
   # so you can't make the window smaller than the buttons sizer
   hsiz.setSizeHints(mainFrame)
