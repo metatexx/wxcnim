@@ -19,20 +19,21 @@ proc unpackHelper(n: NimNode, extname: string, what: NimNode): NimNode =
   for x in n.children:
     var unpack = false
     if x.kind in nnkCallKinds:
-      case $x[0]
-      of "wxnPoint":
-        expectLen(x, 3)
-        unpack = true
-      of "wxnSize":
-        expectLen(x, 3)
-        unpack = true
-      of "wxnRect":
-        expectLen(x, 5)
-        unpack = true
-#      of "wxColor":
-#        expectLen(x, 4)
-#        unpack = true
-      else: discard
+      if x[0].kind == nnkIdent:
+        case $x[0].ident
+        of "wxnPoint":
+          expectLen(x, 3)
+          unpack = true
+        of "wxnSize":
+          expectLen(x, 3)
+          unpack = true
+        of "wxnRect":
+          expectLen(x, 5)
+          unpack = true
+  #      of "wxColor":
+  #        expectLen(x, 4)
+  #        unpack = true
+        else: discard
 
     if unpack:
       for i in 1..<x.len:

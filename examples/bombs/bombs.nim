@@ -7,7 +7,7 @@
 #  Add some meaningful buttons(?)
 #  Create a Bomb image wich adapts in size(?)
 
-import strutils, os, math
+import strutils, os, random
 
 import wxcnim
 import mxstring # managed WxString
