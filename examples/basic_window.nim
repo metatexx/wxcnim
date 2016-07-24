@@ -192,7 +192,7 @@ proc appMain() =
 
   # The lable is not so static :)
   # following uses converters "magically"
-  st2.setLabel("User: " & toUpper(wxnGetUserName()))
+  st2.setLabel("User: " & toUpperASCII(wxnGetUserName()))
 
   # memory leak testing (you need to free GetLabel)
   when false:
